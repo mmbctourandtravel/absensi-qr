@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Absensi QR</title>
 
@@ -11,14 +11,14 @@
 <style>
 body{
     margin:0;
-    font-family:Arial;
+    font-family:Arial,sans-serif;
     background:#f2f2f2;
     text-align:center;
 }
 
 h2{
-    background:#1565c0;
-    color:white;
+    background:#1565C0;
+    color:#fff;
     padding:15px;
     margin:0;
 }
@@ -32,7 +32,7 @@ h2{
     margin-top:20px;
     font-size:22px;
     font-weight:bold;
-    color:#1565c0;
+    color:#1565C0;
 }
 </style>
 
@@ -45,34 +45,38 @@ h2{
 <div id="reader"></div>
 
 <div id="hasil">
-Arahkan QR ke kamera
+Mengaktifkan kamera...
 </div>
 
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
-const html5QrCode=new Html5Qrcode("reader");
+const qr=new Html5Qrcode("reader");
 
-function sukses(decodedText){
+function onScanSuccess(decodedText){
 
-    html5QrCode.pause();
+    qr.pause(true);
 
     document.getElementById("hasil").innerHTML="Mengirim data...";
 
     fetch(API,{
         method:"POST",
+        redirect:"follow",
+        headers:{
+            "Content-Type":"text/plain;charset=utf-8"
+        },
         body:JSON.stringify({
             id:decodedText
         })
     })
-    .then(res=>res.json())
-    .then(data=>{
+    .then(r=>r.json())
+    .then(res=>{
 
-        if(data.sukses){
+        if(res.sukses){
 
             document.getElementById("hasil").innerHTML=
-            "✅ "+data.nama+"<br>Absensi Berhasil";
+            "✅ "+res.nama+"<br>Absensi Berhasil";
 
             if(navigator.vibrate){
                 navigator.vibrate(200);
@@ -81,14 +85,25 @@ function sukses(decodedText){
         }else{
 
             document.getElementById("hasil").innerHTML=
-            "❌ "+data.pesan;
+            "❌ "+res.pesan;
 
         }
 
-        setTimeout(function(){
+    })
+    .catch(err=>{
 
-            document.getElementById("hasil").innerHTML="Arahkan QR ke kamera";
-            html5QrCode.resume();
+        document.getElementById("hasil").innerHTML=
+        "❌ "+err;
+
+    })
+    .finally(()=>{
+
+        setTimeout(()=>{
+
+            document.getElementById("hasil").innerHTML=
+            "Arahkan QR ke kamera";
+
+            qr.resume();
 
         },2500);
 
@@ -96,22 +111,33 @@ function sukses(decodedText){
 
 }
 
-html5QrCode.start(
+Html5Qrcode.getCameras()
+.then(cameras=>{
 
-{
-    facingMode:"environment"
-},
+    if(cameras.length==0){
 
-{
-    fps:10,
-    qrbox:250
-},
+        document.getElementById("hasil").innerHTML=
+        "Kamera tidak ditemukan";
 
-sukses
+        return;
+    }
 
-).catch(err=>{
+    qr.start(
+        {
+            facingMode:"environment"
+        },
+        {
+            fps:10,
+            qrbox:250
+        },
+        onScanSuccess
+    );
 
-document.getElementById("hasil").innerHTML=err;
+})
+.catch(err=>{
+
+    document.getElementById("hasil").innerHTML=
+    "Kamera gagal : "+err;
 
 });
 
