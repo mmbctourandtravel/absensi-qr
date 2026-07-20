@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Absensi QR</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f2f2f2;
+    text-align:center;
+}
+
+h2{
+    background:#1565c0;
+    color:white;
+    padding:15px;
+    margin:0;
+}
+
+#reader{
+    width:330px;
+    margin:20px auto;
+}
+
+#hasil{
+    margin-top:20px;
+    font-size:22px;
+    font-weight:bold;
+    color:#1565c0;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>ABSENSI QR</h2>
+
+<div id="reader"></div>
+
+<div id="hasil">
+Arahkan QR ke kamera
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
+const html5QrCode=new Html5Qrcode("reader");
+
+function sukses(decodedText){
+
+    html5QrCode.pause();
+
+    document.getElementById("hasil").innerHTML="Mengirim data...";
+
+    fetch(API,{
+        method:"POST",
+        body:JSON.stringify({
+            id:decodedText
+        })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        if(data.sukses){
+
+            document.getElementById("hasil").innerHTML=
+            "✅ "+data.nama+"<br>Absensi Berhasil";
+
+            if(navigator.vibrate){
+                navigator.vibrate(200);
+            }
+
+        }else{
+
+            document.getElementById("hasil").innerHTML=
+            "❌ "+data.pesan;
+
+        }
+
+        setTimeout(function(){
+
+            document.getElementById("hasil").innerHTML="Arahkan QR ke kamera";
+            html5QrCode.resume();
+
+        },2500);
+
+    });
+
+}
+
+html5QrCode.start(
+
+{
+    facingMode:"environment"
+},
+
+{
+    fps:10,
+    qrbox:250
+},
+
+sukses
+
+).catch(err=>{
+
+document.getElementById("hasil").innerHTML=err;
+
+});
+
+</script>
+
+</body>
+</html>
