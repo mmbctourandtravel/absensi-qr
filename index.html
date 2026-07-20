@@ -1,148 +1,54 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+function onOpen() {
 
-<title>Absensi QR</title>
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
-<style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f2f2f2;
-    text-align:center;
-}
-
-h2{
-    background:#1565C0;
-    color:#fff;
-    padding:15px;
-    margin:0;
-}
-
-#reader{
-    width:330px;
-    margin:20px auto;
-}
-
-#hasil{
-    margin-top:20px;
-    font-size:22px;
-    font-weight:bold;
-    color:#1565C0;
-}
-</style>
-
-</head>
-
-<body>
-
-<h2>MMBC Tour & Travel</h2>
-<p>Sistem Absensi QR Karyawan</p>
-
-<div id="reader"></div>
-
-<div id="hasil">
-Mengaktifkan kamera...
-</div>
-
-<script>
-
-const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
-
-const qr=new Html5Qrcode("reader");
-
-function onScanSuccess(decodedText){
-
-    qr.pause(true);
-
-    document.getElementById("hasil").innerHTML="Mengirim data...";
-
-    fetch(API,{
-        method:"POST",
-        redirect:"follow",
-        headers:{
-            "Content-Type":"text/plain;charset=utf-8"
-        },
-        body:JSON.stringify({
-            id:decodedText
-        })
-    })
-    .then(r=>r.json())
-    .then(res=>{
-
-        if(res.sukses){
-
-            document.getElementById("hasil").innerHTML=
-            "✅ "+res.nama+"<br>Absensi Berhasil";
-
-            if(navigator.vibrate){
-                navigator.vibrate(200);
-            }
-
-        }else{
-
-            document.getElementById("hasil").innerHTML=
-            "❌ "+res.pesan;
-
-        }
-
-    })
-    .catch(err=>{
-
-        document.getElementById("hasil").innerHTML=
-        "❌ "+err;
-
-    })
-    .finally(()=>{
-
-        setTimeout(()=>{
-
-            document.getElementById("hasil").innerHTML=
-            "Arahkan QR ke kamera";
-
-            qr.resume();
-
-        },2500);
-
-    });
+  SpreadsheetApp.getUi()
+    .createMenu("Absensi QR")
+    .addItem("Generate QR Semua Staff", "generateQR")
+    .addToUi();
 
 }
 
-Html5Qrcode.getCameras()
-.then(cameras=>{
+function generateQR() {
 
-    if(cameras.length==0){
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
 
-        document.getElementById("hasil").innerHTML=
-        "Kamera tidak ditemukan";
+  const sheet = ss.getSheetByName("Data Staff");
 
-        return;
-    }
+  const data = sheet.getDataRange().getValues();
 
-    qr.start(
-        {
-            facingMode:"environment"
-        },
-        {
-            fps:10,
-            qrbox:250
-        },
-        onScanSuccess
+  // hapus sheet lama kalau ada
+  const lama = ss.getSheetByName("QR Staff");
+
+  if (lama) {
+    ss.deleteSheet(lama);
+  }
+
+  const qr = ss.insertSheet("QR Staff");
+
+  qr.setColumnWidth(1,220);
+  qr.setColumnWidth(2,220);
+
+  let baris = 1;
+
+  for(let i=1;i<data.length;i++){
+
+    const id = data[i][0];
+    const nama = data[i][1];
+
+    qr.setRowHeight(baris,170);
+
+    qr.getRange(baris,1).setFormula(
+      '=IMAGE("https://quickchart.io/qr?text='
+      + encodeURIComponent(id)
+      + '&size=160")'
     );
 
-})
-.catch(err=>{
+    qr.getRange(baris,2).setValue(
+      "ID : "+id+
+      "\nNama : "+nama
+    );
 
-    document.getElementById("hasil").innerHTML=
-    "Kamera gagal : "+err;
+    baris++;
 
-});
+  }
 
-</script>
-
-</body>
-</html>
+}
