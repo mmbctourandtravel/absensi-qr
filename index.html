@@ -178,7 +178,9 @@ Version 3.0 FINAL
 
 </div>
 <script>
+
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
 const qr = new Html5Qrcode("reader");
 
 qr.start(
@@ -187,52 +189,63 @@ qr.start(
         fps:10,
         qrbox:250
     },
+
     (decodedText)=>{
 
-    alert(decodedText);
-
-    fetch(API,{
-        method:"POST",
-        body:JSON.stringify({
-            id:decodedText
+        fetch(API,{
+            method:"POST",
+            body:JSON.stringify({
+                id:decodedText
+            })
         })
-    })
 
-    .then(r=>r.json())
+        .then(r=>r.json())
 
-.then(res=>{
+        .then(res=>{
 
-    console.log(res);
+            console.log(res);
 
-    if(res.sukses){
+            if(res.sukses){
 
-        if(res.tipe=="masuk"){
+                if(res.tipe=="masuk"){
 
-            document.getElementById("hasil").innerHTML=
-            "✅ Selamat Datang<br><b>"+res.nama+"</b><br>Absen Masuk Berhasil";
+                    document.getElementById("hasil").innerHTML =
+                    "✅ Selamat Datang<br><b>"+res.nama+"</b><br>Absen Masuk Berhasil";
 
-        }else{
+                }else{
 
-            document.getElementById("hasil").innerHTML=
-            "👋 Sampai Jumpa<br><b>"+res.nama+"</b><br>Absen Pulang Berhasil";
+                    document.getElementById("hasil").innerHTML =
+                    "👋 Sampai Jumpa<br><b>"+res.nama+"</b><br>Absen Pulang Berhasil";
 
-        }
+                }
 
-    }else{
+            }else{
 
-        document.getElementById("hasil").innerHTML=
-        "❌ "+res.pesan;
+                document.getElementById("hasil").innerHTML =
+                "❌ "+res.pesan;
 
+            }
+
+        })
+
+        .catch(err=>{
+
+            console.log(err);
+
+            document.getElementById("hasil").innerHTML =
+            "❌ Gagal mengirim data";
+
+        });
+
+    },
+
+    (errorMessage)=>{
+        // abaikan error scan
     }
 
-})
-
-.catch(err=>{
+).catch(err=>{
 
     console.log(err);
-
-    document.getElementById("hasil").innerHTML=
-    "❌ Gagal mengirim data";
 
 });
 </script>
