@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>MMBC QR Attendance</title>
-
+<script src="https://unpkg.com/html5-qrcode"></script>
 <style>
 
 *{
@@ -177,7 +177,29 @@ Version 3.0 FINAL
 </div>
 
 </div>
+<script>
+<script>
 
+const qr = new Html5Qrcode("reader");
+
+qr.start(
+    { facingMode: "environment" },
+    {
+        fps:10,
+        qrbox:250
+    },
+    (decodedText)=>{
+        console.log(decodedText);
+    },
+    (errorMessage)=>{
+        // abaikan error scan
+    }
+).catch(err=>{
+    console.log(err);
+    alert(err);
+});
+
+</script>
 </body>
 
 </html>
