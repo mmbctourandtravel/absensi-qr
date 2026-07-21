@@ -97,7 +97,7 @@ if(beep){
     beep.play().catch(()=>{});
 }
 qr.pause();
-
+document.getElementById("reader").style.display = "none";
 fetch(API,{
 
 method:"POST",
