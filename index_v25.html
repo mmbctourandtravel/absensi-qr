@@ -42,14 +42,67 @@ qr.start(
 
 function sukses(decodedText){
 
-    if(proses)return;
+    if(proses) return;
 
     proses=true;
 
-    document.getElementById("hasil").innerHTML=
-    "⏳ Memproses...";
+    qr.pause();
 
-    console.log(decodedText);
+    document.getElementById("hasil").innerHTML="⏳ Memproses...";
+
+    fetch(API,{
+
+        method:"POST",
+
+        body:JSON.stringify({
+            id:decodedText
+        })
+
+    })
+
+    .then(r=>r.json())
+
+    .then(res=>{
+
+        console.log(res);
+
+        if(res.sukses){
+
+            document.getElementById("hasil").innerHTML=
+            "✅<br><br>"+res.nama;
+
+        }else{
+
+            document.getElementById("hasil").innerHTML=
+            "❌<br><br>"+res.pesan;
+
+        }
+
+        setTimeout(()=>{
+
+            document.getElementById("hasil").innerHTML=
+            "Menunggu Scan...";
+
+            proses=false;
+
+            qr.resume();
+
+        },3000);
+
+    })
+
+    .catch(err=>{
+
+        console.log(err);
+
+        document.getElementById("hasil").innerHTML=
+        "Server Error";
+
+        proses=false;
+
+        qr.resume();
+
+    });
 
 }
 
