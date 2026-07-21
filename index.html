@@ -176,26 +176,28 @@ qr.resume();
 });
 
 }
+function mulaiKamera(){
 
-qr.start(
+    document.getElementById("reader").style.display="block";
 
-{
+    qr.start(
 
-facingMode:"environment"
+        {
+            facingMode:"environment"
+        },
 
-},
+        {
+            fps:10,
+            qrbox:250
+        },
 
-{
+        sukses
 
-fps:10,
+    );
 
-qrbox:250
+}
 
-},
-
-sukses
-
-);
+mulaiKamera();
 
 </script>
 <audio id="beep" preload="auto">
