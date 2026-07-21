@@ -189,10 +189,14 @@ if(res.sukses){
 
 if(res.tipe=="masuk"){
 
-hasil.classList.add("berhasil");
+hasil.className="sukses";
 
-hasil.innerHTML=
-"✅ <br><br>Absen Masuk Berhasil<br><br><b>"+res.nama+"</b>";
+hasil.innerHTML=`
+<div class="icon">✅</div>
+<div class="judul">ABSEN MASUK BERHASIL</div>
+<div class="nama">${res.nama}</div>
+<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
+`;
 
 }
 
