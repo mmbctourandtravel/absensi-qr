@@ -189,6 +189,15 @@ if(res.sukses){
 
 if(res.tipe=="masuk"){
 
+tampilPesan(
+"sukses",
+"✅",
+"ABSEN MASUK BERHASIL",
+res.nama
+);
+
+}
+
 hasil.className="sukses";
 
 hasil.innerHTML=`
@@ -202,9 +211,14 @@ hasil.innerHTML=`
 
 else{
 
-hasil.className="sukses";
+tampilPesan(
+"sukses",
+"👋",
+"ABSEN PULANG BERHASIL",
+res.nama
+);
 
-hasil.innerHTML=`
+}
 <div class="icon">👋</div>
 <div class="judul">ABSEN PULANG BERHASIL</div>
 <div class="nama">${res.nama}</div>
@@ -217,15 +231,12 @@ hasil.innerHTML=`
 
 else{
 
-hasil.className="gagal";
-
-hasil.innerHTML=`
-<div class="icon">❌</div>
-<div class="judul">GAGAL</div>
-<div class="nama">${res.pesan}</div>
-`;
-
-}
+tampilPesan(
+"gagal",
+"❌",
+"GAGAL",
+res.pesan
+);
 
 setTimeout(()=>{
 
@@ -252,6 +263,22 @@ proses=false;
 qr.resume();
 
 });
+
+}
+    function tampilPesan(warna, icon, judul, nama){
+
+const hasil=document.getElementById("hasil");
+
+hasil.className=warna;
+
+hasil.innerHTML=`
+<div class="icon">${icon}</div>
+<div class="judul">${judul}</div>
+<div class="nama">${nama}</div>
+<div class="jam">
+${new Date().toLocaleTimeString("id-ID")}
+</div>
+`;
 
 }
 function mulaiKamera(){
