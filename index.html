@@ -1,117 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Absensi QR MMBC</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+
 body{
-
+font-family:Arial;
+background:#f5f5f5;
+text-align:center;
 margin:0;
-
-padding:0;
-
-background:#eef3f8;
-
-font-family:Arial,sans-serif;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-min-height:100vh;
-
+padding:25px;
 }
-.container{
 
-width:360px;
+h2{
+color:#1565c0;
+}
+
+#reader{
+width:320px;
+margin:auto;
+}
+
+#hasil{
+
+margin-top:20px;
+font-size:22px;
+font-weight:bold;
+
+padding:15px;
+
+border-radius:10px;
 
 background:white;
 
-padding:25px;
-
-border-radius:22px;
-
-box-shadow:0 15px 40px rgba(0,0,0,.15);
-
-text-align:center;
+box-shadow:0 0 10px rgba(0,0,0,.15);
 
 }
-.logo{
 
-width:80px;
+.berhasil{
 
-height:80px;
-
-margin:auto;
-
-border-radius:50%;
-
-background:#1565c0;
-
-color:white;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:30px;
-
-font-weight:bold;
-
-margin-bottom:18px;
+color:green;
 
 }
-h1{
 
-margin:0;
+.gagal{
 
-color:#1565c0;
-
-font-size:30px;
+color:red;
 
 }
-.subtitle{
 
-color:#777;
+</style>
 
-margin-top:8px;
+</head>
 
-margin-bottom:25px;
+<body>
+
+<h2>ABSENSI QR MMBC</h2>
+
+<div id="reader"></div>
+
+<div id="hasil">
+
+Arahkan QR ke Kamera
+
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
+const qr=new Html5Qrcode("reader");
+
+let proses=false;
+
+function sukses(decodedText){
+
+if(proses)return;
+
+proses=true;
+
+qr.pause();
+
+fetch(API,{
+
+method:"POST",
+
+body:JSON.stringify({
+
+id:decodedText
+
+})
+
+})
+
+.then(r=>r.json())
+
+.then(res=>{
+
+const hasil=document.getElementById("hasil");
+
+hasil.className="";
+
+if(res.sukses){
+
+if(res.tipe=="masuk"){
+
+hasil.classList.add("berhasil");
+
+hasil.innerHTML=
+"✅ <br><br>Absen Masuk Berhasil<br><br><b>"+res.nama+"</b>";
 
 }
-#reader{
 
-width:320px;
+else{
 
-margin:auto;
+hasil.classList.add("berhasil");
 
-border-radius:18px;
-
-overflow:hidden;
-
-box-shadow:0 5px 20px rgba(0,0,0,.15);
+hasil.innerHTML=
+"👋<br><br>Absen Pulang Berhasil<br><br><b>"+res.nama+"</b>";
 
 }
-#hasil{
-
-margin-top:25px;
-
-padding:25px;
-
-border-radius:18px;
-
-background:#f5f7fb;
-
-font-size:24px;
-
-font-weight:bold;
-
-min-height:120px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-transition:.35s;
 
 }
+
+else{
+
+hasil.classList.add("gagal");
+
+hasil.innerHTML=
+"❌<br><br>"+res.pesan;
+
+}
+
+setTimeout(()=>{
+
+hasil.className="";
+
+hasil.innerHTML="Arahkan QR ke Kamera";
+
+proses=false;
+
+qr.resume();
+
+},3000);
+
+})
+
+.catch(()=>{
+
+document.getElementById("hasil").innerHTML="Server Error";
+
+proses=false;
+
+qr.resume();
+
+});
+
+}
+
+qr.start(
+
+{
+
+facingMode:"environment"
+
+},
+
+{
+
+fps:10,
+
+qrbox:250
+
+},
+
+sukses
+
+);
+
+</script>
+
+</body>
+
+</html>
