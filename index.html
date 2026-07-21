@@ -210,9 +210,6 @@ hasil.innerHTML=`
 
 }
 
-}
-
-else{
 
 hasil.className="gagal";
 
@@ -225,24 +222,8 @@ hasil.innerHTML=`
 <div class="nama">${res.pesan}</div>
 
 `;
-
-hasil.innerHTML=
-"❌<br><br>"+res.pesan;
-
 }
-
-setTimeout(()=>{
-
-hasil.className="";
-
-hasil.innerHTML="Arahkan QR ke Kamera";
-
-proses=false;
-
-qr.resume();
-
-},3000);
-
+else{
 })
 
 .catch(()=>{
