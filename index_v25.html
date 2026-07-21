@@ -113,8 +113,10 @@ ${res.pesan}
     }
 
     setTimeout(()=>{
-
+        hasil.style.opacity="0";
         hasil.innerHTML="Menunggu Scan...";
+        hasil.className="";
+        hasil.style.opacity="1";
         document.getElementById("reader").style.opacity="1";
         proses=false;
 
@@ -248,7 +250,8 @@ h1{
 }
 
 #hasil{
-
+    opacity:1;
+    
     margin-top:25px;
 
     background:#ffffff;
@@ -271,7 +274,7 @@ h1{
 
     box-shadow:0 8px 25px rgba(0,0,0,.12);
 
-    transition:.3s;
+    transition:opacity .35s ease, transform .35s ease;
 
     overflow:hidden;
 
