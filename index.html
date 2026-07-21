@@ -198,37 +198,43 @@ qr.start(
         })
     })
 
-    .then(r=>{
-        alert("Response diterima");
-        return r.text();
-    })
+    .then(r=>r.json())
 
-    .then(res=>{
-        alert(res);
-        console.log(res);
-    })
+.then(res=>{
 
-    .catch(err=>{
-        alert(err);
-        console.log(err);
-    });
+    console.log(res);
 
-},
+    if(res.sukses){
 
-    (errorMessage)=>{
+        if(res.tipe=="masuk"){
 
-        // abaikan error scan
+            document.getElementById("hasil").innerHTML=
+            "✅ Selamat Datang<br><b>"+res.nama+"</b><br>Absen Masuk Berhasil";
+
+        }else{
+
+            document.getElementById("hasil").innerHTML=
+            "👋 Sampai Jumpa<br><b>"+res.nama+"</b><br>Absen Pulang Berhasil";
+
+        }
+
+    }else{
+
+        document.getElementById("hasil").innerHTML=
+        "❌ "+res.pesan;
 
     }
 
-).catch(err=>{
+})
 
-    alert(err);
+.catch(err=>{
 
     console.log(err);
 
-});
+    document.getElementById("hasil").innerHTML=
+    "❌ Gagal mengirim data";
 
+});
 </script>
 </body>
 
