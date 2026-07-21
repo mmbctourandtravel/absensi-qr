@@ -32,29 +32,85 @@ margin:auto;
 
 #hasil{
 
-margin-top:20px;
-font-size:22px;
+margin:25px auto;
+
+padding:30px;
+
+width:320px;
+
+min-height:180px;
+
+background:#ffffff;
+
+border-radius:20px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.15);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+transition:.35s;
+
 font-weight:bold;
 
-padding:15px;
-
-border-radius:10px;
-
-background:white;
-
-box-shadow:0 0 10px rgba(0,0,0,.15);
+font-size:24px;
 
 }
 
-.berhasil{
+.sukses{
 
-color:green;
+background:#2ecc71;
+
+color:white;
 
 }
 
 .gagal{
 
-color:red;
+background:#e74c3c;
+
+color:white;
+
+}
+
+.icon{
+
+font-size:58px;
+
+margin-bottom:12px;
+
+}
+
+.judul{
+
+font-size:30px;
+
+font-weight:bold;
+
+margin-bottom:10px;
+
+}
+
+.nama{
+
+font-size:28px;
+
+margin-top:10px;
+
+}
+
+.jam{
+
+font-size:22px;
+
+margin-top:15px;
+
+font-weight:normal;
 
 }
 
@@ -87,17 +143,28 @@ function sukses(decodedText){
 if(proses)return;
 
 proses=true;
-if (navigator.vibrate) {
-    navigator.vibrate([200, 100, 200]);
-}
-    const beep = document.getElementById("beep");
 
-if(beep){
-    beep.currentTime = 0;
-    beep.play().catch(()=>{});
+if (navigator.vibrate) {
+    navigator.vibrate([200,100,200]);
 }
+const beep = document.getElementById("beep");
+beep.currentTime = 0;
+beep.play();
+document.getElementById("reader").style.opacity="0.35";
+
 qr.pause();
-document.getElementById("reader").style.display = "none";
+
+const hasil=document.getElementById("hasil");
+
+hasil.className="";
+
+hasil.innerHTML=`
+<div style="font-size:60px;">⏳</div>
+<div style="font-size:28px;font-weight:bold;">
+Memproses...
+</div>
+`;
+
 fetch(API,{
 
 method:"POST",
@@ -115,37 +182,48 @@ id:decodedText
 .then(res=>{
 
 const hasil=document.getElementById("hasil");
-
+console.log(res);
 hasil.className="";
 
 if(res.sukses){
 
 if(res.tipe=="masuk"){
 
-hasil.classList.add("berhasil");
+hasil.className="sukses";
 
-hasil.innerHTML=
-"✅ <br><br>Absen Masuk Berhasil<br><br><b>"+res.nama+"</b>";
-
-}
-
-else{
-
-hasil.classList.add("berhasil");
-
-hasil.innerHTML=
-"👋<br><br>Absen Pulang Berhasil<br><br><b>"+res.nama+"</b>";
-
-}
+hasil.innerHTML=`
+<div class="icon">✅</div>
+<div class="judul">ABSEN MASUK BERHASIL</div>
+<div class="nama">${res.nama}</div>
+<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
+`;
 
 }
 
 else{
 
-hasil.classList.add("gagal");
+hasil.className="sukses";
 
-hasil.innerHTML=
-"❌<br><br>"+res.pesan;
+hasil.innerHTML=`
+<div class="icon">👋</div>
+<div class="judul">ABSEN PULANG BERHASIL</div>
+<div class="nama">${res.nama}</div>
+<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
+`;
+
+}
+
+}
+
+else{
+
+hasil.className="gagal";
+
+hasil.innerHTML=`
+<div class="icon">❌</div>
+<div class="judul">GAGAL</div>
+<div class="nama">${res.pesan}</div>
+`;
 
 }
 
@@ -155,7 +233,7 @@ hasil.className="";
 
 hasil.innerHTML="Arahkan QR ke Kamera";
 
-document.getElementById("reader").style.display="block";
+document.getElementById("reader").style.opacity="1";
 
 proses=false;
 
@@ -179,7 +257,7 @@ qr.resume();
 function mulaiKamera(){
 
     document.getElementById("reader").style.display="block";
-
+ document.getElementById("reader").style.opacity="1";
     qr.start(
 
         {
