@@ -101,9 +101,11 @@ color:white;
 
 .icon{
 
-font-size:58px;
+font-size:64px;
 
 margin-bottom:12px;
+
+animation:pop .35s ease;
 
 }
 
@@ -113,7 +115,9 @@ font-size:30px;
 
 font-weight:bold;
 
-margin-bottom:10px;
+margin-bottom:12px;
+
+text-align:center;
 
 }
 
@@ -123,15 +127,43 @@ font-size:28px;
 
 margin-top:10px;
 
+text-align:center;
+
 }
 
 .jam{
 
-font-size:22px;
+font-size:20px;
 
-margin-top:15px;
+margin-top:14px;
 
-font-weight:normal;
+opacity:.9;
+
+}
+
+@keyframes pop{
+
+0%{
+
+transform:scale(.5);
+
+opacity:0;
+
+}
+
+70%{
+
+transform:scale(1.15);
+
+}
+
+100%{
+
+transform:scale(1);
+
+opacity:1;
+
+}
 
 }
 
