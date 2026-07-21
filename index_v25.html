@@ -14,7 +14,46 @@
     padding:0;
     box-sizing:border-box;
 }
+<script src="https://unpkg.com/html5-qrcode"></script>
 
+<script>
+
+const API="PASTE_URL_APPS_SCRIPT";
+
+let proses=false;
+
+let qr=new Html5Qrcode("reader");
+
+qr.start(
+
+    { facingMode:"environment" },
+
+    {
+
+        fps:10,
+
+        qrbox:250
+
+    },
+
+    sukses
+
+);
+
+function sukses(decodedText){
+
+    if(proses)return;
+
+    proses=true;
+
+    document.getElementById("hasil").innerHTML=
+    "⏳ Memproses...";
+
+    console.log(decodedText);
+
+}
+
+</script>
 body{
 
     background:#eef3f8;
