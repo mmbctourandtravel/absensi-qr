@@ -254,6 +254,22 @@ qr.resume();
 });
 
 }
+    function tampilPesan(warna, icon, judul, nama){
+
+const hasil=document.getElementById("hasil");
+
+hasil.className=warna;
+
+hasil.innerHTML=`
+<div class="icon">${icon}</div>
+<div class="judul">${judul}</div>
+<div class="nama">${nama}</div>
+<div class="jam">
+${new Date().toLocaleTimeString("id-ID")}
+</div>
+`;
+
+}
 function mulaiKamera(){
 
     document.getElementById("reader").style.display="block";
