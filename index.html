@@ -91,7 +91,7 @@ proses=true;
 if (navigator.vibrate) {
     navigator.vibrate([200,100,200]);
 }
-
+document.getElementById("beep").play().catch(()=>{});
 document.getElementById("reader").style.opacity="0.35";
 
 qr.pause();
