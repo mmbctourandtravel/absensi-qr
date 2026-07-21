@@ -168,29 +168,55 @@ hasil.className="";
 
 if(res.sukses){
 
-if(res.tipe=="masuk"){
+hasil.className="sukses";
 
-hasil.classList.add("berhasil");
+hasil.innerHTML=`
 
-hasil.innerHTML=
-"✅ <br><br>Absen Masuk Berhasil<br><br><b>"+res.nama+"</b>";
+<div class="icon">✔</div>
 
-}
+<div class="judul">ABSEN MASUK BERHASIL</div>
 
-else{
+<div class="nama">${res.nama}</div>
 
-hasil.classList.add("berhasil");
+<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
 
-hasil.innerHTML=
-"👋<br><br>Absen Pulang Berhasil<br><br><b>"+res.nama+"</b>";
-
-}
+`;
 
 }
 
 else{
 
-hasil.classList.add("gagal");
+hasil.className="sukses";
+
+hasil.innerHTML=`
+
+<div class="icon">👋</div>
+
+<div class="judul">ABSEN PULANG BERHASIL</div>
+
+<div class="nama">${res.nama}</div>
+
+<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
+
+`;
+
+}
+
+}
+
+else{
+
+hasil.className="gagal";
+
+hasil.innerHTML=`
+
+<div class="icon">✖</div>
+
+<div class="judul">GAGAL</div>
+
+<div class="nama">${res.pesan}</div>
+
+`;
 
 hasil.innerHTML=
 "❌<br><br>"+res.pesan;
