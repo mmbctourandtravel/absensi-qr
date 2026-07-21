@@ -77,34 +77,39 @@ hasil.innerHTML=`
 
     if(res.sukses){
 
-        hasil.innerHTML=`
-        <div style="font-size:65px;">✅</div>
-        <div style="font-size:28px;font-weight:bold;margin-top:15px;">
-            ${res.tipe=="masuk" ? "ABSEN MASUK BERHASIL" : "ABSEN PULANG BERHASIL"}
-        </div>
+        hasil.className="sukses";
 
-        <div style="font-size:30px;margin-top:15px;color:#1565c0;">
-            ${res.nama}
-        </div>
+hasil.innerHTML=`
+<div class="icon">✅</div>
 
-        <div style="margin-top:15px;font-size:22px;">
-            ${new Date().toLocaleTimeString("id-ID")}
-        </div>
-        `;
+<div class="judul">
+${res.tipe=="masuk" ? "ABSEN MASUK BERHASIL" : "ABSEN PULANG BERHASIL"}
+</div>
 
+<div class="nama">
+${res.nama}
+</div>
+
+<div class="jam">
+${new Date().toLocaleTimeString("id-ID")}
+</div>
+`;
     }else{
 
         hasil.innerHTML=`
-        <div style="font-size:65px;">❌</div>
+        hasil.className="gagal";
 
-        <div style="font-size:28px;font-weight:bold;color:red;margin-top:15px;">
-            GAGAL
-        </div>
+hasil.innerHTML=`
+<div class="icon">❌</div>
 
-        <div style="font-size:24px;margin-top:15px;">
-            ${res.pesan}
-        </div>
-        `;
+<div class="judul">
+GAGAL
+</div>
+
+<div class="nama">
+${res.pesan}
+</div>
+`;
 
     }
 
