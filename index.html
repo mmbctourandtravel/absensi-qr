@@ -32,73 +32,17 @@ margin:auto;
 
 #hasil{
 
-margin:25px auto;
-padding:30px;
-width:320px;
-min-height:180px;
-
-background:#ffffff;
-
-border-radius:18px;
-
-box-shadow:0 8px 25px rgba(0,0,0,.18);
-
+margin-top:20px;
 font-size:22px;
 font-weight:bold;
 
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
+padding:15px;
 
-transition:all .35s ease;
+border-radius:10px;
 
-}
-.sukses{
+background:white;
 
-background:#2ecc71;
-color:white;
-
-}
-
-.gagal{
-
-background:#e74c3c;
-color:white;
-
-}
-
-.icon{
-
-font-size:60px;
-margin-bottom:15px;
-
-}
-
-.judul{
-
-font-size:30px;
-font-weight:bold;
-
-margin-bottom:10px;
-
-}
-
-.nama{
-
-font-size:28px;
-
-margin-top:15px;
-
-}
-
-.jam{
-
-margin-top:18px;
-
-font-size:24px;
-
-font-weight:normal;
+box-shadow:0 0 10px rgba(0,0,0,.15);
 
 }
 
@@ -143,16 +87,8 @@ function sukses(decodedText){
 if(proses)return;
 
 proses=true;
-// Getar HP
-if(navigator.vibrate){
-    navigator.vibrate(300);
-}
 
-// Bunyi beep
-document.getElementById("beep").play().catch(()=>{});
-qr.stop();
-
-document.getElementById("reader").style.display="none";
+qr.pause();
 
 fetch(API,{
 
@@ -176,54 +112,47 @@ hasil.className="";
 
 if(res.sukses){
 
-hasil.className="sukses";
+if(res.tipe=="masuk"){
 
-hasil.innerHTML=`
+hasil.classList.add("berhasil");
 
-<div class="icon">✔</div>
-
-<div class="judul">ABSEN MASUK BERHASIL</div>
-
-<div class="nama">${res.nama}</div>
-
-<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
-
-`;
+hasil.innerHTML=
+"✅ <br><br>Absen Masuk Berhasil<br><br><b>"+res.nama+"</b>";
 
 }
 
 else{
 
-hasil.className="sukses";
+hasil.classList.add("berhasil");
 
-hasil.innerHTML=`
-
-<div class="icon">👋</div>
-
-<div class="judul">ABSEN PULANG BERHASIL</div>
-
-<div class="nama">${res.nama}</div>
-
-<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
-
-`;
+hasil.innerHTML=
+"👋<br><br>Absen Pulang Berhasil<br><br><b>"+res.nama+"</b>";
 
 }
 
-
-hasil.className="gagal";
-
-hasil.innerHTML=`
-
-<div class="icon">✖</div>
-
-<div class="judul">GAGAL</div>
-
-<div class="nama">${res.pesan}</div>
-
-`;
 }
+
 else{
+
+hasil.classList.add("gagal");
+
+hasil.innerHTML=
+"❌<br><br>"+res.pesan;
+
+}
+
+setTimeout(()=>{
+
+hasil.className="";
+
+hasil.innerHTML="Arahkan QR ke Kamera";
+
+proses=false;
+
+qr.resume();
+
+},3000);
+
 })
 
 .catch(()=>{
@@ -259,9 +188,7 @@ sukses
 );
 
 </script>
-<audio id="beep">
-<source src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" type="audio/ogg">
-</audio>
+
 </body>
 
 </html>
