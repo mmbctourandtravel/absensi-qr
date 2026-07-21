@@ -48,7 +48,14 @@ function sukses(decodedText){
 
     qr.pause();
 
-    document.getElementById("hasil").innerHTML="⏳ Memproses...";
+const hasil=document.getElementById("hasil");
+
+hasil.className="proses";
+
+hasil.innerHTML=`
+<div class="icon">⏳</div>
+<div class="judul">Memproses...</div>
+`;
 
     fetch(API,{
 
