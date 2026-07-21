@@ -91,7 +91,9 @@ proses=true;
 if (navigator.vibrate) {
     navigator.vibrate([200,100,200]);
 }
-document.getElementById("beep").play().catch(()=>{});
+const beep = document.getElementById("beep");
+beep.currentTime = 0;
+beep.play();
 document.getElementById("reader").style.opacity="0.35";
 
 qr.pause();
