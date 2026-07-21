@@ -47,7 +47,7 @@ function sukses(decodedText){
     proses=true;
 
     qr.pause();
-
+document.getElementById("reader").style.opacity="0.35";
 const hasil=document.getElementById("hasil");
 
 hasil.className="proses animasi";
@@ -115,7 +115,7 @@ ${res.pesan}
     setTimeout(()=>{
 
         hasil.innerHTML="Menunggu Scan...";
-
+        document.getElementById("reader").style.opacity="1";
         proses=false;
 
         qr.resume();
