@@ -90,6 +90,12 @@ proses=true;
 if (navigator.vibrate) {
     navigator.vibrate([200, 100, 200]);
 }
+    const beep = document.getElementById("beep");
+
+if(beep){
+    beep.currentTime = 0;
+    beep.play().catch(()=>{});
+}
 qr.pause();
 
 fetch(API,{
