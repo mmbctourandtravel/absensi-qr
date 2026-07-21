@@ -143,8 +143,16 @@ function sukses(decodedText){
 if(proses)return;
 
 proses=true;
+// Getar HP
+if(navigator.vibrate){
+    navigator.vibrate(300);
+}
 
-qr.pause();
+// Bunyi beep
+document.getElementById("beep").play().catch(()=>{});
+qr.stop();
+
+document.getElementById("reader").style.display="none";
 
 fetch(API,{
 
@@ -270,7 +278,9 @@ sukses
 );
 
 </script>
-
+<audio id="beep">
+<source src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" type="audio/ogg">
+</audio>
 </body>
 
 </html>
