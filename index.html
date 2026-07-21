@@ -202,10 +202,14 @@ hasil.innerHTML=`
 
 else{
 
-hasil.classList.add("berhasil");
+hasil.className="sukses";
 
-hasil.innerHTML=
-"👋<br><br>Absen Pulang Berhasil<br><br><b>"+res.nama+"</b>";
+hasil.innerHTML=`
+<div class="icon">👋</div>
+<div class="judul">ABSEN PULANG BERHASIL</div>
+<div class="nama">${res.nama}</div>
+<div class="jam">${new Date().toLocaleTimeString('id-ID')}</div>
+`;
 
 }
 
@@ -213,10 +217,13 @@ hasil.innerHTML=
 
 else{
 
-hasil.classList.add("gagal");
+hasil.className="gagal";
 
-hasil.innerHTML=
-"❌<br><br>"+res.pesan;
+hasil.innerHTML=`
+<div class="icon">❌</div>
+<div class="judul">GAGAL</div>
+<div class="nama">${res.pesan}</div>
+`;
 
 }
 
