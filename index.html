@@ -87,7 +87,9 @@ function sukses(decodedText){
 if(proses)return;
 
 proses=true;
-
+if (navigator.vibrate) {
+    navigator.vibrate(300);
+}
 qr.pause();
 
 fetch(API,{
