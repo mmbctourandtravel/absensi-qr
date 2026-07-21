@@ -190,31 +190,30 @@ qr.start(
     (decodedText)=>{
 
     alert(decodedText);
-alert("Kirim ke Apps Script");
-        alert(API);
+
     fetch(API,{
-            method:"POST",
-            body:JSON.stringify({
-                id:decodedText
-            })
+        method:"POST",
+        body:JSON.stringify({
+            id:decodedText
         })
+    })
 
-        .then(r=>r.json())
+    .then(r=>{
+        alert("Response diterima");
+        return r.text();
+    })
 
-        .then(res=>{
+    .then(res=>{
+        alert(res);
+        console.log(res);
+    })
 
-            console.log(res);
+    .catch(err=>{
+        alert(err);
+        console.log(err);
+    });
 
-        })
-
-        .catch(err=>{
-
-            alert(err);
-console.log(err);
-
-        });
-
-    },
+},
 
     (errorMessage)=>{
 
