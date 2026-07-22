@@ -221,13 +221,25 @@ qr.start(
 
                 if(res.tipe=="masuk"){
 
-                    document.getElementById("hasil").innerHTML =
-                    "✅ Selamat Datang<br><b>"+res.nama+"</b><br>Absen Masuk Berhasil";
+                    document.getElementById("hasil").innerHTML = `
+<div class="success">
+    <div class="icon">✅</div>
+    <div class="title">SELAMAT DATANG</div>
+    <div class="nama">${res.nama}</div>
+    <div class="ket">Absen Masuk Berhasil</div>
+</div>
+`;
 
                 }else{
 
-                    document.getElementById("hasil").innerHTML =
-                    "👋 Sampai Jumpa<br><b>"+res.nama+"</b><br>Absen Pulang Berhasil";
+                    document.getElementById("hasil").innerHTML = `
+<div class="success">
+    <div class="icon">👋</div>
+    <div class="title">SAMPAI JUMPA</div>
+    <div class="nama">${res.nama}</div>
+    <div class="ket">Absen Pulang Berhasil</div>
+</div>
+`;
 
                 }
 
