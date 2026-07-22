@@ -305,9 +305,7 @@ MMBC TOUR & TRAVEL
 <div id="reader"></div>
 
 <div id="hasil">
-
 Menunggu Scan...
-
 </div>
 
 <div class="footer">
@@ -424,6 +422,9 @@ const reader = document.getElementById("reader");
 reader.innerHTML = "";
 reader.style.display = "none";
 
+setTimeout(() => {
+    location.reload();
+}, 5000);
 window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -464,7 +465,9 @@ window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
-
+setTimeout(() => {
+    location.reload();
+}, 5000);
 });
 
     // Tampilkan pesan
@@ -507,6 +510,7 @@ setTimeout(()=>{
     qr.resume();
 
 });
+
 </script>
 </body>
 
