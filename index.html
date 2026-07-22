@@ -419,7 +419,10 @@ fetch("https://api.ipify.org?format=json")
         if(navigator.vibrate){
             navigator.vibrate(300);
         }
-document.getElementById("reader").style.display = "none";
+const reader = document.getElementById("reader");
+
+reader.innerHTML = "";
+reader.style.display = "none";
 
 window.scrollTo({
     top: 0,
