@@ -417,17 +417,22 @@ fetch("https://api.ipify.org?format=json")
         if(navigator.vibrate){
             navigator.vibrate(300);
         }
-const reader = document.getElementById("reader");
+qr.stop().then(() => {
 
-reader.innerHTML = "";
-reader.style.display = "none";
+    const reader = document.getElementById("reader");
 
-setTimeout(() => {
-    location.reload();
-}, 5000);
-window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    reader.innerHTML = "";
+    reader.style.display = "none";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    setTimeout(() => {
+        location.reload();
+    }, 5000);
+
 });
         // lanjutkan kode kamu yang sekarang...
                 if(res.tipe=="masuk"){
