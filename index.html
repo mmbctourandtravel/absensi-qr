@@ -394,26 +394,33 @@ qr.start(
     document.getElementById("hasil").innerHTML =
     "⏳ Memproses absensi...";
 
-    fetch(API,{
-            method:"POST",
-            body:JSON.stringify({
-                id:decodedText
-            })
+fetch("https://api.ipify.org?format=json")
+.then(r => r.json())
+.then(ipData => {
+
+    return fetch(API,{
+        method:"POST",
+        body:JSON.stringify({
+            id: decodedText,
+            ip: ipData.ip
         })
+    });
 
-        .then(r=>r.json())
+})
+.then(r => r.json())
+.then(res => {
 
-        .then(res=>{
+    console.log(res);
 
-            console.log(res);
+    if(res.sukses){
 
-            if(res.sukses){
-beep();
-                if(navigator.vibrate){
+        beep();
 
-    navigator.vibrate(300);
+        if(navigator.vibrate){
+            navigator.vibrate(300);
+        }
 
-}
+        // lanjutkan kode kamu yang sekarang...
                 if(res.tipe=="masuk"){
 
                     document.getElementById("hasil").innerHTML = `
