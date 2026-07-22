@@ -456,16 +456,16 @@ window.scrollTo({
             }else{
 
     // Hentikan scanner
-    qr.pause();
+    qr.stop().then(() => {
 
-    // Sembunyikan kamera
     document.getElementById("reader").style.display = "none";
 
-    // Scroll ke atas
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
+});
 
     // Tampilkan pesan
     document.getElementById("hasil").innerHTML =
