@@ -455,10 +455,23 @@ window.scrollTo({
 
             }else{
 
-                document.getElementById("hasil").innerHTML =
-                "❌ "+res.pesan;
+    // Hentikan scanner
+    qr.pause();
 
-            }
+    // Sembunyikan kamera
+    document.getElementById("reader").style.display = "none";
+
+    // Scroll ke atas
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    // Tampilkan pesan
+    document.getElementById("hasil").innerHTML =
+    "❌ " + res.pesan;
+
+}
 setTimeout(()=>{
 
     sedangProses = false;
