@@ -178,7 +178,15 @@ Version 3.0 FINAL
 
 </div>
 <script>
+function beep(){
 
+    const audio = new Audio(
+    "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+    );
+
+    audio.play();
+
+}
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
@@ -218,7 +226,12 @@ qr.start(
             console.log(res);
 
             if(res.sukses){
+beep();
+                if(navigator.vibrate){
 
+    navigator.vibrate(300);
+
+}
                 if(res.tipe=="masuk"){
 
                     document.getElementById("hasil").innerHTML = `
