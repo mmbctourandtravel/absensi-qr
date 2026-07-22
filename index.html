@@ -182,6 +182,7 @@ Version 3.0 FINAL
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
+    let sedangProses = false;
 
 qr.start(
     { facingMode: "environment" },
@@ -192,7 +193,18 @@ qr.start(
 
     (decodedText)=>{
 
-        fetch(API,{
+    if(sedangProses){
+        return;
+    }
+
+    sedangProses = true;
+
+    qr.pause();
+
+    document.getElementById("hasil").innerHTML =
+    "⏳ Memproses absensi...";
+
+    fetch(API,{
             method:"POST",
             body:JSON.stringify({
                 id:decodedText
@@ -225,7 +237,13 @@ qr.start(
                 "❌ "+res.pesan;
 
             }
+setTimeout(()=>{
 
+    sedangProses = false;
+
+    qr.resume();
+
+},3000);
         })
 
         .catch(err=>{
@@ -246,6 +264,12 @@ qr.start(
 ).catch(err=>{
 
     console.log(err);
+
+    document.getElementById("hasil").innerHTML =
+    "❌ Gagal mengirim data";
+
+    sedangProses = false;
+    qr.resume();
 
 });
 </script>
