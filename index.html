@@ -7,6 +7,7 @@
 
 <title>MMBC QR Attendance</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://openfpcdn.io/fingerprintjs/v4"></script>
 <style>
 
 *{
@@ -367,6 +368,14 @@ function beep(){
 setInterval(updateClock,1000);
 
 updateClock();
+    let visitorId = "";
+
+FingerprintJS.load()
+.then(fp => fp.get())
+.then(result => {
+    visitorId = result.visitorId;
+    console.log("Fingerprint:", visitorId);
+});
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
@@ -401,6 +410,7 @@ fetch("https://api.ipify.org?format=json")
         body:JSON.stringify({
             id: decodedText,
             ip: ipData.ip
+            fingerprint: visitorId
         })
     });
 
