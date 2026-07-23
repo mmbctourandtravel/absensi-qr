@@ -374,7 +374,10 @@ FingerprintJS.load()
 .then(fp => fp.get())
 .then(result => {
     visitorId = result.visitorId;
-    console.log("Fingerprint:", visitorId);
+    console.log(visitorId);
+})
+.catch(err=>{
+    console.log(err);
 });
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
@@ -409,7 +412,7 @@ fetch("https://api.ipify.org?format=json")
         method:"POST",
         body:JSON.stringify({
             id: decodedText,
-            ip: ipData.ip
+            ip: ipData.ip,
             fingerprint: visitorId
         })
     });
