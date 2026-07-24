@@ -602,12 +602,14 @@ setTimeout(()=>{
 
         .catch(err=>{
 
-            console.log(err);
+    console.log(err);
 
-            document.getElementById("hasil").innerHTML =
-            "❌ Gagal mengirim data";
+    alert(err);
 
-        });
+    document.getElementById("hasil").innerHTML =
+    "❌ " + err;
+
+});
 
     },
 
