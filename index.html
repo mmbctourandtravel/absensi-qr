@@ -386,6 +386,36 @@ if (!deviceToken) {
     console.log("Device lama:", deviceToken);
 
 }
+    function getDevice() {
+    
+    const ua = navigator.userAgent;
+
+    if (/Android/i.test(ua)) return "Android";
+
+    if (/iPhone|iPad|iPod/i.test(ua)) return "iPhone";
+
+    if (/Windows/i.test(ua)) return "Windows";
+
+    if (/Mac/i.test(ua)) return "Mac";
+
+    if (/Linux/i.test(ua)) return "Linux";
+
+    return "Unknown";
+
+}
+  function getBrowser() {
+
+    const ua = navigator.userAgent;
+
+    if (ua.includes("Edg")) return "Microsoft Edge";
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Chrome")) return "Google Chrome";
+    if (ua.includes("Safari")) return "Safari";
+    if (ua.includes("OPR") || ua.includes("Opera")) return "Opera";
+
+    return "Unknown";
+
+}  
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
@@ -421,8 +451,8 @@ fetch("https://api.ipify.org?format=json")
     id: decodedText,
     ip: ipData.ip,
     deviceToken: deviceToken,
-    device: navigator.platform,
-    browser: navigator.userAgent
+    device: getDevice(),
+    browser: getBrowser()
 })
     });
 
