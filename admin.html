@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>MMBC Admin Device</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#eef3f8;
+padding:25px;
+}
+
+.container{
+
+max-width:1100px;
+margin:auto;
+
+}
+
+.header{
+
+background:#1565c0;
+color:white;
+
+padding:20px;
+
+border-radius:15px;
+
+margin-bottom:20px;
+
+}
+
+.header h1{
+
+font-size:30px;
+
+}
+
+.header p{
+
+margin-top:8px;
+
+opacity:.9;
+
+}
+
+.search{
+
+margin-bottom:20px;
+
+}
+
+.search input{
+
+width:100%;
+
+padding:14px;
+
+font-size:16px;
+
+border-radius:10px;
+
+border:1px solid #ccc;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+background:white;
+
+border-radius:15px;
+
+overflow:hidden;
+
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+thead{
+
+background:#1565c0;
+color:white;
+
+}
+
+th,td{
+
+padding:12px;
+
+text-align:left;
+
+font-size:14px;
+
+border-bottom:1px solid #eee;
+
+}
+
+tr:hover{
+
+background:#f5f9ff;
+
+}
+
+.statusAktif{
+
+color:green;
+font-weight:bold;
+
+}
+
+.statusNonaktif{
+
+color:red;
+font-weight:bold;
+
+}
+
+.loading{
+
+text-align:center;
+
+padding:30px;
+
+font-size:18px;
+
+color:#666;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>MMBC ADMIN DEVICE TOKEN</h1>
+
+<p>Monitoring Device Staff</p>
+
+</div>
+
+<div class="search">
+
+<input
+type="text"
+id="cari"
+placeholder="Cari ID Staff / Nama..."
+onkeyup="filterData()">
+
+</div>
+
+<div id="isi">
+
+<div class="loading">
+
+Memuat data...
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec?action=listDevice";
+
+let semuaData=[];
+
+fetch(API)
+
+.then(r=>r.json())
+
+.then(data=>{
+
+semuaData=data;
+
+tampilkan(data);
+
+});
+
+function tampilkan(data){
+
+let html="";
+
+html+=`
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Nama</th>
+<th>Device</th>
+<th>Browser</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+`;
+
+data.forEach(d=>{
+
+html+=`
+
+<tr>
+
+<td>${d.id}</td>
+
+<td>${d.nama}</td>
+
+<td>${d.device}</td>
+
+<td>${d.browser}</td>
+
+<td class="${
+d.status=="Aktif"
+?
+"statusAktif"
+:
+"statusNonaktif"
+}">
+
+${d.status}
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+html+=`
+
+</tbody>
+
+</table>
+
+`;
+
+document.getElementById("isi").innerHTML=html;
+
+}
+
+function filterData(){
+
+const key=document
+.getElementById("cari")
+.value
+.toLowerCase();
+
+const hasil=semuaData.filter(x=>
+
+x.id.toLowerCase().includes(key)
+
+||
+
+x.nama.toLowerCase().includes(key)
+
+);
+
+tampilkan(hasil);
+
+}
+
+</script>
+
+</body>
+</html>
