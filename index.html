@@ -367,12 +367,49 @@ function beep(){
 setInterval(updateClock,1000);
 
 updateClock();
+    // ===============================
+// Ambil GPS sekali saat halaman dibuka
+// ===============================
+
+if (navigator.geolocation) {
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            currentLatitude = position.coords.latitude;
+            currentLongitude = position.coords.longitude;
+
+            console.log("GPS:", currentLatitude, currentLongitude);
+
+        },
+
+        function(error){
+
+            console.log("GPS Error:", error.message);
+
+        },
+
+        {
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:0
+        }
+
+    );
+
+}
     // =====================================
 // DEVICE TOKEN
 // =====================================
 
 let deviceToken = localStorage.getItem("deviceToken");
+// ===============================
+// GPS
+// ===============================
 
+let currentLatitude = "";
+let currentLongitude = "";
 if (!deviceToken) {
 
     deviceToken = crypto.randomUUID();
@@ -450,6 +487,8 @@ fetch("https://api.ipify.org?format=json")
         body: JSON.stringify({
     id: decodedText,
     ip: ipData.ip,
+latitude: currentLatitude,
+longitude: currentLongitude,
     deviceToken: deviceToken,
     device: getDevice(),
     browser: getBrowser()
