@@ -475,13 +475,19 @@ qr.start(
 
     qr.pause();
 
-    document.getElementById("hasil").innerHTML =
-    "⏳ Memproses absensi...";
+document.getElementById("hasil").innerHTML =
+"⏳ Memproses absensi...";
 
-fetch("https://api.ipify.org?format=json")
+setTimeout(() => {
+
+    console.log("LAT =", currentLatitude);
+    console.log("LON =", currentLongitude);
+
+    fetch("https://api.ipify.org?format=json")
 .then(r => r.json())
 .then(ipData => {
-
+console.log("LAT =", currentLatitude);
+console.log("LON =", currentLongitude);
     return fetch(API,{
         method:"POST",
         body: JSON.stringify({
@@ -606,6 +612,7 @@ setTimeout(()=>{
     qr.resume();
 
 });
+},10000);
 
 </script>
 </body>
