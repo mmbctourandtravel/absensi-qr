@@ -214,6 +214,7 @@ html+=`
 <th>Device</th>
 <th>Browser</th>
 <th>Status</th>
+<th>Aksi</th>
 
 </tr>
 
@@ -245,6 +246,20 @@ d.status=="Aktif"
 }">
 
 ${d.status}
+</td>
+<td>
+
+<button onclick='resetToken('${d.id}')'>
+🔄 Reset
+</button>
+
+<button onclick='disableDevice('${d.id}')'>
+🚫 Disable
+</button>
+
+<button onclick='enableDevice('${d.id}')'>
+✅ Enable
+</button>
 
 </td>
 
@@ -286,7 +301,71 @@ x.nama.toLowerCase().includes(key)
 tampilkan(hasil);
 
 }
+// ==========================
+// RESET TOKEN
+// ==========================
+function resetToken(id){
 
+if(!confirm("Reset token device " + id + " ?")) return;
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"resetToken",
+id:id
+})
+})
+.then(r=>r.json())
+.then(res=>{
+alert(res.pesan);
+location.reload();
+});
+
+}
+
+// ==========================
+// DISABLE DEVICE
+// ==========================
+function disableDevice(id){
+
+if(!confirm("Disable device " + id + " ?")) return;
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"disable",
+id:id
+})
+})
+.then(r=>r.json())
+.then(res=>{
+alert(res.pesan);
+location.reload();
+});
+
+}
+
+// ==========================
+// ENABLE DEVICE
+// ==========================
+function enableDevice(id){
+
+if(!confirm("Enable device " + id + " ?")) return;
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"enable",
+id:id
+})
+})
+.then(r=>r.json())
+.then(res=>{
+alert(res.pesan);
+location.reload();
+});
+
+}
 </script>
 
 </body>
