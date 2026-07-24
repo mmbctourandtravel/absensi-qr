@@ -366,6 +366,49 @@ location.reload();
 });
 
 }
+  function kirimAction(action,id){
+
+if(!confirm("Yakin?")) return;
+
+fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+action:action,
+id:id
+})
+})
+
+.then(r=>r.json())
+
+.then(res=>{
+
+alert(res.pesan);
+
+location.reload();
+
+});
+
+}
+  function resetToken(id){
+
+kirimAction("resetToken",id);
+
+}
+
+function disableDevice(id){
+
+kirimAction("disable",id);
+
+}
+
+function enableDevice(id){
+
+kirimAction("enable",id);
+
+}
 </script>
 
 </body>
