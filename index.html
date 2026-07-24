@@ -371,34 +371,6 @@ updateClock();
 // Ambil GPS sekali saat halaman dibuka
 // ===============================
 
-if (navigator.geolocation) {
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(position){
-
-            currentLatitude = position.coords.latitude;
-            currentLongitude = position.coords.longitude;
-
-            console.log("GPS:", currentLatitude, currentLongitude);
-
-        },
-
-        function(error){
-
-            console.log("GPS Error:", error.message);
-
-        },
-
-        {
-            enableHighAccuracy:true,
-            timeout:10000,
-            maximumAge:0
-        }
-
-    );
-
-}
     // =====================================
 // DEVICE TOKEN
 // =====================================
@@ -407,9 +379,6 @@ let deviceToken = localStorage.getItem("deviceToken");
 // ===============================
 // GPS
 // ===============================
-
-let currentLatitude = "";
-let currentLongitude = "";
 if (!deviceToken) {
 
     deviceToken = crypto.randomUUID();
@@ -477,31 +446,67 @@ qr.start(
 
 document.getElementById("hasil").innerHTML =
 "⏳ Memproses absensi...";
-
-setTimeout(() => {
-
-    console.log("LAT =", currentLatitude);
-    console.log("LON =", currentLongitude);
-
     fetch("https://api.ipify.org?format=json")
 .then(r => r.json())
 .then(ipData => {
-console.log("LAT =", currentLatitude);
-console.log("LON =", currentLongitude);
-    return fetch(API,{
-        method:"POST",
-        body: JSON.stringify({
-    id: decodedText,
-    ip: ipData.ip,
-latitude: currentLatitude,
-longitude: currentLongitude,
-    deviceToken: deviceToken,
-    device: getDevice(),
-    browser: getBrowser()
-})
-    });
+    navigator.geolocation.getCurrentPosition(
 
-})
+    function(position){
+
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+alert(
+"LAT = " + latitude +
+"\nLON = " + longitude
+);
+        console.log("LAT =", latitude);
+        console.log("LON =", longitude);
+
+        return fetch(API,{
+            method:"POST",
+            body:JSON.stringify({
+
+                id: decodedText,
+
+                ip: ipData.ip,
+
+                latitude: latitude,
+
+                longitude: longitude,
+
+                deviceToken: deviceToken,
+
+                device: getDevice(),
+
+                browser: getBrowser()
+
+            })
+
+        });
+
+    },
+
+    function(error){
+
+        alert("GPS Error : " + error.message);
+
+        sedangProses = false;
+
+        qr.resume();
+
+    },
+
+    {
+
+        enableHighAccuracy:true,
+
+        timeout:10000,
+
+        maximumAge:0
+
+    }
+
+);
 .then(r => r.json())
 .then(res => {
 
