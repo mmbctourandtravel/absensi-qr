@@ -444,51 +444,18 @@ qr.start(
 fetch("https://api.ipify.org?format=json")
 .then(r => r.json())
 .then(ipData => {
-alert("navigator.geolocation = " + (navigator.geolocation ? "ADA" : "TIDAK ADA"));
-    navigator.geolocation.getCurrentPosition(
-
-function(position){
 
     return fetch(API,{
         method:"POST",
-        body:JSON.stringify({
-
-            id: decodedText,
-
-            ip: ipData.ip,
-
-            latitude: position.coords.latitude,
-
-            longitude: position.coords.longitude,
-
-            deviceToken: deviceToken,
-
-            device: getDevice(),
-
-            browser: getBrowser()
-
-        })
+        body: JSON.stringify({
+    id: decodedText,
+    ip: ipData.ip,
+    deviceToken: deviceToken,
+    device: getDevice(),
+    browser: getBrowser()
+})
     });
 
-},
-
-function(error){
-
-    alert("GPS Error : " + error.message);
-
-    sedangProses = false;
-
-    qr.resume();
-
-},
-
-{
-    enableHighAccuracy:true,
-    timeout:10000,
-    maximumAge:0
-}
-
-);
 })
 .then(r => r.json())
 .then(res => {
