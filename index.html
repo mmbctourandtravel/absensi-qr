@@ -444,9 +444,11 @@ function getLocation() {
 
             (err) => {
 
-                reject(err.message);
+    alert("GPS ERROR : " + err.message);
 
-            },
+    reject(err.message);
+
+},
 
             {
                 enableHighAccuracy: true,
