@@ -444,7 +444,7 @@ qr.start(
 fetch("https://api.ipify.org?format=json")
 .then(r => r.json())
 .then(ipData => {
-
+alert("navigator.geolocation = " + (navigator.geolocation ? "ADA" : "TIDAK ADA"));
     navigator.geolocation.getCurrentPosition(
 
 function(position){
