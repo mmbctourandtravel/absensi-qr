@@ -367,6 +367,25 @@ function beep(){
 setInterval(updateClock,1000);
 
 updateClock();
+    // =====================================
+// DEVICE TOKEN
+// =====================================
+
+let deviceToken = localStorage.getItem("deviceToken");
+
+if (!deviceToken) {
+
+    deviceToken = crypto.randomUUID();
+
+    localStorage.setItem("deviceToken", deviceToken);
+
+    console.log("Device baru:", deviceToken);
+
+} else {
+
+    console.log("Device lama:", deviceToken);
+
+}
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
@@ -398,10 +417,11 @@ fetch("https://api.ipify.org?format=json")
 
     return fetch(API,{
         method:"POST",
-        body:JSON.stringify({
-            id: decodedText,
-            ip: ipData.ip
-        })
+        body: JSON.stringify({
+    id: decodedText,
+    ip: ipData.ip,
+    deviceToken: deviceToken
+})
     });
 
 })
