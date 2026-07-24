@@ -182,11 +182,11 @@ Memuat data...
 
 <script>
 
-const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec?action=listDevice";
+const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 let semuaData=[];
 
-fetch(API)
+fetch(API + "?action=listDevice")
 
 .then(r=>r.json())
 
@@ -306,9 +306,6 @@ if(!confirm("Yakin?")) return;
 
 fetch(API,{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
 body:JSON.stringify({
 action:action,
 id:id
