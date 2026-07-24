@@ -420,7 +420,9 @@ fetch("https://api.ipify.org?format=json")
         body: JSON.stringify({
     id: decodedText,
     ip: ipData.ip,
-    deviceToken: deviceToken
+    deviceToken: deviceToken,
+    device: navigator.platform,
+    browser: navigator.userAgent
 })
     });
 
