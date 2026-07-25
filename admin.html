@@ -181,7 +181,25 @@ Memuat data...
 </div>
 
 <script>
+// =========================
+// PASSWORD ADMIN SEDERHANA
+// =========================
 
+const ADMIN_PASSWORD = "MMBC2026";
+
+const input = prompt("Masukkan Password Admin");
+
+if (input === null) {
+  document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;'>Akses dibatalkan.</h2>";
+  throw new Error("Login dibatalkan");
+}
+
+if (input !== ADMIN_PASSWORD) {
+  document.body.innerHTML = "<h2 style='text-align:center;margin-top:100px;color:red;'>❌ Password Salah</h2>";
+  throw new Error("Password salah");
+}
+
+const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 const API="https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 let semuaData=[];
