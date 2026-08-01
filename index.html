@@ -120,6 +120,27 @@ h1{
   align-items:center;
 
 }
+    .processing{
+
+  background:#fff3cd !important;
+  border:1px solid #ffe69c !important;
+  color:#856404;
+
+}
+
+.success-box{
+
+  background:#d1fae5 !important;
+  border:1px solid #86efac !important;
+
+}
+
+.error-box{
+
+  background:#fee2e2 !important;
+  border:1px solid #fca5a5 !important;
+
+}
 .success{
 
     width:100%;
@@ -469,8 +490,11 @@ qr.start(
 
     qr.pause();
 
-    document.getElementById("hasil").innerHTML =
-    "⏳ Memproses absensi...";
+    document.getElementById("hasil").className =
+"processing";
+
+document.getElementById("hasil").innerHTML =
+"⏳ Memproses absensi...";
 
 fetch("https://api.ipify.org?format=json")
 .then(r => r.json())
@@ -524,8 +548,9 @@ qr.stop().then(() => {
 });
         // lanjutkan kode kamu yang sekarang...
                 if(res.tipe=="masuk"){
-
-                    document.getElementById("hasil").innerHTML = `
+document.getElementById("hasil").className =
+"success-box";
+document.getElementById("hasil").innerHTML = `
 <div class="success">
     <div class="icon">✅</div>
     <div class="title">SELAMAT DATANG</div>
@@ -535,7 +560,8 @@ qr.stop().then(() => {
 `;
 
                 }else{
-
+document.getElementById("hasil").className =
+"success-box";
                     document.getElementById("hasil").innerHTML = `
 <div class="success">
     <div class="icon">👋</div>
@@ -564,14 +590,19 @@ setTimeout(() => {
 });
 
     // Tampilkan pesan
-    document.getElementById("hasil").innerHTML =
-    "❌ " + res.pesan;
+        
+document.getElementById("hasil").className =
+"error-box";
 
-}
+document.getElementById("hasil").innerHTML =
+"❌ " + res.pesan;
 setTimeout(()=>{
 
     sedangProses = false;
+document.getElementById("hasil").className = "";
 
+document.getElementById("hasil").innerHTML =
+"Menunggu Scan...";
     qr.resume();
 
 },3000);
@@ -580,7 +611,8 @@ setTimeout(()=>{
         .catch(err=>{
 
             console.log(err);
-
+document.getElementById("hasil").className =
+"error-box";
             document.getElementById("hasil").innerHTML =
             "❌ Gagal mengirim data";
 
@@ -595,7 +627,8 @@ setTimeout(()=>{
 ).catch(err=>{
 
     console.log(err);
-
+document.getElementById("hasil").className =
+"error-box";
     document.getElementById("hasil").innerHTML =
     "❌ Gagal mengirim data";
 
