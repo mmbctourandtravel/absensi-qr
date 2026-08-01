@@ -599,25 +599,29 @@ document.getElementById("hasil").innerHTML =
 setTimeout(()=>{
 
     sedangProses = false;
-document.getElementById("hasil").className = "";
+    document.getElementById("hasil").className = "";
 
-document.getElementById("hasil").innerHTML =
-"Menunggu Scan...";
+    document.getElementById("hasil").innerHTML =
+    "Menunggu Scan...";
     qr.resume();
 
 },3000);
-         }
 
-        .catch(err=>{
+}   // tutup else
 
-            console.log(err);
-document.getElementById("hasil").className =
-"error-box";
-            document.getElementById("hasil").innerHTML =
-            "❌ Gagal mengirim data";
+})  // tutup .then(res=>{
 
-        });
+.catch(err=>{
 
+    console.log(err);
+
+    document.getElementById("hasil").className =
+    "error-box";
+
+    document.getElementById("hasil").innerHTML =
+    "❌ Gagal mengirim data";
+
+});
     },
 
     (errorMessage)=>{
