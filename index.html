@@ -424,92 +424,119 @@ fetch(API,{
     console.log("HASIL RESPONSE:", res);
     console.log("NAMA:", res.nama);
 
+
     if(res.sukses){
 
-    fetch(API,{
-        method:"POST",
-        body: JSON.stringify({
-            action:"absen",
-            id: decodedText
+        fetch(API,{
+            method:"POST",
+            body: JSON.stringify({
+                action:"absen",
+                id: decodedText
+            })
         })
-    })
-    .then(r=>r.json())
-    .then(absenRes=>{
+        .then(r=>r.json())
+        .then(absenRes=>{
 
-    console.log("HASIL ABSEN:", absenRes);
-
-    if(absenRes.sukses){
-
-        beep();
-
-        if(navigator.vibrate){
-            navigator.vibrate(300);
-        }
+            console.log("HASIL ABSEN:", absenRes);
 
 
-        if(absenRes.tipe=="masuk"){
+            if(absenRes.sukses){
+
+                beep();
+
+                if(navigator.vibrate){
+                    navigator.vibrate(300);
+                }
+
+
+                if(absenRes.tipe=="masuk"){
+
+                    document.getElementById("hasil").className =
+                    "success-box";
+
+                    document.getElementById("hasil").innerHTML = `
+                    <div class="success">
+                        <div class="icon">✅</div>
+                        <div class="title">SELAMAT DATANG</div>
+                        <div class="nama">${absenRes.nama}</div>
+                        <div class="ket">Absen Masuk Berhasil</div>
+                    </div>
+                    `;
+
+
+                }else{
+
+
+                    document.getElementById("hasil").className =
+                    "success-box";
+
+                    document.getElementById("hasil").innerHTML = `
+                    <div class="success">
+                        <div class="icon">👋</div>
+                        <div class="title">SAMPAI JUMPA</div>
+                        <div class="nama">${absenRes.nama}</div>
+                        <div class="ket">Absen Pulang Berhasil</div>
+                    </div>
+                    `;
+
+                }
+
+
+                // STOP KAMERA SETELAH BERHASIL
+                qr.stop().then(()=>{
+
+                    document.getElementById("reader").style.display="none";
+
+                    window.scrollTo({
+                        top:0,
+                        behavior:"smooth"
+                    });
+
+                });
+
+
+            }else{
+
+
+                document.getElementById("hasil").className =
+                "error-box";
+
+                document.getElementById("hasil").innerHTML =
+                "❌ " + absenRes.pesan;
+
+
+            }
+
+
+        })
+        .catch(err=>{
+
+            console.log(err);
 
             document.getElementById("hasil").className =
-            "success-box";
+            "error-box";
 
-            document.getElementById("hasil").innerHTML = `
-            <div class="success">
-                <div class="icon">✅</div>
-                <div class="title">SELAMAT DATANG</div>
-                <div class="nama">${absenRes.nama}</div>
-                <div class="ket">Absen Masuk Berhasil</div>
-            </div>
-            `;
+            document.getElementById("hasil").innerHTML =
+            "❌ Gagal mengirim data";
 
-        }else{
-
-            document.getElementById("hasil").className =
-            "success-box";
-
-            document.getElementById("hasil").innerHTML = `
-            <div class="success">
-                <div class="icon">👋</div>
-                <div class="title">SAMPAI JUMPA</div>
-                <div class="nama">${absenRes.nama}</div>
-                <div class="ket">Absen Pulang Berhasil</div>
-            </div>
-            `;
-
-        }
+        });
 
 
     }else{
 
+
+        document.getElementById("hasil").className =
+        "error-box";
+
+        document.getElementById("hasil").innerHTML =
+        "❌ " + res.pesan;
+
+
     }
 
-});
-    // Hentikan scanner
-    qr.stop().then(() => {
 
-    document.getElementById("reader").style.display = "none";
+})
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-setTimeout(() => {
-    location.reload();
-}, 5000);
-});
-setTimeout(()=>{
-
-    sedangProses = false;
-    document.getElementById("hasil").className = "";
-
-    document.getElementById("hasil").innerHTML =
-    "Menunggu Scan...";
-    qr.resume();
-
-},3000);
-
-}   // tutup else
-
-})  // tutup .then(res=>{
 
 .catch(err=>{
 
@@ -521,26 +548,9 @@ setTimeout(()=>{
     document.getElementById("hasil").innerHTML =
     "❌ Gagal mengirim data";
 
-});
-    },
-
-    (errorMessage)=>{
-        // abaikan error scan
-    }
-
-).catch(err=>{
-
-    console.log(err);
-document.getElementById("hasil").className =
-"error-box";
-    document.getElementById("hasil").innerHTML =
-    "❌ Gagal mengirim data";
-
-    sedangProses = false;
-    qr.resume();
+    sedangProses=false;
 
 });
-
 </script>
 </body>
 
