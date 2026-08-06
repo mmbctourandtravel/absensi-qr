@@ -486,8 +486,6 @@ fetch(API,{
 
             if(absenRes.sukses){
 
-        alert("ABSEN BERHASIL");
-
         beep();
 
         if(navigator.vibrate){
@@ -536,13 +534,7 @@ qr.stop().then(()=>{
         behavior:"smooth"
     });
 
-    setTimeout(()=>{
-    bukaKameraSelfie();
-},500);
-
 });
-
-
            }else{
 
     document.getElementById("hasil").className =
@@ -558,8 +550,6 @@ qr.stop().then(()=>{
 }
         })
         .catch(err=>{
-
-    alert("FETCH ERROR = " + err);
 
     console.log(err);
 
@@ -617,13 +607,9 @@ qr.stop().then(()=>{
 
     try{
 
-        alert("STEP 1");
-
         document.getElementById(
             "selfieArea"
         ).style.display = "block";
-
-        alert("STEP 2");
 
         selfieStream =
         await navigator.mediaDevices.getUserMedia({
@@ -634,13 +620,9 @@ qr.stop().then(()=>{
 
         });
 
-        alert("STEP 3");
-
         document
         .getElementById("selfieVideo")
         .srcObject = selfieStream;
-
-        alert("STEP 4");
 
     }catch(err){
 
@@ -697,8 +679,6 @@ qr.stop().then(()=>{
 })
 })
 .then(r=>{
-
-    alert("RESPON DITERIMA");
 
     return r.text();
 
