@@ -573,13 +573,14 @@ qr.stop().then(()=>{
 
     qr.stop().then(()=>{
 
-        document.getElementById("reader").style.display =
-        "none";
+    alert("QR STOP OK");
 
-        window.scrollTo({
-            top:0,
-            behavior:"smooth"
-        });
+    document.getElementById("reader").style.display =
+    "none";
+
+    bukaKameraSelfie();
+
+});
 
     });
 
