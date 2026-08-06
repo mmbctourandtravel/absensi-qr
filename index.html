@@ -699,24 +699,28 @@ qr.stop().then(()=>{
     "📤 Mengupload selfie...";
 
     fetch(API,{
-        method:"POST",
-        body: JSON.stringify({
-            action:"uploadSelfie",
-            id: decodedText,
-            foto: foto
-        })
+    method:"POST",
+    body: JSON.stringify({
+        action:"uploadSelfie",
+        id: decodedText,
+        foto: foto
     })
-    .then(r=>r.json())
-    .then(res=>{
+})
+.then(r=>{
 
-        alert(JSON.stringify(res));
+    alert("RESPON DITERIMA");
 
-    })
-    .catch(err=>{
+    return r.text();
 
-        alert("UPLOAD ERROR : " + err);
+})
+.then(text=>{
 
-    });
+    alert(text);
+
+})
+.catch(err=>{
+
+    alert("UPLOAD ERROR : " + err);
 
 });
 </script>
