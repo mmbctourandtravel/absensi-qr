@@ -524,15 +524,25 @@ fetch(API,{
 
     }else{
 
+    document.getElementById("hasil").className =
+    "error-box";
 
-        document.getElementById("hasil").className =
-        "error-box";
+    document.getElementById("hasil").innerHTML =
+    "❌ " + res.pesan;
 
-        document.getElementById("hasil").innerHTML =
-        "❌ " + res.pesan;
+    qr.stop().then(()=>{
 
+        document.getElementById("reader").style.display =
+        "none";
 
-    }
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+    });
+
+}
 
 
 })
