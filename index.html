@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>MMBC QR Attendance</title>
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>if(absenRes.sukses){
 <style>
 
 *{
@@ -488,11 +488,13 @@ qr.stop().then(()=>{
 
             if(absenRes.sukses){
 
-                beep();
+        alert("ABSEN BERHASIL");
 
-                if(navigator.vibrate){
-                    navigator.vibrate(300);
-                }
+        beep();
+
+        if(navigator.vibrate){
+            navigator.vibrate(300);
+        }
 
 
                 if(absenRes.tipe=="masuk"){
@@ -582,10 +584,7 @@ qr.stop().then(()=>{
 
 });
 
-    });
-
 }
-
 
 })
 
