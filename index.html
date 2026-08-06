@@ -411,16 +411,18 @@ document.getElementById("hasil").className =
 document.getElementById("hasil").innerHTML =
 "⏳ Memproses absensi...";
 
-fetch("https://api.ipify.org?format=json")
-.then(r => r.json())
-.then(async (ipData) => {
-    
-return fetch(API,{
+fetch(API,{
     method:"POST",
     body: JSON.stringify({
-        id: decodedText,
-        ip: ipData.ip,
+        action:"cekStatus",
+        id: decodedText
     })
+})
+.then(r=>r.json())
+.then(statusRes=>{
+
+    console.log(statusRes);
+
 });
 
 })
