@@ -449,14 +449,7 @@ document.getElementById("hasil").className =
 
 document.getElementById("hasil").innerHTML =
 "⏳ Memproses absensi...";
-qr.stop().then(()=>{
 
-    document.getElementById("reader").style.display =
-    "none";
-
-    bukaKameraSelfie();
-
-});
 fetch(API,{
     method:"POST",
     body: JSON.stringify({
