@@ -426,11 +426,38 @@ fetch(API,{
 
     if(res.sukses){
 
-        beep();
+    fetch(API,{
+        method:"POST",
+        body: JSON.stringify({
+            action:"absen",
+            id: decodedText
+        })
+    })
+    .then(r=>r.json())
+    .then(absenRes=>{
 
-        if(navigator.vibrate){
-            navigator.vibrate(300);
+        console.log("HASIL ABSEN:", absenRes);
+
+        if(absenRes.sukses){
+
+            beep();
+
+            if(navigator.vibrate){
+                navigator.vibrate(300);
+            }
+
+            // lanjutkan kode tampilan sukses yang lama di sini
+
+        }else{
+
+            document.getElementById("hasil").innerHTML =
+            absenRes.pesan;
+
         }
+
+    });
+
+}
 
         qr.stop().then(() => {
     const reader = document.getElementById("reader");
