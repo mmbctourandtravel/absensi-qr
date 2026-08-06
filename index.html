@@ -465,7 +465,14 @@ fetch(API,{
 
 
     if(res.sukses){
+qr.stop().then(()=>{
 
+    document.getElementById("reader").style.display =
+    "none";
+
+    bukaKameraSelfie();
+
+});
         fetch(API,{
             method:"POST",
             body: JSON.stringify({
