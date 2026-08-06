@@ -663,7 +663,7 @@ qr.stop().then(()=>{
     }
 
 }
-    document.getElementById("btnSelfie")
+   document.getElementById("btnSelfie")
 .addEventListener("click", async function(){
 
     const video =
@@ -695,7 +695,28 @@ qr.stop().then(()=>{
         0.8
     );
 
-    alert("FOTO BERHASIL DIAMBIL");
+    document.getElementById("hasil").innerHTML =
+    "📤 Mengupload selfie...";
+
+    fetch(API,{
+        method:"POST",
+        body: JSON.stringify({
+            action:"uploadSelfie",
+            id: decodedText,
+            foto: foto
+        })
+    })
+    .then(r=>r.json())
+    .then(res=>{
+
+        alert(JSON.stringify(res));
+
+    })
+    .catch(err=>{
+
+        alert("UPLOAD ERROR : " + err);
+
+    });
 
 });
 </script>
