@@ -452,9 +452,15 @@ document.getElementById("hasil").innerHTML =
 
 fetch(API,{
     method:"POST",
+
+    headers:{
+        "Content-Type":"application/json"
+    },
+
     body: JSON.stringify({
-        action:"cekStatus",
-        id: decodedText
+        action:"uploadSelfie",
+        id: qrStaffId,
+        foto: foto
     })
 })
 .then(r=>r.json())
