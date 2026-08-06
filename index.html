@@ -475,35 +475,37 @@ fetch(API,{
     }, 5000);
 
 });
-        // lanjutkan kode kamu yang sekarang...
-               if(res.status=="masuk"){
+// lanjutkan kode tampilan sukses
+
+if(absenRes.tipe=="masuk"){
+
 document.getElementById("hasil").className =
 "success-box";
+
 document.getElementById("hasil").innerHTML = `
 <div class="success">
     <div class="icon">✅</div>
     <div class="title">SELAMAT DATANG</div>
-    <div class="nama">${res.nama}</div>
+    <div class="nama">${absenRes.nama}</div>
     <div class="ket">Absen Masuk Berhasil</div>
 </div>
 `;
 
-                }else{
+}else{
+
 document.getElementById("hasil").className =
 "success-box";
+
 document.getElementById("hasil").innerHTML = `
 <div class="success">
     <div class="icon">👋</div>
     <div class="title">SAMPAI JUMPA</div>
-    <div class="nama">${res.nama}</div>
+    <div class="nama">${absenRes.nama}</div>
     <div class="ket">Absen Pulang Berhasil</div>
 </div>
 `;
 
-                }
-
-            }else{
-
+}
     // Hentikan scanner
     qr.stop().then(() => {
 
