@@ -419,14 +419,6 @@ fetch(API,{
     })
 })
 .then(r=>r.json())
-.then(statusRes=>{
-
-    console.log(statusRes);
-
-});
-
-})
-.then(r => r.json())
 .then(res => {
 
     console.log(res);
@@ -438,8 +430,8 @@ fetch(API,{
         if(navigator.vibrate){
             navigator.vibrate(300);
         }
-qr.stop().then(() => {
 
+        qr.stop().then(() => {
     const reader = document.getElementById("reader");
 
     reader.innerHTML = "";
