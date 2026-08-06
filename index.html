@@ -436,76 +436,53 @@ fetch(API,{
     .then(r=>r.json())
     .then(absenRes=>{
 
-        console.log("HASIL ABSEN:", absenRes);
+    console.log("HASIL ABSEN:", absenRes);
 
-        if(absenRes.sukses){
+    if(absenRes.sukses){
 
-            beep();
+        beep();
 
-            if(navigator.vibrate){
-                navigator.vibrate(300);
-            }
+        if(navigator.vibrate){
+            navigator.vibrate(300);
+        }
 
-            // lanjutkan kode tampilan sukses yang lama di sini
+
+        if(absenRes.tipe=="masuk"){
+
+            document.getElementById("hasil").className =
+            "success-box";
+
+            document.getElementById("hasil").innerHTML = `
+            <div class="success">
+                <div class="icon">✅</div>
+                <div class="title">SELAMAT DATANG</div>
+                <div class="nama">${absenRes.nama}</div>
+                <div class="ket">Absen Masuk Berhasil</div>
+            </div>
+            `;
 
         }else{
 
-            document.getElementById("hasil").innerHTML =
-            absenRes.pesan;
+            document.getElementById("hasil").className =
+            "success-box";
+
+            document.getElementById("hasil").innerHTML = `
+            <div class="success">
+                <div class="icon">👋</div>
+                <div class="title">SAMPAI JUMPA</div>
+                <div class="nama">${absenRes.nama}</div>
+                <div class="ket">Absen Pulang Berhasil</div>
+            </div>
+            `;
 
         }
 
-    });
 
-}
+    }else{
 
-        qr.stop().then(() => {
-    const reader = document.getElementById("reader");
-
-    reader.innerHTML = "";
-    reader.style.display = "none";
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-    setTimeout(() => {
-        location.reload();
-    }, 5000);
+    }
 
 });
-// lanjutkan kode tampilan sukses
-
-if(absenRes.tipe=="masuk"){
-
-document.getElementById("hasil").className =
-"success-box";
-
-document.getElementById("hasil").innerHTML = `
-<div class="success">
-    <div class="icon">✅</div>
-    <div class="title">SELAMAT DATANG</div>
-    <div class="nama">${absenRes.nama}</div>
-    <div class="ket">Absen Masuk Berhasil</div>
-</div>
-`;
-
-}else{
-
-document.getElementById("hasil").className =
-"success-box";
-
-document.getElementById("hasil").innerHTML = `
-<div class="success">
-    <div class="icon">👋</div>
-    <div class="title">SAMPAI JUMPA</div>
-    <div class="nama">${absenRes.nama}</div>
-    <div class="ket">Absen Pulang Berhasil</div>
-</div>
-`;
-
-}
     // Hentikan scanner
     qr.stop().then(() => {
 
