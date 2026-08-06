@@ -630,22 +630,42 @@ qr.stop().then(()=>{
 });
     async function bukaKameraSelfie(){
 
-    document.getElementById(
-        "selfieArea"
-    ).style.display = "block";
+    try{
 
-    selfieStream =
-    await navigator.mediaDevices.getUserMedia({
+        alert("STEP 1");
 
-        video:{
-            facingMode:"user"
-        }
+        document.getElementById(
+            "selfieArea"
+        ).style.display = "block";
 
-    });
+        alert("STEP 2");
 
-    document
-    .getElementById("selfieVideo")
-    .srcObject = selfieStream;
+        selfieStream =
+        await navigator.mediaDevices.getUserMedia({
+
+            video:{
+                facingMode:"user"
+            }
+
+        });
+
+        alert("STEP 3");
+
+        document
+        .getElementById("selfieVideo")
+        .srcObject = selfieStream;
+
+        alert("STEP 4");
+
+    }catch(err){
+
+        alert(
+            "SELFIE ERROR : " + err
+        );
+
+        console.log(err);
+
+    }
 
 }
 </script>
