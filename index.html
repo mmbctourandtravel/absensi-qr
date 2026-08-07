@@ -476,10 +476,13 @@ console.log("SCAN =", decodedText);
     return;
 }
 
-    if(res.status == "pulang"){
+   if(res.status == "pulang"){
 
     document.getElementById("hasil").innerHTML =
-    "👋 Memproses absen pulang...";
+    "👋 Memproses absen pulang";
+
+    return;
+}
 
     fetch(API,{
         method:"POST",
