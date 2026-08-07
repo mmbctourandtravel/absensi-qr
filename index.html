@@ -465,15 +465,13 @@ console.log("SCAN =", decodedText);
 
     if(res.status == "masuk"){
 
-        qr.pause();
+    document.getElementById("hasil").innerHTML =
+    "📸 Silakan ambil selfie";
 
-        document.getElementById("hasil").innerHTML =
-        "📸 Silakan ambil selfie";
+    bukaKameraSelfie();
 
-        bukaKameraSelfie();
-
-        return;
-    }
+    return;
+}
 
     if(res.status == "pulang"){
 
