@@ -596,17 +596,14 @@ console.log("SCAN =", decodedText);
     "📤 Mengupload selfie...";
 
 
-    fetch(API,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body: JSON.stringify({
-            action:"uploadSelfie",
-            id: qrStaffId,
-            foto: foto
-        })
+   fetch(API,{
+    method:"POST",
+    body: JSON.stringify({
+        action:"uploadSelfie",
+        id: qrStaffId,
+        foto: foto
     })
+})
     .then(r=>{
 
         console.log("UPLOAD RAW RESPONSE =", r);
@@ -644,17 +641,12 @@ console.log("SCAN =", decodedText);
 
 
             return fetch(API,{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body: JSON.stringify({
-                    action:"absen",
-                    id: qrStaffId
-                })
-            });
-
-
+    method:"POST",
+    body: JSON.stringify({
+        action:"absen",
+        id: qrStaffId
+    })
+});
         }else{
 
 
