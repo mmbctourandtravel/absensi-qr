@@ -212,7 +212,6 @@
     </footer>
 
     <script>
-        // Registrasi Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
@@ -221,7 +220,6 @@
             });
         }
 
-        // Tangkap Event Install PWA
         let deferredPrompt;
         const btnInstall = document.getElementById('btnInstall');
 
@@ -263,13 +261,9 @@
         updateClock();
 
         let userIP = "";
-        let namaWifiInfo = "Jaringan WiFi";
         fetch("https://api.ipify.org?format=json")
             .then(r => r.json())
-            .then(data => { 
-                userIP = data.ip; 
-                namaWifiInfo = "Megavision / WiFi Admin (" + data.ip + ")";
-            })
+            .then(data => { userIP = data.ip; })
             .catch(err => console.log("Gagal mengambil IP: ", err));
 
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
@@ -279,6 +273,7 @@
         let selfieStream = null;
         let qrStaffId = "";
         let namaStaffAktif = "";
+        let namaWifiAktif = "Jaringan WiFi Kantor"; // Variabel penampung nama WiFi dari server
 
         // Mulai Kamera QR
         qr.start(
@@ -297,19 +292,21 @@
 
                 fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "cekStatus", id: decodedText })
+                    body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
                 })
                 .then(r => r.text())
                 .then(text => {
                     let res = JSON.parse(text);
+                    
+                    // Ambil Nama Staf dan Nama WiFi langsung dari balasan Apps Script
                     if(res.nama) { namaStaffAktif = res.nama; }
+                    if(res.wifi) { namaWifiAktif = res.wifi; } // Ambil nama WiFi master
 
                     if(res.status == "masuk"){
                         document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
                         qr.stop().then(() => {
                             document.getElementById("reader").style.display = "none";
                             
-                            // SEMBUNYIKAN TOMBOL INSTALL PAS MASUK KE MODE SELFIE
                             const btnInstallEl = document.getElementById("btnInstall");
                             if(btnInstallEl) btnInstallEl.style.display = "none";
 
@@ -435,9 +432,10 @@
             let startY = canvas.height - boxHeight + 15;
             let lineSpacing = fontSize + 8;
 
+            // Cetak Watermark dengan Nama WiFi Asli dari Master Data
             ctx.fillText("🏢 MMBC Tour & Travel", startX, startY);
             ctx.fillText(`👤 Nama: ${namaStaffAktif || "Staff"}`, startX, startY + lineSpacing);
-            ctx.fillText(`🌐 Jaringan: ${namaWifiInfo}`, startX, startY + (lineSpacing * 2));
+            ctx.fillText(`🌐 Jaringan: ${namaWifiAktif}`, startX, startY + (lineSpacing * 2));
             ctx.fillText(`🕒 Waktu: ${waktuLengkap}`, startX, startY + (lineSpacing * 3));
 
             const foto = canvas.toDataURL("image/jpeg", 0.85);
