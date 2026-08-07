@@ -461,13 +461,16 @@ qr.start(
     .then(r=>r.json())
     .then(res=>{
 
-        console.log("STATUS =",res);
+    document.getElementById("hasil").innerHTML =
+    "<pre>" +
+    JSON.stringify(res,null,2) +
+    "</pre>";
 
-        sedangProses = false;
+    sedangProses = false;
 
-        qr.resume();
+    qr.resume();
 
-    })
+})
     .catch(err=>{
 
         console.log(err);
