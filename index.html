@@ -478,26 +478,46 @@ console.log("SCAN =", decodedText);
 
     if(res.status == "pulang"){
 
+    document.getElementById("hasil").innerHTML =
+    "👋 Memproses absen pulang...";
+
+    fetch(API,{
+        method:"POST",
+        body: JSON.stringify({
+            action:"absen",
+            id: decodedText
+        })
+    })
+    .then(r=>r.json())
+    .then(absenRes=>{
+
+        document.getElementById("hasil").className =
+        "success-box";
+
         document.getElementById("hasil").innerHTML =
-        "👋 Memproses absen pulang";
+        "✅ Absen Pulang Berhasil<br>" +
+        absenRes.nama;
 
-        return;
-    }
+        sedangProses = false;
 
-    if(res.status == "sudah_absen"){
+    })
+    .catch(err=>{
+
+        console.log(err);
 
         document.getElementById("hasil").className =
         "error-box";
 
         document.getElementById("hasil").innerHTML =
-        "❌ " + res.pesan;
+        "❌ Gagal absen pulang";
 
         sedangProses = false;
 
         qr.resume();
+    });
 
-        return;
-    }
+    return;
+}
 
 })
 .catch(err=>{
