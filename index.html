@@ -619,29 +619,62 @@ console.log("SCAN =", decodedText);
 
     if(hasil.sukses){
 
-        document.getElementById("hasil").className =
-        "success-box";
+    // matikan kamera selfie
+    if(selfieStream){
 
-        document.getElementById("hasil").innerHTML = `
-        <div class="success">
-            <div class="icon">📸</div>
-            <div class="title">SELFIE BERHASIL</div>
-            <div class="nama">
-                Data selfie tersimpan
+        selfieStream.getTracks().forEach(track=>{
+            track.stop();
+        });
+
+    }
+
+    document.getElementById("hasil").innerHTML =
+    "⏳ Menyimpan absensi...";
+
+    fetch(API,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+            action:"absen",
+            id: qrStaffId
+        })
+    })
+.then(r=>r.json())
+.then(absenRes=>{
+    console.log("ABSEN RESPONSE =", absenRes);
+    if(absenRes.sukses){
+
+        if(absenRes.tipe=="masuk"){
+
+            document.getElementById("hasil").className =
+            "success-box";
+
+            document.getElementById("hasil").innerHTML = `
+            <div class="success">
+                <div class="icon">✅</div>
+                <div class="title">SELAMAT DATANG</div>
+                <div class="nama">${absenRes.nama}</div>
+                <div class="ket">Absen Masuk Berhasil</div>
             </div>
-        </div>
-        `;
+            `;
 
+        }else{
 
-        // matikan kamera selfie
-        if(selfieStream){
+            document.getElementById("hasil").className =
+            "success-box";
 
-            selfieStream.getTracks().forEach(track=>{
-                track.stop();
-            });
+            document.getElementById("hasil").innerHTML = `
+            <div class="success">
+                <div class="icon">👋</div>
+                <div class="title">SAMPAI JUMPA</div>
+                <div class="nama">${absenRes.nama}</div>
+                <div class="ket">Absen Pulang Berhasil</div>
+            </div>
+            `;
 
         }
-
 
     }else{
 
@@ -649,15 +682,27 @@ console.log("SCAN =", decodedText);
         "error-box";
 
         document.getElementById("hasil").innerHTML =
-        "❌ " + hasil.pesan;
+        "❌ " + absenRes.pesan;
 
     }
 
+});
+
+}else{
+
+    document.getElementById("hasil").className =
+    "error-box";
+
+    document.getElementById("hasil").innerHTML =
+    "❌ " + hasil.pesan;
+
+}
 
 })
 .catch(err=>{
 
     alert("UPLOAD ERROR : " + err);
+
 });
 });
 </script>
