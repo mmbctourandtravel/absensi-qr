@@ -607,7 +607,7 @@ console.log("SCAN =", decodedText);
 })
 })
 .then(r=>{
-
+console.log("ABSEN RAW RESPONSE", r);
     return r.text();
 
 })
@@ -630,7 +630,7 @@ console.log("SCAN =", decodedText);
 
     document.getElementById("hasil").innerHTML =
     "⏳ Menyimpan absensi...";
-
+console.log("KIRIM ABSEN =", qrStaffId);
     fetch(API,{
         method:"POST",
         headers:{
