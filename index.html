@@ -1,657 +1,493 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>MMBC QR Attendance</title>
-<script src="https://unpkg.com/html5-qrcode"></script>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-
-    background:#eef3f8;
-    font-family:Arial,sans-serif;
-
-    display:flex;
-    flex-direction:column;
-
-    justify-content:center;
-    align-items:center;
-
-    min-height:100vh;
-
-    padding:20px;
-
-}
-
-.container{
-
-    width:380px;
-    max-width:100%;
-
-    background:#ffffff;
-
-    border-radius:25px;
-
-    padding:25px;
-
-    box-shadow:0 15px 40px rgba(0,0,0,.15);
-
-}
-
-.logo{
-
-    width:120px;
-    margin:auto;
-
-}
-
-.logo img{
-
-    width:100%;
-    display:block;
-
-}
-
-h1{
-
-    margin-top:20px;
-
-    text-align:center;
-
-    color:#1565c0;
-
-    font-size:30px;
-
-}
-
-.subtitle{
-
-    margin-top:10px;
-    margin-bottom:25px;
-
-    text-align:center;
-
-    color:#777;
-
-}
-
-#reader{
-
-    width:100%;
-    min-height:320px;
-
-    border-radius:20px;
-
-    border:2px dashed #90caf9;
-
-    background:#f8fbff;
-
-}
-
-#hasil{
-
-  margin-top:10px;
-
-  min-height:60px;
-
-  padding:12px;
-
-  border-radius:15px;
-
-  background:#ffffff;
-
-  border:1px solid #e4e9f2;
-
-  box-shadow:0 8px 15px rgba(0,0,0,.08);
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-}
-    .processing{
-
-  background:#fff3cd !important;
-  border:1px solid #ffe69c !important;
-  color:#856404;
-
-}
-
-.success-box{
-
-  background:#d1fae5 !important;
-  border:1px solid #86efac !important;
-
-}
-
-.error-box{
-
-  background:#fee2e2 !important;
-  border:1px solid #fca5a5 !important;
-
-}
-.success{
-
-    width:100%;
-
-}
-
-.success .icon{
-
-    font-size:70px;
-
-    margin-bottom:15px;
-
-    animation:pop .35s ease;
-
-}
-
-.success .title{
-
-    font-size:30px;
-
-    font-weight:bold;
-
-    color:#16a34a;
-
-    margin-bottom:18px;
-
-}
-
-.success .nama{
-
-    font-size:28px;
-
-    font-weight:bold;
-
-    color:#1565c0;
-
-    margin-bottom:15px;
-
-}
-
-.success .jam{
-
-    font-size:22px;
-
-    color:#555;
-
-}
-    .error{
-
-    width:100%;
-
-}
-
-.error .icon{
-
-    font-size:70px;
-
-    margin-bottom:15px;
-
-}
-
-.error .title{
-
-    font-size:28px;
-
-    color:#d32f2f;
-
-    font-weight:bold;
-
-    margin-bottom:15px;
-
-}
-
-.error .pesan{
-
-    font-size:22px;
-
-    color:#555;
-
-}
-  @keyframes pop{
-
-0%{
-
-transform:scale(.7);
-
-opacity:0;
-
-}
-
-100%{
-
-transform:scale(1);
-
-opacity:1;
-
-}
-
-}  
- #clock{
-
-    text-align:center;
-
-    margin-bottom:20px;
-
-}
-
-#tanggal{
-
-    color:#666;
-
-    font-size:16px;
-
-    margin-bottom:6px;
-
-}
-
-#jam{
-
-    font-size:34px;
-
-    font-weight:bold;
-
-    color:#1565c0;
-
-    letter-spacing:2px;
-
-}   
-.footer{
-
-    margin-top:20px;
-
-    text-align:center;
-
-    color:#999;
-
-    font-size:14px;
-
-    width:100%;
-
-    clear:both;
-
-    display:block;
-
-}
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi - MMBC Tour & Travel</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .header-brand {
+            background: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2563eb;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .clock-box {
+            background: #eff6ff;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d4ed8;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .scanner-wrapper {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #reader {
+            width: 100% !important;
+            border: none !important;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #reader video {
+            border-radius: 12px;
+        }
+
+        #hasil {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .processing {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .error-box {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Area Kamera Selfie */
+        #selfieArea {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #selfieVideo {
+            width: 100%;
+            max-height: 320px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .btn-custom {
+            margin-top: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            transition: 0.2s;
+        }
+
+        .btn-custom:active {
+            transform: scale(0.98);
+        }
+
+        /* Tombol Install PWA di Browser */
+        #btnInstall {
+            display: none;
+            margin-top: 15px;
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+        }
+
+        footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <div class="container">
+        <div class="header-brand">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>Sistem Absensi Karyawan</h1>
+            <div class="subtitle">Silakan scan QR Code untuk Melakukan Absen</div>
+        </div>
 
-<div class="logo">
-  <img src="Logo.jpeg" alt="MMBC">
-</div>
+        <div class="clock-box" id="clock">
+            <span id="tanggal">Memuat tanggal...</span> | <span id="jam">00:00:00</span>
+        </div>
 
-<h1>
-
-ABSENSI QR
-
-</h1>
-
-<div class="subtitle">
-
-MMBC TOUR & TRAVEL
-
-</div>
-<div id="clock">
-
-  <div id="tanggal"></div>
-
-  <div id="jam"></div>
-
-</div>
-
-<div id="hasil">
-  Menunggu Scan...
-</div>
-
-<div id="reader"></div>
-<div id="selfieArea" style="display:none;">
-
-<video
-    id="selfieVideo"
-    autoplay
-    playsinline
-    style="
-    width:100%;
-    border-radius:15px;
-    ">
-</video>
-
-<canvas
-    id="selfieCanvas"
-    style="display:none;">
-</canvas>
-
-<button
-    id="btnSelfie"
-    style="
-    width:100%;
-    margin-top:10px;
-    padding:15px;
-    border:none;
-    border-radius:15px;
-    background:#1565c0;
-    color:white;
-    font-size:18px;
-    cursor:pointer;
-    ">
-    📸 Ambil Selfie
-</button>
-</div>
-</div>
-<div class="footer">
-
-Version 3.0 FINAL
-</div>
-
-<script>
-function beep(){
-    const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-    audio.play().catch(e => console.log("Audio play blocked"));
-}
-
-function updateClock(){
-    const now = new Date();
-    const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    
-    const elTgl = document.getElementById("tanggal");
-    const elJam = document.getElementById("jam");
-    if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
-    if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
-}
-
-setInterval(updateClock,1000);
-updateClock();
-
-// Ambil IP Address pengunjung otomatis
-let userIP = "";
-let namaWifiInfo = "Jaringan WiFi"; // Default
-fetch("https://api.ipify.org?format=json")
-    .then(r => r.json())
-    .then(data => { 
-        userIP = data.ip; 
-        // Deteksi sederhana atau bisa disesuaikan dengan info jaringan kamu
-        namaWifiInfo = "Megavision / WiFi Admin (" + data.ip + ")";
-    })
-    .catch(err => console.log("Gagal mengambil IP: ", err));
-
-// URL Web App Apps Script (Pastikan URL deploy terbaru)
-const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
-
-const qr = new Html5Qrcode("reader");
-let sedangProses = false;
-let selfieStream = null;
-let qrStaffId = "";
-let namaStaffAktif = ""; // Variabel buat nyimpen nama staf
-
-// Mulai Kamera QR
-qr.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText) => {
-        if (sedangProses) return;
-
-        qrStaffId = decodedText;
-        sedangProses = true;
-        qr.pause();
-        beep();
-
-        document.getElementById("hasil").className = "processing";
-        document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
-
-        // Cek Status ke Apps Script
-        fetch(API, {
-            method: "POST",
-            body: JSON.stringify({ action: "cekStatus", id: decodedText })
-        })
-        .then(r => r.text())
-        .then(text => {
-            let res = JSON.parse(text);
+        <div class="scanner-wrapper">
+            <div id="reader"></div>
+            <div id="hasil"></div>
             
-            // Simpan nama staf untuk dipakai di watermark foto nanti
-            if(res.nama) {
-                namaStaffAktif = res.nama;
-            }
+            <button id="btnInstall">📱 Install Aplikasi ke HP</button>
+        </div>
 
-            // 1. JIKA ABSEN MASUK (BUTUH SELFIE)
-            if(res.status == "masuk"){
-                document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
-                qr.stop().then(() => {
-                    document.getElementById("reader").style.display = "none";
-                    bukaKameraSelfie();
-                });
-                return;
-            }
+        <div id="selfieArea">
+            <video id="selfieVideo" autoplay playsinline></video>
+            <canvas id="selfieCanvas" style="display:none;"></canvas>
+            <button class="btn-custom" id="btnSelfie">📸 Ambil Foto Selfie</button>
+        </div>
+    </div>
 
-            // 2. JIKA ABSEN PULANG
-            if(res.status == "pulang"){
-                document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
-                
-                qr.stop().catch(e => console.log(e));
-                sembunyikanHeaderUtama();
+    <footer>
+        &copy; 2026 MMBC Tour & Travel - All Rights Reserved
+    </footer>
+
+    <script>
+        // Registrasi Service Worker (SW.js) untuk Auto-Update Cache & PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('ServiceWorker Berhasil Terdaftar: ', reg.scope))
+                    .catch(err => console.log('ServiceWorker Gagal: ', err));
+            });
+        }
+
+        // Tangkap Event Install PWA di Browser
+        let deferredPrompt;
+        const btnInstall = document.getElementById('btnInstall');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            btnInstall.style.display = 'block'; // Tampilkan tombol install
+        });
+
+        btnInstall.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('Pengguna menerima instalasi PWA');
+                }
+                deferredPrompt = null;
+                btnInstall.style.display = 'none';
+            }
+        });
+
+        function beep(){
+            const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+            audio.play().catch(e => console.log("Audio play blocked"));
+        }
+
+        function updateClock(){
+            const now = new Date();
+            const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            const elTgl = document.getElementById("tanggal");
+            const elJam = document.getElementById("jam");
+            if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
+            if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let userIP = "";
+        let namaWifiInfo = "Jaringan WiFi";
+        fetch("https://api.ipify.org?format=json")
+            .then(r => r.json())
+            .then(data => { 
+                userIP = data.ip; 
+                namaWifiInfo = "Megavision / WiFi Admin (" + data.ip + ")";
+            })
+            .catch(err => console.log("Gagal mengambil IP: ", err));
+
+        // URL Web App Apps Script kamu
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
+        const qr = new Html5Qrcode("reader");
+        let sedangProses = false;
+        let selfieStream = null;
+        let qrStaffId = "";
+        let namaStaffAktif = "";
+
+        // Mulai Kamera QR
+        qr.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 230 },
+            (decodedText) => {
+                if (sedangProses) return;
+
+                qrStaffId = decodedText;
+                sedangProses = true;
+                qr.pause();
+                beep();
+
+                document.getElementById("hasil").className = "processing";
+                document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
 
                 fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "absen", id: qrStaffId, ip: userIP })
+                    body: JSON.stringify({ action: "cekStatus", id: decodedText })
                 })
                 .then(r => r.text())
-                .then(pulangText => {
-                    let absenRes = JSON.parse(pulangText);
-                    if(absenRes.sukses){
-                        document.body.style.background = "#e8f5e9";
-                        document.getElementById("hasil").className = "success-box";
-                        document.getElementById("hasil").innerHTML = `
-                        <div class="success" style="padding: 20px; text-align: center;">
-                            <div class="icon" style="font-size: 60px; margin-bottom: 10px;">👋</div>
-                            <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 10px;">SAMPAI JUMPA</div>
-                            <div class="nama" style="font-size: 24px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
-                            <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 15px;">Absen Pulang Berhasil</div>
-                            <div style="font-size: 15px; color: #555; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat!</div>
-                            <div style="font-size: 13px; color: #888; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu: ${new Date().toLocaleTimeString("id-ID")}</div>
-                        </div>`;
-                    } else {
-                        document.getElementById("hasil").className = "error-box";
-                        document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+                .then(text => {
+                    let res = JSON.parse(text);
+                    if(res.nama) { namaStaffAktif = res.nama; }
+
+                    if(res.status == "masuk"){
+                        document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
+                        qr.stop().then(() => {
+                            document.getElementById("reader").style.display = "none";
+                            bukaKameraSelfie();
+                        });
+                        return;
                     }
-                    setTimeout(() => { location.reload(); }, 6000); 
-                }).catch(err => {
+
+                    if(res.status == "pulang"){
+                        document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
+                        qr.stop().catch(e => console.log(e));
+                        sembunyikanHeaderUtama();
+
+                        fetch(API, {
+                            method: "POST",
+                            body: JSON.stringify({ action: "absen", id: qrStaffId, ip: userIP })
+                        })
+                        .then(r => r.text())
+                        .then(pulangText => {
+                            let absenRes = JSON.parse(pulangText);
+                            if(absenRes.sukses){
+                                document.body.style.background = "#e8f5e9";
+                                document.getElementById("hasil").className = "success-box";
+                                document.getElementById("hasil").innerHTML = `
+                                <div class="success" style="padding: 20px; text-align: center;">
+                                    <div class="icon" style="font-size: 60px; margin-bottom: 10px;">👋</div>
+                                    <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 10px;">SAMPAI JUMPA</div>
+                                    <div class="nama" style="font-size: 24px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
+                                    <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 15px;">Absen Pulang Berhasil</div>
+                                    <div style="font-size: 15px; color: #555; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat!</div>
+                                    <div style="font-size: 13px; color: #888; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu: ${new Date().toLocaleTimeString("id-ID")}</div>
+                                </div>`;
+                            } else {
+                                document.getElementById("hasil").className = "error-box";
+                                document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+                            }
+                            setTimeout(() => { location.reload(); }, 6000); 
+                        }).catch(err => {
+                            document.getElementById("hasil").className = "error-box";
+                            document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+                            setTimeout(() => { location.reload(); }, 5000);
+                        });
+                        return;
+                    }
+
+                    if(res.status == "sudah_absen"){
+                        qr.stop().catch(e => console.log(e));
+                        sembunyikanHeaderUtama();
+                        document.getElementById("hasil").className = "error-box";
+                        document.getElementById("hasil").innerHTML = `
+                        <div style="padding: 20px; text-align: center;">
+                            <div style="font-size: 50px; margin-bottom: 10px;">⚠️</div>
+                            <div style="font-size: 22px; font-weight: bold; color: #d32f2f; margin-bottom: 10px;">INFO ABSENSI</div>
+                            <div style="font-size: 18px; color: #555; margin-bottom: 15px;">${res.pesan}</div>
+                        </div>`;
+                        setTimeout(() => { location.reload(); }, 5000); 
+                        return;
+                    }
+                })
+                .catch(err => {
                     document.getElementById("hasil").className = "error-box";
-                    document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
-                    setTimeout(() => { location.reload(); }, 5000);
+                    document.getElementById("hasil").innerHTML = "❌ CEK STATUS ERROR : " + err;
+                    setTimeout(() => { location.reload(); }, 4000);
                 });
-                return;
-            }
-
-            // 3. JIKA SUDAH ABSEN
-            if(res.status == "sudah_absen"){
-                qr.stop().catch(e => console.log(e));
-                sembunyikanHeaderUtama();
-
-                document.getElementById("hasil").className = "error-box";
-                document.getElementById("hasil").innerHTML = `
-                <div style="padding: 20px; text-align: center;">
-                    <div style="font-size: 50px; margin-bottom: 10px;">⚠️</div>
-                    <div style="font-size: 22px; font-weight: bold; color: #d32f2f; margin-bottom: 10px;">INFO ABSENSI</div>
-                    <div style="font-size: 18px; color: #555; margin-bottom: 15px;">${res.pesan}</div>
-                </div>`;
-                
-                setTimeout(() => { location.reload(); }, 5000); 
-                return;
-            }
-        })
-        .catch(err => {
+            },
+            (errorMessage) => {}
+        ).catch(err => {
             document.getElementById("hasil").className = "error-box";
-            document.getElementById("hasil").innerHTML = "❌ CEK STATUS ERROR : " + err;
-            setTimeout(() => { location.reload(); }, 4000);
+            document.getElementById("hasil").innerHTML = "❌ Gagal membuka kamera QR";
+            sedangProses = false;
         });
-    },
-    (errorMessage) => { /* Abaikan error scan */ }
-).catch(err => {
-    document.getElementById("hasil").className = "error-box";
-    document.getElementById("hasil").innerHTML = "❌ Gagal membuka kamera QR";
-    sedangProses = false;
-});
 
-// Fungsi sembunyikan header utama
-function sembunyikanHeaderUtama() {
-    const logoEl = document.querySelector(".logo");
-    const h1El = document.querySelector("h1");
-    const subEl = document.querySelector(".subtitle");
-    const clockEl = document.getElementById("clock");
-    const readerEl = document.getElementById("reader");
+        function sembunyikanHeaderUtama() {
+            const headerEl = document.querySelector(".header-brand");
+            const clockEl = document.querySelector(".clock-box");
+            const readerEl = document.getElementById("reader");
+            const installEl = document.getElementById("btnInstall");
 
-    if(logoEl) logoEl.style.display = "none";
-    if(h1El) h1El.style.display = "none";
-    if(subEl) subEl.style.display = "none";
-    if(clockEl) clockEl.style.display = "none";
-    if(readerEl) readerEl.style.display = "none";
-}
+            if(headerEl) headerEl.style.display = "none";
+            if(clockEl) clockEl.style.display = "none";
+            if(readerEl) readerEl.style.display = "none";
+            if(installEl) installEl.style.display = "none";
+        }
 
-// Buka Kamera Depan (Selfie)
-async function bukaKameraSelfie(){
-    try{
-        document.getElementById("selfieArea").style.display = "block";
-        document.getElementById("btnSelfie").style.display = "block";
-        
-        selfieStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user" }
-        });
-        document.getElementById("selfieVideo").srcObject = selfieStream;
-    }catch(err){
-        alert("Kamera Selfie tidak dapat diakses: " + err);
-    }
-}
-
-// Proses Jepret Selfie & Tambah Watermark Lengkap
-document.getElementById("btnSelfie").addEventListener("click", function(){
-    this.style.display = "none"; 
-
-    const video = document.getElementById("selfieVideo");
-    video.pause(); // Efek freeze frame
-    
-    const canvas = document.getElementById("selfieCanvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    // 1. Gambar Video Selfie ke Canvas
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // 2. TAMBAHKAN WATERMARK DI ATAS CANVAS (FOTO)
-    const now = new Date();
-    const tglStr = now.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
-    const jamStr = now.toLocaleTimeString("id-ID");
-    const waktuLengkap = `${tglStr}, ${jamStr}`;
-
-    // Buat latar belakang hitam transparan di bagian bawah foto agar teks terbaca jelas
-    const boxHeight = 130;
-    ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-    ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
-
-    // Konfigurasi Teks Watermark
-    ctx.fillStyle = "#ffffff";
-    ctx.textBaseline = "top";
-    
-    // Sesuaikan ukuran font secara dinamis berdasarkan ukuran video
-    let fontSize = Math.max(14, Math.floor(canvas.width / 35));
-    ctx.font = `bold ${fontSize}px Arial`;
-
-    let startX = 20;
-    let startY = canvas.height - boxHeight + 15;
-    let lineSpacing = fontSize + 8;
-
-    ctx.fillText("🏢 MMBC Tour & Travel", startX, startY);
-    ctx.fillText(`👤 Nama: ${namaStaffAktif || "Staff"}`, startX, startY + lineSpacing);
-    ctx.fillText(`🌐 Jaringan: ${namaWifiInfo}`, startX, startY + (lineSpacing * 2));
-    ctx.fillText(`🕒 Waktu: ${waktuLengkap}`, startX, startY + (lineSpacing * 3));
-
-    // Ambil hasil akhir foto yang sudah ada watermark-nya
-    const foto = canvas.toDataURL("image/jpeg", 0.85);
-    
-    document.getElementById("hasil").className = "processing";
-    document.getElementById("hasil").innerHTML = "📤 sedang upload foto selfi";
-
-    // Kirim Foto ke Google Drive
-    fetch(API, {
-        method: "POST",
-        body: JSON.stringify({ action: "uploadSelfie", id: qrStaffId, foto: foto })
-    })
-    .then(r => r.text())
-    .then(text => {
-        let hasil = JSON.parse(text);
-        if(hasil.sukses){
-            
-            if(selfieStream){
-                selfieStream.getTracks().forEach(track => track.stop());
-                selfieStream = null;
+        async function bukaKameraSelfie(){
+            try{
+                document.getElementById("selfieArea").style.display = "block";
+                document.getElementById("btnSelfie").style.display = "block";
+                selfieStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                document.getElementById("selfieVideo").srcObject = selfieStream;
+            }catch(err){
+                alert("Kamera Selfie tidak dapat diakses: " + err);
             }
-            video.srcObject = null;
-            video.style.display = "none";
-            document.getElementById("selfieArea").style.display = "none";
+        }
 
-            document.getElementById("hasil").innerHTML = "⏳ Menyimpan absensi...";
+        document.getElementById("btnSelfie").addEventListener("click", function(){
+            this.style.display = "none"; 
+            const video = document.getElementById("selfieVideo");
+            video.pause(); 
             
-            // Lanjut simpan absen masuk
-            return fetch(API, {
+            const canvas = document.getElementById("selfieCanvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const now = new Date();
+            const tglStr = now.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
+            const jamStr = now.toLocaleTimeString("id-ID");
+            const waktuLengkap = `${tglStr}, ${jamStr}`;
+
+            const boxHeight = 130;
+            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+            ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.textBaseline = "top";
+            let fontSize = Math.max(14, Math.floor(canvas.width / 35));
+            ctx.font = `bold ${fontSize}px Arial`;
+
+            let startX = 20;
+            let startY = canvas.height - boxHeight + 15;
+            let lineSpacing = fontSize + 8;
+
+            ctx.fillText("🏢 MMBC Tour & Travel", startX, startY);
+            ctx.fillText(`👤 Nama: ${namaStaffAktif || "Staff"}`, startX, startY + lineSpacing);
+            ctx.fillText(`🌐 Jaringan: ${namaWifiInfo}`, startX, startY + (lineSpacing * 2));
+            ctx.fillText(`🕒 Waktu: ${waktuLengkap}`, startX, startY + (lineSpacing * 3));
+
+            const foto = canvas.toDataURL("image/jpeg", 0.85);
+            document.getElementById("hasil").className = "processing";
+            document.getElementById("hasil").innerHTML = "📤 Mengupload selfie dengan watermark...";
+
+            fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP })
+                body: JSON.stringify({ action: "uploadSelfie", id: qrStaffId, foto: foto })
+            })
+            .then(r => r.text())
+            .then(text => {
+                let hasil = JSON.parse(text);
+                if(hasil.sukses){
+                    if(selfieStream){
+                        selfieStream.getTracks().forEach(track => track.stop());
+                        selfieStream = null;
+                    }
+                    video.srcObject = null;
+                    video.style.display = "none";
+                    document.getElementById("selfieArea").style.display = "none";
+
+                    document.getElementById("hasil").innerHTML = "⏳ Menyimpan absensi...";
+                    
+                    return fetch(API, {
+                        method: "POST",
+                        body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP })
+                    });
+                } else {
+                    throw new Error("Upload selfie gagal");
+                }
+            })
+            .then(r => r.text())
+            .then(text => {
+                let absenRes = JSON.parse(text);
+                if(absenRes.sukses){
+                    sembunyikanHeaderUtama();
+                    document.body.style.background = "#e8f5e9";
+
+                    document.getElementById("hasil").className = "success-box";
+                    document.getElementById("hasil").innerHTML = `
+                    <div class="success" style="padding: 20px; text-align: center;">
+                        <div class="icon" style="font-size: 65px; margin-bottom: 10px;">👍</div>
+                        <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 8px;">SELAMAT DATANG</div>
+                        <div class="nama" style="font-size: 25px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
+                        <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 12px;">Absen Masuk Berhasil</div>
+                        <div style="font-size: 16px; color: #333; font-weight: 500; margin-bottom: 20px;">Selamat bekerja dan tetap semangat! 🚀</div>
+                        <div style="font-size: 13px; color: #777; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu Absen: ${new Date().toLocaleTimeString("id-ID")}</div>
+                    </div>`;
+                    
+                    setTimeout(() => { location.reload(); }, 6000); 
+
+                } else {
+                    document.getElementById("hasil").className = "error-box";
+                    document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+                    setTimeout(() => { location.reload(); }, 5000);
+                }
+            })
+            .catch(err => {
+                document.getElementById("hasil").className = "error-box";
+                document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+                setTimeout(() => { location.reload(); }, 5000);
             });
-        } else {
-            throw new Error("Upload selfie gagal");
-        }
-    })
-    .then(r => r.text())
-    .then(text => {
-        let absenRes = JSON.parse(text);
-        if(absenRes.sukses){
-            sembunyikanHeaderUtama();
-            document.body.style.background = "#e8f5e9";
-
-            document.getElementById("hasil").className = "success-box";
-            document.getElementById("hasil").innerHTML = `
-            <div class="success" style="padding: 20px; text-align: center;">
-                <div class="icon" style="font-size: 65px; margin-bottom: 10px;">👍</div>
-                <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 8px;">SELAMAT DATANG</div>
-                <div class="nama" style="font-size: 25px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
-                <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 12px;">Absen Masuk Berhasil</div>
-                <div style="font-size: 16px; color: #333; font-weight: 500; margin-bottom: 20px;">Selamat bekerja dan tetap semangat! 🚀</div>
-                <div style="font-size: 13px; color: #777; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu Absen: ${new Date().toLocaleTimeString("id-ID")}</div>
-            </div>`;
-            
-            setTimeout(() => { location.reload(); }, 6000); 
-
-        } else {
-            document.getElementById("hasil").className = "error-box";
-            document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
-            setTimeout(() => { location.reload(); }, 5000);
-        }
-    })
-    .catch(err => {
-        document.getElementById("hasil").className = "error-box";
-        document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
-        setTimeout(() => { location.reload(); }, 5000);
-    });
-});
-</script>
+        });
+    </script>
 </body>
-
 </html>
