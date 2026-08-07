@@ -598,9 +598,12 @@ console.log("SCAN =", decodedText);
     document.getElementById("hasil").innerHTML =
     "📤 Mengupload selfie...";
 
-    fetch(API,{
-    method:"POST",
-    body: JSON.stringify({
+fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
     action:"uploadSelfie",
     id: qrStaffId,
     foto: foto
@@ -706,7 +709,7 @@ id: qrStaffId
     alert("ABSEN ERROR : " + err);
 
 });
-
+});
 </script>
 </body>
 
