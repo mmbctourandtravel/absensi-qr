@@ -632,18 +632,30 @@ console.log("ABSEN RAW RESPONSE", r);
     "⏳ Menyimpan absensi...";
 console.log("KIRIM ABSEN =", qrStaffId);
     fetch(API,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body: JSON.stringify({
-            action:"absen",
-            id: qrStaffId
-        })
-    })
-.then(r=>r.json())
-.then(absenRes=>{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+action:"absen",
+id: qrStaffId
+})
+})
+.then(r=>{
+
+    console.log("ABSEN RAW RESPONSE =", r);
+
+    return r.text();
+
+})
+.then(text=>{
+
+    console.log("ABSEN TEXT =", text);
+
+    let absenRes = JSON.parse(text);
+
     console.log("ABSEN RESPONSE =", absenRes);
+
     if(absenRes.sukses){
 
         if(absenRes.tipe=="masuk"){
@@ -686,22 +698,12 @@ console.log("KIRIM ABSEN =", qrStaffId);
 
     }
 
-});
-
-}else{
-
-    document.getElementById("hasil").className =
-    "error-box";
-
-    document.getElementById("hasil").innerHTML =
-    "❌ " + hasil.pesan;
-
-}
-
 })
 .catch(err=>{
 
-    alert("UPLOAD ERROR : " + err);
+    console.log("ABSEN ERROR =", err);
+
+    alert("ABSEN ERROR : " + err);
 
 });
 });
