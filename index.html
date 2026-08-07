@@ -372,8 +372,10 @@ function updateClock(){
     const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     
-    document.getElementById("tanggal").innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
-    document.getElementById("jam").innerHTML = now.toLocaleTimeString("id-ID");
+    const elTgl = document.getElementById("tanggal");
+    const elJam = document.getElementById("jam");
+    if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
+    if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
 }
 
 setInterval(updateClock,1000);
@@ -386,7 +388,7 @@ fetch("https://api.ipify.org?format=json")
     .then(data => { userIP = data.ip; })
     .catch(err => console.log("Gagal mengambil IP: ", err));
 
-// URL Web App Apps Script (Pastikan ini yang paling baru dari hasil Deploy)
+// URL Web App Apps Script (Pastikan URL deploy terbaru)
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
@@ -403,8 +405,8 @@ qr.start(
 
         qrStaffId = decodedText;
         sedangProses = true;
-        qr.pause(); // Pause kamera QR
-        beep(); // Bunyi tit!
+        qr.pause();
+        beep();
 
         document.getElementById("hasil").className = "processing";
         document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
@@ -422,7 +424,7 @@ qr.start(
             if(res.status == "masuk"){
                 document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
                 qr.stop().then(() => {
-                    document.getElementById("reader").style.display = "none"; // Sembunyikan kotak QR
+                    document.getElementById("reader").style.display = "none";
                     bukaKameraSelfie();
                 });
                 return;
@@ -432,9 +434,10 @@ qr.start(
             if(res.status == "pulang"){
                 document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
                 
-                // Matikan dan Sembunyikan Kotak QR biar profesional
                 qr.stop().catch(e => console.log(e));
-                document.getElementById("reader").style.display = "none"; 
+                
+                // Sembunyikan Header & Kotak QR agar halaman bersih
+                sembunyikanHeaderUtama();
 
                 fetch(API, {
                     method: "POST",
@@ -444,58 +447,83 @@ qr.start(
                 .then(pulangText => {
                     let absenRes = JSON.parse(pulangText);
                     if(absenRes.sukses){
+                        // Ubah Background jadi hijau muda lembut
+                        document.body.style.background = "#e8f5e9";
+                        
                         document.getElementById("hasil").className = "success-box";
                         document.getElementById("hasil").innerHTML = `
-                        <div class="success">
-                            <div class="icon">👋</div>
-                            <div class="title">SAMPAI JUMPA</div>
-                            <div class="nama">${absenRes.nama}</div>
-                            <div class="ket">Absen Pulang Berhasil</div>
+                        <div class="success" style="padding: 20px; text-align: center;">
+                            <div class="icon" style="font-size: 60px; margin-bottom: 10px;">👋</div>
+                            <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 10px;">SAMPAI JUMPA</div>
+                            <div class="nama" style="font-size: 24px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
+                            <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 15px;">Absen Pulang Berhasil</div>
+                            <div style="font-size: 15px; color: #555; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat!</div>
+                            <div style="font-size: 13px; color: #888; border-top: 1px dashed #c8e6c9; pt: 10px; margin-top: 10px;">📅 Waktu: ${new Date().toLocaleTimeString("id-ID")}</div>
                         </div>`;
                     } else {
                         document.getElementById("hasil").className = "error-box";
                         document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
                     }
-                    setTimeout(() => { location.reload(); }, 3500); // Otomatis refresh
+                    // Waktu tampil diperlama jadi 6 detik supaya staf bisa baca dengan puas
+                    setTimeout(() => { location.reload(); }, 6000); 
                 }).catch(err => {
                     document.getElementById("hasil").className = "error-box";
                     document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
-                    setTimeout(() => { location.reload(); }, 3500);
+                    setTimeout(() => { location.reload(); }, 5000);
                 });
                 return;
             }
 
             // 3. JIKA SUDAH ABSEN
             if(res.status == "sudah_absen"){
-                document.getElementById("hasil").className = "error-box";
-                document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
-                
-                // Matikan dan Sembunyikan Kotak QR biar gak nge-freeze jelek
                 qr.stop().catch(e => console.log(e));
-                document.getElementById("reader").style.display = "none"; 
+                sembunyikanHeaderUtama();
+
+                document.getElementById("hasil").className = "error-box";
+                document.getElementById("hasil").innerHTML = `
+                <div style="padding: 20px; text-align: center;">
+                    <div style="font-size: 50px; margin-bottom: 10px;">⚠️</div>
+                    <div style="font-size: 22px; font-weight: bold; color: #d32f2f; margin-bottom: 10px;">INFO ABSENSI</div>
+                    <div style="font-size: 18px; color: #555; margin-bottom: 15px;">${res.pesan}</div>
+                </div>`;
                 
-                setTimeout(() => { location.reload(); }, 3000); // Otomatis refresh
+                setTimeout(() => { location.reload(); }, 5000); 
                 return;
             }
         })
         .catch(err => {
             document.getElementById("hasil").className = "error-box";
             document.getElementById("hasil").innerHTML = "❌ CEK STATUS ERROR : " + err;
-            setTimeout(() => { location.reload(); }, 3000);
+            setTimeout(() => { location.reload(); }, 4000);
         });
     },
-    (errorMessage) => { /* Abaikan error scan frame kosong */ }
+    (errorMessage) => { /* Abaikan error scan */ }
 ).catch(err => {
     document.getElementById("hasil").className = "error-box";
     document.getElementById("hasil").innerHTML = "❌ Gagal membuka kamera QR";
     sedangProses = false;
 });
 
+// Fungsi untuk menyembunyikan header/logo/jam saat sukses agar tampilan bersih
+function sembunyikanHeaderUtama() {
+    const logoEl = document.querySelector(".logo");
+    const h1El = document.querySelector("h1");
+    const subEl = document.querySelector(".subtitle");
+    const clockEl = document.getElementById("clock");
+    const readerEl = document.getElementById("reader");
+
+    if(logoEl) logoEl.style.display = "none";
+    if(h1El) h1El.style.display = "none";
+    if(subEl) subEl.style.display = "none";
+    if(clockEl) clockEl.style.display = "none";
+    if(readerEl) readerEl.style.display = "none";
+}
+
 // Buka Kamera Depan (Selfie)
 async function bukaKameraSelfie(){
     try{
         document.getElementById("selfieArea").style.display = "block";
-        document.getElementById("btnSelfie").style.display = "block"; // Pastikan tombol muncul
+        document.getElementById("btnSelfie").style.display = "block";
         
         selfieStream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "user" }
@@ -508,14 +536,10 @@ async function bukaKameraSelfie(){
 
 // Proses Jepret Selfie
 document.getElementById("btnSelfie").addEventListener("click", function(){
-    
-    // UI/UX: Sembunyikan tombol biar gak ditekan 2 kali
     this.style.display = "none"; 
 
     const video = document.getElementById("selfieVideo");
-    
-    // UI/UX: Pause video seolah-olah difoto (efek jepret)
-    video.pause(); 
+    video.pause(); // Efek jepret (freeze frame)
     
     const canvas = document.getElementById("selfieCanvas");
     const ctx = canvas.getContext("2d");
@@ -539,17 +563,17 @@ document.getElementById("btnSelfie").addEventListener("click", function(){
         let hasil = JSON.parse(text);
         if(hasil.sukses){
             
-            // Matikan Kamera Selfie karena sudah beres upload
             if(selfieStream){
                 selfieStream.getTracks().forEach(track => track.stop());
                 selfieStream = null;
             }
             video.srcObject = null;
-            video.style.display = "none"; // Hilangkan kamera selfie
+            video.style.display = "none";
+            document.getElementById("selfieArea").style.display = "none";
 
             document.getElementById("hasil").innerHTML = "⏳ Menyimpan absensi...";
             
-            // Lanjut proses simpan absen masuk ke Sheet
+            // Lanjut simpan absen masuk
             return fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP })
@@ -562,29 +586,36 @@ document.getElementById("btnSelfie").addEventListener("click", function(){
     .then(text => {
         let absenRes = JSON.parse(text);
         if(absenRes.sukses){
-            document.getElementById("hasil").className = "success-box";
-            document.getElementById("selfieArea").style.display = "none"; // Bersihkan area
+            // Sembunyikan elemen atas agar halaman bersih total
+            sembunyikanHeaderUtama();
             
+            // Ubah Background jadi hijau muda segar
+            document.body.style.background = "#e8f5e9";
+
+            document.getElementById("hasil").className = "success-box";
             document.getElementById("hasil").innerHTML = `
-            <div class="success">
-                <div class="icon">✅</div>
-                <div class="title">SELAMAT DATANG</div>
-                <div class="nama">${absenRes.nama}</div>
-                <div class="ket">Absen Masuk Berhasil</div>
+            <div class="success" style="padding: 20px; text-align: center;">
+                <div class="icon" style="font-size: 65px; margin-bottom: 10px;">👍</div>
+                <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 8px;">SELAMAT DATANG</div>
+                <div class="nama" style="font-size: 25px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
+                <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 12px;">Absen Masuk Berhasil</div>
+                <div style="font-size: 16px; color: #333; font-weight: 500; margin-bottom: 20px;">Selamat bekerja dan tetap semangat! 🚀</div>
+                <div style="font-size: 13px; color: #777; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu Absen: ${new Date().toLocaleTimeString("id-ID")}</div>
             </div>`;
             
-            setTimeout(() => { location.reload(); }, 3500); 
+            // Waktu tampil 6 detik supaya staf punya waktu baca dengan tenang
+            setTimeout(() => { location.reload(); }, 6000); 
 
         } else {
             document.getElementById("hasil").className = "error-box";
             document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
-            setTimeout(() => { location.reload(); }, 3500);
+            setTimeout(() => { location.reload(); }, 5000);
         }
     })
     .catch(err => {
         document.getElementById("hasil").className = "error-box";
         document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
-        setTimeout(() => { location.reload(); }, 3500);
+        setTimeout(() => { location.reload(); }, 5000);
     });
 });
 </script>
