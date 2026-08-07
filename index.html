@@ -40,18 +40,27 @@
 
         .header-brand {
             background: #f8fafc;
-            padding: 20px;
+            padding: 15px 20px;
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
         }
 
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
         .logo-text {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: #2563eb;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         h1 {
@@ -174,9 +183,10 @@
 
     <div class="container">
         <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
             <div class="logo-text">MMBC Tour & Travel</div>
-            <h1>Sistem Absensi Karyawan</h1>
-            <div class="subtitle">Silakan scan QR Code untuk Melakukan Absen</div>
+            <h1>ABSENSI QR</h1>
+            <div class="subtitle">Silakan scan QR Code untuk melakukan absensi</div>
         </div>
 
         <div class="clock-box" id="clock">
@@ -202,7 +212,7 @@
     </footer>
 
     <script>
-        // Registrasi Service Worker (SW.js) untuk Auto-Update Cache & PWA
+        // Registrasi Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
@@ -211,14 +221,14 @@
             });
         }
 
-        // Tangkap Event Install PWA di Browser
+        // Tangkap Event Install PWA
         let deferredPrompt;
         const btnInstall = document.getElementById('btnInstall');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            btnInstall.style.display = 'block'; // Tampilkan tombol install
+            btnInstall.style.display = 'block'; 
         });
 
         btnInstall.addEventListener('click', async () => {
@@ -262,7 +272,6 @@
             })
             .catch(err => console.log("Gagal mengambil IP: ", err));
 
-        // URL Web App Apps Script kamu
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
         const qr = new Html5Qrcode("reader");
@@ -299,6 +308,11 @@
                         document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
                         qr.stop().then(() => {
                             document.getElementById("reader").style.display = "none";
+                            
+                            // SEMBUNYIKAN TOMBOL INSTALL PAS MASUK KE MODE SELFIE
+                            const btnInstallEl = document.getElementById("btnInstall");
+                            if(btnInstallEl) btnInstallEl.style.display = "none";
+
                             bukaKameraSelfie();
                         });
                         return;
