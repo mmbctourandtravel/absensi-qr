@@ -419,6 +419,9 @@
             const jamStr = now.toLocaleTimeString("id-ID");
             const waktuLengkap = `${tglStr}, ${jamStr}`;
 
+            // AMBIL NAMA WIFI LANGSUNG DARI TEKS DI LAYAR AGAR SELALU PAS & AKURAT
+            const wifiDiLayar = document.getElementById("namaWifiText").innerText;
+
             const boxHeight = 130;
             ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
             ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
@@ -432,10 +435,9 @@
             let startY = canvas.height - boxHeight + 15;
             let lineSpacing = fontSize + 8;
 
-            // Cetak Watermark dengan Nama WiFi Asli dari Master Data
             ctx.fillText("🏢 MMBC Tour & Travel", startX, startY);
             ctx.fillText(`👤 Nama: ${namaStaffAktif || "Staff"}`, startX, startY + lineSpacing);
-            ctx.fillText(`🌐 Jaringan: ${namaWifiAktif}`, startX, startY + (lineSpacing * 2));
+            ctx.fillText(`🌐 Jaringan: ${wifiDiLayar}`, startX, startY + (lineSpacing * 2)); // <--- Pakai teks yang sama persis di layar
             ctx.fillText(`🕒 Waktu: ${waktuLengkap}`, startX, startY + (lineSpacing * 3));
 
             const foto = canvas.toDataURL("image/jpeg", 0.85);
@@ -462,7 +464,7 @@
                     
                     return fetch(API, {
                         method: "POST",
-                        body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP })
+                        body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP, wifi: wifiDiLayar })
                     });
                 } else {
                     throw new Error("Upload selfie gagal");
