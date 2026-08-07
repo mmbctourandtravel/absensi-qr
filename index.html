@@ -700,15 +700,16 @@ id: qrStaffId
         "❌ " + absenRes.pesan;
 
     }
+    }
 
 })
-.catch(err=>{
+.withFailureHandler(function(err){
 
     console.log("ABSEN ERROR =", err);
 
     alert("ABSEN ERROR : " + err);
 
-});
+})
 </script>
 </body>
 
