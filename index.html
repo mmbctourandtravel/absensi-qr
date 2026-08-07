@@ -689,7 +689,11 @@ id: qrStaffId
             </div>
             `;
 
-        }
+         } // tutup if absenRes.sukses
+
+    }); // tutup then ABSEN TEXT
+
+}); // tutup fetch ABSEN
 
     }else{
 
@@ -699,16 +703,20 @@ id: qrStaffId
         document.getElementById("hasil").innerHTML =
         "❌ " + absenRes.pesan;
 
-    }
-}
-})
-.withFailureHandler(function(err){
+   }
 
-    console.log("ABSEN ERROR =", err);
+}); // tutup then UPLOAD RESPONSE
 
-    alert("ABSEN ERROR : " + err);
 
-})
+.catch(err=>{
+
+    console.log("UPLOAD ERROR =", err);
+
+    alert("UPLOAD ERROR : " + err);
+
+});
+
+}); // tutup btnSelfie click
 </script>
 </body>
 
