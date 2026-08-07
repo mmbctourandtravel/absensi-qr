@@ -446,7 +446,7 @@ qr.start(
 
     document.getElementById("hasil").innerHTML =
     "⏳ Memproses absensi...";
-
+console.log("SCAN =", decodedText);
     fetch(API,{
         method:"POST",
         body: JSON.stringify({
@@ -456,7 +456,7 @@ qr.start(
     })
     .then(r=>r.json())
     .then(res=>{
-
+console.log("STATUS RESPONSE =", res);
     if(res.status == "masuk"){
 
         qr.pause();
