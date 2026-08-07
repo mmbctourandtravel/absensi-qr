@@ -1,1 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Generator Ikon Absensi QR</title>
+</head>
+<body style="text-align:center; padding:50px; background:#f0f2f5;">
+    <h3>Alat Pembuat Ikon Otomatis</h3>
+    <p>Logo di bawah ini sudah digabungkan dengan teks "ABSENSI QR". Klik tombol Download untuk menyimpannya sebagai <b>logo.png</b></p>
+    
+    <canvas id="iconCanvas" width="512" height="512" style="border-radius: 100px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);"></canvas>
+    <br><br>
+    <a id="downloadBtn" download="logo.png" style="background:#2563eb; color:white; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold; font-family:sans-serif;">📥 Download logo.png</a>
 
+    <script>
+        const canvas = document.getElementById('iconCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Muat Logo.jpeg yang sudah ada di repository kamu
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = "Logo.jpeg"; // Pastikan file Logo.jpeg ada di folder yang sama
+
+        img.onload = function() {
+            // 1. Gambar Logo Asli (memenuhi canvas 512x512)
+            ctx.drawImage(img, 0, 0, 512, 512);
+
+            // 2. Buat Banner Pita / Kotak Transparan di Bagian Bawah Ikon
+            ctx.fillStyle = "rgba(15, 23, 42, 0.85);"; // Warna Navy gelap transparan elegan
+            ctx.fillRect(0, 370, 512, 142);
+
+            // 3. Tambahkan Teks "ABSENSI QR"
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 48px 'Segoe UI', Arial, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("ABSENSI QR", 256, 415);
+
+            // 4. Tambahkan Sub-teks "MMBC"
+            ctx.fillStyle = "#38bdf8"; // Biru cerah aksen
+            ctx.font = "bold 26px 'Segoe UI', Arial, sans-serif";
+            ctx.fillText("MMBC TOUR & TRAVEL", 256, 465);
+
+            // Set link download
+            const dataURL = canvas.toDataURL("image/png");
+            document.getElementById('downloadBtn').href = dataURL;
+        };
+    </script>
+</body>
+</html>
