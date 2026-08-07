@@ -383,9 +383,14 @@ updateClock();
 
 // Ambil IP Address pengunjung otomatis
 let userIP = "";
+let namaWifiInfo = "Jaringan WiFi"; // Default
 fetch("https://api.ipify.org?format=json")
     .then(r => r.json())
-    .then(data => { userIP = data.ip; })
+    .then(data => { 
+        userIP = data.ip; 
+        // Deteksi sederhana atau bisa disesuaikan dengan info jaringan kamu
+        namaWifiInfo = "Megavision / WiFi Admin (" + data.ip + ")";
+    })
     .catch(err => console.log("Gagal mengambil IP: ", err));
 
 // URL Web App Apps Script (Pastikan URL deploy terbaru)
@@ -395,6 +400,7 @@ const qr = new Html5Qrcode("reader");
 let sedangProses = false;
 let selfieStream = null;
 let qrStaffId = "";
+let namaStaffAktif = ""; // Variabel buat nyimpen nama staf
 
 // Mulai Kamera QR
 qr.start(
@@ -420,6 +426,11 @@ qr.start(
         .then(text => {
             let res = JSON.parse(text);
             
+            // Simpan nama staf untuk dipakai di watermark foto nanti
+            if(res.nama) {
+                namaStaffAktif = res.nama;
+            }
+
             // 1. JIKA ABSEN MASUK (BUTUH SELFIE)
             if(res.status == "masuk"){
                 document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
@@ -435,8 +446,6 @@ qr.start(
                 document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
                 
                 qr.stop().catch(e => console.log(e));
-                
-                // Sembunyikan Header & Kotak QR agar halaman bersih
                 sembunyikanHeaderUtama();
 
                 fetch(API, {
@@ -447,9 +456,7 @@ qr.start(
                 .then(pulangText => {
                     let absenRes = JSON.parse(pulangText);
                     if(absenRes.sukses){
-                        // Ubah Background jadi hijau muda lembut
                         document.body.style.background = "#e8f5e9";
-                        
                         document.getElementById("hasil").className = "success-box";
                         document.getElementById("hasil").innerHTML = `
                         <div class="success" style="padding: 20px; text-align: center;">
@@ -458,13 +465,12 @@ qr.start(
                             <div class="nama" style="font-size: 24px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
                             <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 15px;">Absen Pulang Berhasil</div>
                             <div style="font-size: 15px; color: #555; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat!</div>
-                            <div style="font-size: 13px; color: #888; border-top: 1px dashed #c8e6c9; pt: 10px; margin-top: 10px;">📅 Waktu: ${new Date().toLocaleTimeString("id-ID")}</div>
+                            <div style="font-size: 13px; color: #888; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu: ${new Date().toLocaleTimeString("id-ID")}</div>
                         </div>`;
                     } else {
                         document.getElementById("hasil").className = "error-box";
                         document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
                     }
-                    // Waktu tampil diperlama jadi 6 detik supaya staf bisa baca dengan puas
                     setTimeout(() => { location.reload(); }, 6000); 
                 }).catch(err => {
                     document.getElementById("hasil").className = "error-box";
@@ -504,7 +510,7 @@ qr.start(
     sedangProses = false;
 });
 
-// Fungsi untuk menyembunyikan header/logo/jam saat sukses agar tampilan bersih
+// Fungsi sembunyikan header utama
 function sembunyikanHeaderUtama() {
     const logoEl = document.querySelector(".logo");
     const h1El = document.querySelector("h1");
@@ -534,24 +540,55 @@ async function bukaKameraSelfie(){
     }
 }
 
-// Proses Jepret Selfie
+// Proses Jepret Selfie & Tambah Watermark Lengkap
 document.getElementById("btnSelfie").addEventListener("click", function(){
     this.style.display = "none"; 
 
     const video = document.getElementById("selfieVideo");
-    video.pause(); // Efek jepret (freeze frame)
+    video.pause(); // Efek freeze frame
     
     const canvas = document.getElementById("selfieCanvas");
     const ctx = canvas.getContext("2d");
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    
+    // 1. Gambar Video Selfie ke Canvas
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const foto = canvas.toDataURL("image/jpeg", 0.8);
+    // 2. TAMBAHKAN WATERMARK DI ATAS CANVAS (FOTO)
+    const now = new Date();
+    const tglStr = now.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
+    const jamStr = now.toLocaleTimeString("id-ID");
+    const waktuLengkap = `${tglStr}, ${jamStr}`;
+
+    // Buat latar belakang hitam transparan di bagian bawah foto agar teks terbaca jelas
+    const boxHeight = 130;
+    ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+    ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
+
+    // Konfigurasi Teks Watermark
+    ctx.fillStyle = "#ffffff";
+    ctx.textBaseline = "top";
+    
+    // Sesuaikan ukuran font secara dinamis berdasarkan ukuran video
+    let fontSize = Math.max(14, Math.floor(canvas.width / 35));
+    ctx.font = `bold ${fontSize}px Arial`;
+
+    let startX = 20;
+    let startY = canvas.height - boxHeight + 15;
+    let lineSpacing = fontSize + 8;
+
+    ctx.fillText("🏢 MMBC Tour & Travel", startX, startY);
+    ctx.fillText(`👤 Nama: ${namaStaffAktif || "Staff"}`, startX, startY + lineSpacing);
+    ctx.fillText(`🌐 Jaringan: ${namaWifiInfo}`, startX, startY + (lineSpacing * 2));
+    ctx.fillText(`🕒 Waktu: ${waktuLengkap}`, startX, startY + (lineSpacing * 3));
+
+    // Ambil hasil akhir foto yang sudah ada watermark-nya
+    const foto = canvas.toDataURL("image/jpeg", 0.85);
     
     document.getElementById("hasil").className = "processing";
-    document.getElementById("hasil").innerHTML = "📤 Mengupload selfie...";
+    document.getElementById("hasil").innerHTML = "📤 Mengupload selfie dengan watermark...";
 
     // Kirim Foto ke Google Drive
     fetch(API, {
@@ -586,10 +623,7 @@ document.getElementById("btnSelfie").addEventListener("click", function(){
     .then(text => {
         let absenRes = JSON.parse(text);
         if(absenRes.sukses){
-            // Sembunyikan elemen atas agar halaman bersih total
             sembunyikanHeaderUtama();
-            
-            // Ubah Background jadi hijau muda segar
             document.body.style.background = "#e8f5e9";
 
             document.getElementById("hasil").className = "success-box";
@@ -603,7 +637,6 @@ document.getElementById("btnSelfie").addEventListener("click", function(){
                 <div style="font-size: 13px; color: #777; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu Absen: ${new Date().toLocaleTimeString("id-ID")}</div>
             </div>`;
             
-            // Waktu tampil 6 detik supaya staf punya waktu baca dengan tenang
             setTimeout(() => { location.reload(); }, 6000); 
 
         } else {
