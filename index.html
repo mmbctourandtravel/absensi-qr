@@ -463,7 +463,10 @@ console.log("SCAN =", decodedText);
 
     console.log("STATUS RESPONSE =", res);
 
-    if(res.status == "masuk"){
+   if(res.status == "masuk"){
+
+    document.getElementById("reader").style.display =
+    "none";
 
     document.getElementById("hasil").innerHTML =
     "📸 Silakan ambil selfie";
