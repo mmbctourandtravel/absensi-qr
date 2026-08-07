@@ -566,20 +566,16 @@ console.log("SCAN =", decodedText);
    document.getElementById("btnSelfie")
 .addEventListener("click", async function(){
 
-    const video =
-    document.getElementById("selfieVideo");
+    const video = document.getElementById("selfieVideo");
 
-    const canvas =
-    document.getElementById("selfieCanvas");
+    const canvas = document.getElementById("selfieCanvas");
 
-    const ctx =
-    canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
-    canvas.width =
-    video.videoWidth;
 
-    canvas.height =
-    video.videoHeight;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
 
     ctx.drawImage(
         video,
@@ -589,145 +585,166 @@ console.log("SCAN =", decodedText);
         canvas.height
     );
 
-    const foto =
-    canvas.toDataURL(
+
+    const foto = canvas.toDataURL(
         "image/jpeg",
         0.8
     );
 
+
     document.getElementById("hasil").innerHTML =
     "📤 Mengupload selfie...";
 
-fetch(API,{
-    method:"POST",
-    headers:{
-        "Content-Type":"application/json"
-    },
-    body: JSON.stringify({
-        action:"uploadSelfie",
-        id: qrStaffId,
-        foto: foto
+
+    fetch(API,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+            action:"uploadSelfie",
+            id: qrStaffId,
+            foto: foto
+        })
     })
-})
-.then(r=>{
-    console.log("UPLOAD RAW RESPONSE =", r);
-    return r.text();
-})
-.then(text=>{
+    .then(r=>{
 
-    console.log("UPLOAD RESPONSE =", text);
+        console.log("UPLOAD RAW RESPONSE =", r);
 
-    let hasil = JSON.parse(text);
+        return r.text();
 
+    })
+    .then(text=>{
 
-    if(hasil.sukses){
+        console.log("UPLOAD RESPONSE =", text);
 
 
-        // matikan kamera selfie
-        if(selfieStream){
+        let hasil = JSON.parse(text);
 
-            selfieStream.getTracks().forEach(track=>{
-                track.stop();
+
+        if(hasil.sukses){
+
+
+            // MATIKAN KAMERA SELFIE
+            if(selfieStream){
+
+                selfieStream.getTracks().forEach(track=>{
+                    track.stop();
+                });
+
+            }
+
+
+            document.getElementById("hasil").innerHTML =
+            "⏳ Menyimpan absensi...";
+
+
+            console.log("KIRIM ABSEN =", qrStaffId);
+
+
+
+            return fetch(API,{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    action:"absen",
+                    id: qrStaffId
+                })
             });
+
+
+        }else{
+
+
+            throw new Error("Upload selfie gagal");
+
 
         }
 
 
-        document.getElementById("hasil").innerHTML =
-        "⏳ Menyimpan absensi...";
+    })
+    .then(r=>{
 
 
-        console.log("KIRIM ABSEN =", qrStaffId);
+        console.log("ABSEN RAW RESPONSE =", r);
 
 
-        fetch(API,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify({
-                action:"absen",
-                id: qrStaffId
-            })
-        })
-        .then(r=>{
-
-            console.log("ABSEN RAW RESPONSE =", r);
-
-            return r.text();
-
-        })
-        .then(text=>{
+        return r.text();
 
 
-            console.log("ABSEN TEXT =", text);
+    })
+    .then(text=>{
 
 
-            let absenRes = JSON.parse(text);
+        console.log("ABSEN TEXT =", text);
 
 
-            console.log("ABSEN RESPONSE =", absenRes);
+        let absenRes = JSON.parse(text);
+
+
+        console.log("ABSEN RESPONSE =", absenRes);
 
 
 
-            if(absenRes.sukses){
+        if(absenRes.sukses){
 
 
-                if(absenRes.tipe=="masuk"){
+            document.getElementById("hasil").className =
+            "success-box";
 
 
-                    document.getElementById("hasil").className =
-                    "success-box";
+
+            if(absenRes.tipe=="masuk"){
 
 
-                    document.getElementById("hasil").innerHTML = `
-                    <div class="success">
-                        <div class="icon">✅</div>
-                        <div class="title">SELAMAT DATANG</div>
-                        <div class="nama">${absenRes.nama}</div>
-                        <div class="ket">Absen Masuk Berhasil</div>
-                    </div>
-                    `;
-
-
-                }else{
-
-
-                    document.getElementById("hasil").className =
-                    "success-box";
-
-
-                    document.getElementById("hasil").innerHTML = `
-                    <div class="success">
-                        <div class="icon">👋</div>
-                        <div class="title">SAMPAI JUMPA</div>
-                        <div class="nama">${absenRes.nama}</div>
-                        <div class="ket">Absen Pulang Berhasil</div>
-                    </div>
-                    `;
-
-
-                }
+                document.getElementById("hasil").innerHTML = `
+                <div class="success">
+                    <div class="icon">✅</div>
+                    <div class="title">SELAMAT DATANG</div>
+                    <div class="nama">${absenRes.nama}</div>
+                    <div class="ket">Absen Masuk Berhasil</div>
+                </div>
+                `;
 
 
             }else{
 
 
-                document.getElementById("hasil").className =
-                "error-box";
-
-
-                document.getElementById("hasil").innerHTML =
-                "❌ " + absenRes.pesan;
+                document.getElementById("hasil").innerHTML = `
+                <div class="success">
+                    <div class="icon">👋</div>
+                    <div class="title">SAMPAI JUMPA</div>
+                    <div class="nama">${absenRes.nama}</div>
+                    <div class="ket">Absen Pulang Berhasil</div>
+                </div>
+                `;
 
 
             }
 
 
-        });
+
+        }else{
 
 
-    }else{
+            document.getElementById("hasil").className =
+            "error-box";
+
+
+            document.getElementById("hasil").innerHTML =
+            "❌ " + absenRes.pesan;
+
+
+        }
+
+
+    })
+    .catch(err=>{
+
+
+        console.log("ABSEN / UPLOAD ERROR =", err);
 
 
         document.getElementById("hasil").className =
@@ -735,20 +752,10 @@ fetch(API,{
 
 
         document.getElementById("hasil").innerHTML =
-        "❌ Upload selfie gagal";
+        "❌ ERROR : " + err.message;
 
 
-    }
-
-
-})
-.catch(err=>{
-
-
-    console.log("UPLOAD ERROR =", err);
-
-
-    alert("UPLOAD ERROR : " + err);
+    });
 
 
 });
