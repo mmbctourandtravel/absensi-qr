@@ -642,15 +642,9 @@ if(video){
     video.style.display = "none";
 
 }
-
             document.getElementById("hasil").innerHTML =
             "⏳ Menyimpan absensi...";
-
-
             console.log("KIRIM ABSEN =", qrStaffId);
-
-
-
             return fetch(API,{
     method:"POST",
     body: JSON.stringify({
@@ -659,45 +653,21 @@ if(video){
     })
 });
         }else{
-
-
             throw new Error("Upload selfie gagal");
-
-
         }
-
-
     })
     .then(r=>{
-
-
         console.log("ABSEN RAW RESPONSE =", r);
-
-
         return r.text();
-
-
     })
     .then(text=>{
-
-
         console.log("ABSEN TEXT =", text);
-
-
         let absenRes = JSON.parse(text);
-
-
         console.log("ABSEN RESPONSE =", absenRes);
 
-
-
-        if(absenRes.sukses){
-
-
+       if(absenRes.sukses){
             document.getElementById("hasil").className =
             "success-box";
-
-
 
 if(absenRes.tipe=="masuk"){
 
@@ -726,43 +696,30 @@ if(absenRes.tipe=="masuk"){
                     <div class="ket">Absen Pulang Berhasil</div>
                 </div>
                 `;
-
-
             }
 
-
-
         }else{
-
 
             document.getElementById("hasil").className =
             "error-box";
 
-
             document.getElementById("hasil").innerHTML =
             "❌ " + absenRes.pesan;
 
-
         }
-
 
     })
     .catch(err=>{
 
-
         console.log("ABSEN / UPLOAD ERROR =", err);
-
 
         document.getElementById("hasil").className =
         "error-box";
 
-
         document.getElementById("hasil").innerHTML =
         "❌ ERROR : " + err.message;
 
-
     });
-
 
 });
 </script>
