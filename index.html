@@ -615,12 +615,11 @@ console.log("SCAN =", decodedText);
 
         console.log("UPLOAD RESPONSE =", text);
 
-
         let hasil = JSON.parse(text);
 
-
         if(hasil.sukses){
-
+const fotoUrl = hasil.url;
+console.log("FOTO URL =", fotoUrl);
 
             // MATIKAN KAMERA SELFIE
             if(selfieStream){
@@ -633,7 +632,6 @@ console.log("SCAN =", decodedText);
 
 }
 
-
 const video = document.getElementById("selfieVideo");
 
 if(video){
@@ -645,12 +643,14 @@ if(video){
             document.getElementById("hasil").innerHTML =
             "⏳ Menyimpan absensi...";
             console.log("KIRIM ABSEN =", qrStaffId);
+            
             return fetch(API,{
-    method:"POST",
-    body: JSON.stringify({
-        action:"absen",
-        id: qrStaffId
-    })
+method:"POST",
+body: JSON.stringify({
+action:"absen",
+id: qrStaffId,
+foto: fotoUrl
+})
 });
         }else{
             throw new Error("Upload selfie gagal");
