@@ -599,122 +599,159 @@ console.log("SCAN =", decodedText);
     "📤 Mengupload selfie...";
 
 fetch(API,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify({
-    action:"uploadSelfie",
-    id: qrStaffId,
-    foto: foto
-})
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+        action:"uploadSelfie",
+        id: qrStaffId,
+        foto: foto
+    })
 })
 .then(r=>{
-console.log("ABSEN RAW RESPONSE", r);
+    console.log("UPLOAD RAW RESPONSE =", r);
     return r.text();
-
 })
 .then(text=>{
 
-    console.log("UPLOAD RESPONSE:", text);
+    console.log("UPLOAD RESPONSE =", text);
 
     let hasil = JSON.parse(text);
 
+
     if(hasil.sukses){
 
-    // matikan kamera selfie
-    if(selfieStream){
 
-        selfieStream.getTracks().forEach(track=>{
-            track.stop();
+        // matikan kamera selfie
+        if(selfieStream){
+
+            selfieStream.getTracks().forEach(track=>{
+                track.stop();
+            });
+
+        }
+
+
+        document.getElementById("hasil").innerHTML =
+        "⏳ Menyimpan absensi...";
+
+
+        console.log("KIRIM ABSEN =", qrStaffId);
+
+
+        fetch(API,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                action:"absen",
+                id: qrStaffId
+            })
+        })
+        .then(r=>{
+
+            console.log("ABSEN RAW RESPONSE =", r);
+
+            return r.text();
+
+        })
+        .then(text=>{
+
+
+            console.log("ABSEN TEXT =", text);
+
+
+            let absenRes = JSON.parse(text);
+
+
+            console.log("ABSEN RESPONSE =", absenRes);
+
+
+
+            if(absenRes.sukses){
+
+
+                if(absenRes.tipe=="masuk"){
+
+
+                    document.getElementById("hasil").className =
+                    "success-box";
+
+
+                    document.getElementById("hasil").innerHTML = `
+                    <div class="success">
+                        <div class="icon">✅</div>
+                        <div class="title">SELAMAT DATANG</div>
+                        <div class="nama">${absenRes.nama}</div>
+                        <div class="ket">Absen Masuk Berhasil</div>
+                    </div>
+                    `;
+
+
+                }else{
+
+
+                    document.getElementById("hasil").className =
+                    "success-box";
+
+
+                    document.getElementById("hasil").innerHTML = `
+                    <div class="success">
+                        <div class="icon">👋</div>
+                        <div class="title">SAMPAI JUMPA</div>
+                        <div class="nama">${absenRes.nama}</div>
+                        <div class="ket">Absen Pulang Berhasil</div>
+                    </div>
+                    `;
+
+
+                }
+
+
+            }else{
+
+
+                document.getElementById("hasil").className =
+                "error-box";
+
+
+                document.getElementById("hasil").innerHTML =
+                "❌ " + absenRes.pesan;
+
+
+            }
+
+
         });
 
-    }
 
-    document.getElementById("hasil").innerHTML =
-    "⏳ Menyimpan absensi...";
-console.log("KIRIM ABSEN =", qrStaffId);
-    fetch(API,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify({
-action:"absen",
-id: qrStaffId
-})
-})
-.then(r=>{
+    }else{
 
-    console.log("ABSEN RAW RESPONSE =", r);
-
-    return r.text();
-
-})
-.then(text=>{
-
-    console.log("ABSEN TEXT =", text);
-
-    let absenRes = JSON.parse(text);
-
-    console.log("ABSEN RESPONSE =", absenRes);
-
-    if(absenRes.sukses){
-
-        if(absenRes.tipe=="masuk"){
-
-            document.getElementById("hasil").className =
-            "success-box";
-
-            document.getElementById("hasil").innerHTML = `
-            <div class="success">
-                <div class="icon">✅</div>
-                <div class="title">SELAMAT DATANG</div>
-                <div class="nama">${absenRes.nama}</div>
-                <div class="ket">Absen Masuk Berhasil</div>
-            </div>
-            `;
-
-        }else{
-
-            document.getElementById("hasil").className =
-            "success-box";
-
-            document.getElementById("hasil").innerHTML = `
-            <div class="success">
-                <div class="icon">👋</div>
-                <div class="title">SAMPAI JUMPA</div>
-                <div class="nama">${absenRes.nama}</div>
-                <div class="ket">Absen Pulang Berhasil</div>
-            </div>
-            `;
-
-         } // tutup if absenRes.sukses
-}else{
 
         document.getElementById("hasil").className =
         "error-box";
 
+
         document.getElementById("hasil").innerHTML =
-        "❌ " + absenRes.pesan;
-
-   }
-}); // tutup fetch ABSEN
-
-    
-
-}); // tutup then UPLOAD RESPONSE
+        "❌ Upload selfie gagal";
 
 
+    }
+
+
+})
 .catch(err=>{
+
 
     console.log("UPLOAD ERROR =", err);
 
+
     alert("UPLOAD ERROR : " + err);
 
-});
 
-}); // tutup btnSelfie click
+});
 </script>
 </body>
 
