@@ -439,151 +439,44 @@ qr.start(
     if(sedangProses){
         return;
     }
+
     qrStaffId = decodedText;
     sedangProses = true;
 
     qr.pause();
 
-document.getElementById("hasil").className =
-"processing";
+    document.getElementById("hasil").className =
+    "processing";
 
-document.getElementById("hasil").innerHTML =
-"⏳ Memproses absensi...";
+    document.getElementById("hasil").innerHTML =
+    "⏳ Memproses absensi...";
 
-fetch(API,{
-    method:"POST",
-
-    headers:{
-        "Content-Type":"application/json"
-    },
-
-    body: JSON.stringify({
-        action:"uploadSelfie",
-        id: qrStaffId,
-        foto: foto
+    fetch(API,{
+        method:"POST",
+        body: JSON.stringify({
+            action:"cekStatus",
+            id: decodedText
+        })
     })
-})
-.then(r=>r.json())
-.then(res => {
+    .then(r=>r.json())
+    .then(res=>{
 
-    console.log("HASIL RESPONSE:", res);
-    console.log("NAMA:", res.nama);
+        console.log("STATUS =",res);
 
+        sedangProses = false;
 
-    if(res.sukses){
-        fetch(API,{
-            method:"POST",
-            body: JSON.stringify({
-                action:"absen",
-                id: decodedText
-            })
-        })
-        .then(r=>r.json())
-        .then(absenRes=>{
+        qr.resume();
 
-            console.log("HASIL ABSEN:", absenRes);
+    })
+    .catch(err=>{
 
+        console.log(err);
 
-            if(absenRes.sukses){
+        sedangProses = false;
 
-        beep();
+        qr.resume();
 
-        if(navigator.vibrate){
-            navigator.vibrate(300);
-        }
-
-
-                if(absenRes.tipe=="masuk"){
-
-                    document.getElementById("hasil").className =
-                    "success-box";
-
-                    document.getElementById("hasil").innerHTML = `
-                    <div class="success">
-                        <div class="icon">✅</div>
-                        <div class="title">SELAMAT DATANG</div>
-                        <div class="nama">${absenRes.nama}</div>
-                        <div class="ket">Absen Masuk Berhasil</div>
-                    </div>
-                    `;
-
-
-                }else{
-
-
-                    document.getElementById("hasil").className =
-                    "success-box";
-
-                    document.getElementById("hasil").innerHTML = `
-                    <div class="success">
-                        <div class="icon">👋</div>
-                        <div class="title">SAMPAI JUMPA</div>
-                        <div class="nama">${absenRes.nama}</div>
-                        <div class="ket">Absen Pulang Berhasil</div>
-                    </div>
-                    `;
-
-                }
-               // STOP KAMERA QR DAN BUKA SELFIE
-qr.stop().then(()=>{
-
-    document.getElementById("reader").style.display="none";
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
     });
-
-});
-           }else{
-
-    document.getElementById("hasil").className =
-    "error-box";
-
-    document.getElementById("hasil").innerHTML =
-    "❌ " + res.pesan;
-
-    sedangProses=false;
-
-    qr.resume();
-
-}
-        })
-        .catch(err=>{
-
-    console.log(err);
-
-});
-
-    }else{
-
-    document.getElementById("hasil").className =
-    "error-box";
-
-    document.getElementById("hasil").innerHTML =
-    "❌ " + absenRes.pesan;
-
-    sedangProses=false;
-
-    qr.resume();
-
-}
-
-})
-.catch(err=>{
-
-    console.log(err);
-
-    document.getElementById("hasil").className =
-    "error-box";
-
-    document.getElementById("hasil").innerHTML =
-    "❌ Gagal mengirim data";
-
-    sedangProses=false;
-
-});
-
     },
 
     (errorMessage)=>{
