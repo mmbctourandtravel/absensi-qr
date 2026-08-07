@@ -464,6 +464,7 @@ console.log("SCAN =", decodedText);
     console.log("STATUS RESPONSE =", res);
 
    if(res.status == "masuk"){
+
     document.getElementById("hasil").innerHTML =
     "📸 Silakan ambil selfie";
 
@@ -471,12 +472,14 @@ console.log("SCAN =", decodedText);
 
         document.getElementById("reader").style.display =
         "none";
+
         bukaKameraSelfie();
     });
+
     return;
 }
 
-   if(res.status == "pulang"){
+if(res.status == "pulang"){
 
     document.getElementById("hasil").innerHTML =
     "👋 Memproses absen pulang";
@@ -484,44 +487,20 @@ console.log("SCAN =", decodedText);
     return;
 }
 
-    fetch(API,{
-        method:"POST",
-        body: JSON.stringify({
-            action:"absen",
-            id: decodedText
-        })
-    })
-    .then(r=>r.json())
-    .then(absenRes=>{
+if(res.status == "sudah_absen"){
 
-        document.getElementById("hasil").className =
-        "success-box";
+    document.getElementById("hasil").className =
+    "error-box";
 
-        document.getElementById("hasil").innerHTML =
-        "✅ Absen Pulang Berhasil<br>" +
-        absenRes.nama;
+    document.getElementById("hasil").innerHTML =
+    "❌ " + res.pesan;
 
-        sedangProses = false;
+    sedangProses = false;
 
-    })
-    .catch(err=>{
-
-        console.log(err);
-
-        document.getElementById("hasil").className =
-        "error-box";
-
-        document.getElementById("hasil").innerHTML =
-        "❌ Gagal absen pulang";
-
-        sedangProses = false;
-
-        qr.resume();
-    });
+    qr.resume();
 
     return;
 }
-
 })
 .catch(err=>{
 
