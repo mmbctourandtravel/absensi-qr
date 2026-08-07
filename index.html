@@ -447,16 +447,22 @@ qr.start(
     document.getElementById("hasil").innerHTML =
     "⏳ Memproses absensi...";
 console.log("SCAN =", decodedText);
-    fetch(API,{
-        method:"POST",
-        body: JSON.stringify({
-            action:"cekStatus",
-            id: decodedText
-        })
+ fetch(API,{
+    method:"POST",
+    body: JSON.stringify({
+        action:"cekStatus",
+        id: decodedText
     })
-    .then(r=>r.json())
-    .then(res=>{
-console.log("STATUS RESPONSE =", res);
+})
+.then(r=>r.text())
+.then(text=>{
+
+    console.log("RAW RESPONSE =", text);
+
+    let res = JSON.parse(text);
+
+    console.log("STATUS RESPONSE =", res);
+
     if(res.status == "masuk"){
 
         qr.pause();
@@ -494,6 +500,8 @@ console.log("STATUS RESPONSE =", res);
 
 })
 .catch(err=>{
+
+    alert("CEK STATUS ERROR : " + err);
 
     console.log(err);
 
