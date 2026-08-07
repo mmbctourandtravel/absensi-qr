@@ -480,41 +480,64 @@ console.log("SCAN =", decodedText);
 }
 
 if(res.status == "pulang"){
+    document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
 
-    document.getElementById("hasil").innerHTML =
-    "👋 Memproses absen pulang";
+    // --- MULAI PERINTAH KIRIM ABSEN PULANG ---
+    fetch(API, {
+        method: "POST",
+        body: JSON.stringify({
+            action: "absen",
+            id: qrStaffId,
+            ip: typeof userIP !== 'undefined' ? userIP : "" // Aman walau variabel userIP belum dipasang
+        })
+    })
+    .then(r => r.text())
+    .then(text => {
+        let absenRes = JSON.parse(text);
+        if(absenRes.sukses){
+            document.getElementById("hasil").className = "success-box";
+            document.getElementById("hasil").innerHTML = `
+            <div class="success">
+                <div class="icon">👋</div>
+                <div class="title">SAMPAI JUMPA</div>
+                <div class="nama">${absenRes.nama}</div>
+                <div class="ket">Absen Pulang Berhasil</div>
+            </div>`;
+            
+            // Web otomatis refresh setelah 3 detik
+            setTimeout(() => { location.reload(); }, 3000);
+        } else {
+            document.getElementById("hasil").className = "error-box";
+            document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+            setTimeout(() => { location.reload(); }, 3000);
+        }
+    })
+    .catch(err => {
+        document.getElementById("hasil").className = "error-box";
+        document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+        setTimeout(() => { location.reload(); }, 3000);
+    });
+    // --- AKHIR PERINTAH KIRIM ABSEN PULANG ---
 
     return;
 }
 
 if(res.status == "sudah_absen"){
-
-    document.getElementById("hasil").className =
-    "error-box";
-
-    document.getElementById("hasil").innerHTML =
-    "❌ " + res.pesan;
-
+    document.getElementById("hasil").className = "error-box";
+    document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
     sedangProses = false;
-
     qr.resume();
-
     return;
 }
 })
 .catch(err=>{
-
     alert("CEK STATUS ERROR : " + err);
-
     console.log(err);
-
     sedangProses = false;
-
     qr.resume();
-
 });
 
-},   // ← INI YANG HILANG BRO
+}, 
 
 (errorMessage)=>{
     // abaikan error scan
