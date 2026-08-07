@@ -322,48 +322,43 @@ MMBC TOUR & TRAVEL
 </div>
 
 <div id="reader"></div>
-                     <div id="selfieArea" style="display:none;margin-top:15px;">
+<div id="selfieArea" style="display:none;">
 
-    <video
-        id="selfieVideo"
-        autoplay
-        playsinline
-        style="
-        width:100%;
-        border-radius:15px;
-        ">
-    </video>
+<video
+    id="selfieVideo"
+    autoplay
+    playsinline
+    style="
+    width:100%;
+    border-radius:15px;
+    ">
+</video>
 
-    <canvas
-        id="selfieCanvas"
-        style="display:none;">
-    </canvas>
+<canvas
+    id="selfieCanvas"
+    style="display:none;">
+</canvas>
 
-    <button
-        id="btnSelfie"
-        style="
-        width:100%;
-        margin-top:10px;
-        padding:15px;
-        border:none;
-        border-radius:15px;
-        background:#1565c0;
-        color:white;
-        font-size:18px;
-        cursor:pointer;
-        ">
-        📸 Ambil Selfie
-    </button>
-
+<button
+    id="btnSelfie"
+    style="
+    width:100%;
+    margin-top:10px;
+    padding:15px;
+    border:none;
+    border-radius:15px;
+    background:#1565c0;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    ">
+    📸 Ambil Selfie
+</button>
 </div>
 </div>
-
 <div class="footer">
 
 Version 3.0 FINAL
-
-</div>
-
 </div>
 <script>
 function beep(){
@@ -461,26 +456,44 @@ qr.start(
     .then(r=>r.json())
     .then(res=>{
 
-    document.getElementById("hasil").innerHTML =
-    "<pre>" +
-    JSON.stringify(res,null,2) +
-    "</pre>";
+    if(res.status == "masuk"){
 
-    sedangProses = false;
+        qr.pause();
 
-    qr.resume();
+        document.getElementById("hasil").innerHTML =
+        "📸 Silakan ambil selfie";
 
-})
-    .catch(err=>{
+        bukaKameraSelfie();
 
-        console.log(err);
+        return;
+    }
+
+    if(res.status == "pulang"){
+
+        document.getElementById("hasil").innerHTML =
+        "👋 Memproses absen pulang";
+
+        // nanti kita sambungkan prosesAbsen()
+
+        return;
+    }
+
+    if(res.status == "sudah_absen"){
+
+        document.getElementById("hasil").className =
+        "error-box";
+
+        document.getElementById("hasil").innerHTML =
+        "❌ " + res.pesan;
 
         sedangProses = false;
 
         qr.resume();
 
-    });
-    },
+        return;
+    }
+
+})
 
     (errorMessage)=>{
         // abaikan error scan
