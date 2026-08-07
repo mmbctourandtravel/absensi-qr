@@ -625,12 +625,23 @@ console.log("SCAN =", decodedText);
             // MATIKAN KAMERA SELFIE
             if(selfieStream){
 
-                selfieStream.getTracks().forEach(track=>{
-                    track.stop();
-                });
+    selfieStream.getTracks().forEach(track=>{
+        track.stop();
+    });
 
-            }
+    selfieStream = null;
 
+}
+
+
+const video = document.getElementById("selfieVideo");
+
+if(video){
+
+    video.srcObject = null;
+    video.style.display = "none";
+
+}
 
             document.getElementById("hasil").innerHTML =
             "⏳ Menyimpan absensi...";
@@ -688,21 +699,24 @@ console.log("SCAN =", decodedText);
 
 
 
-            if(absenRes.tipe=="masuk"){
+if(absenRes.tipe=="masuk"){
 
+    document.getElementById("selfieCanvas").style.display="none";
+    const video = document.getElementById("selfieVideo");
 
-                document.getElementById("hasil").innerHTML = `
-                <div class="success">
-                    <div class="icon">✅</div>
-                    <div class="title">SELAMAT DATANG</div>
-                    <div class="nama">${absenRes.nama}</div>
-                    <div class="ket">Absen Masuk Berhasil</div>
-                </div>
-                `;
+    if(video){
+        video.style.display="none";
+    }
+    document.getElementById("hasil").innerHTML = `
+    <div class="success">
+        <div class="icon">✅</div>
+        <div class="title">SELAMAT DATANG</div>
+        <div class="nama">${absenRes.nama}</div>
+        <div class="ket">Absen Masuk Berhasil</div>
+    </div>
+    `;
 
-
-            }else{
-
+}else{
 
                 document.getElementById("hasil").innerHTML = `
                 <div class="success">
