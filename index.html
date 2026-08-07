@@ -474,8 +474,6 @@ qr.start(
         document.getElementById("hasil").innerHTML =
         "👋 Memproses absen pulang";
 
-        // nanti kita sambungkan prosesAbsen()
-
         return;
     }
 
@@ -495,10 +493,21 @@ qr.start(
     }
 
 })
+.catch(err=>{
 
-    (errorMessage)=>{
-        // abaikan error scan
-    }
+    console.log(err);
+
+    sedangProses = false;
+
+    qr.resume();
+
+});
+
+},   // ← INI YANG HILANG BRO
+
+(errorMessage)=>{
+    // abaikan error scan
+}
 
 ).catch(err=>{
 
