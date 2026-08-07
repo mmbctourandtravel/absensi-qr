@@ -1,1 +1,15 @@
-
+{
+  "name": "Absensi MMBC Tour & Travel",
+  "short_name": "Absen MMBC",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e40af",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2921/2921222.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
