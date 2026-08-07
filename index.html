@@ -365,10 +365,35 @@
                         return;
                     }
 
-                    if(res.status == "pulang"){
-                        document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
-                        qr.stop().catch(e => console.log(e));
+    if(res.status == "pulang"){
+                        // Sembunyikan header utama & scanner agar fokus ke tampilan proses pulang
                         sembunyikanHeaderUtama();
+                        
+                        document.body.style.background = "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)";
+                        
+                        // Tampilan Card Elegan untuk Proses & Hasil Pulang
+                        const containerEl = document.querySelector(".container");
+                        containerEl.innerHTML = `
+                            <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                                <div id="pulangIcon" style="font-size: 65px; margin-bottom: 15px; animation: bounce 1s infinite alternate;">⏳</div>
+                                <div id="pulangTitle" style="font-size: 22px; font-weight: bold; color: #1e293b; margin-bottom: 8px;">MEMPROSES ABSEN PULANG</div>
+                                <div id="pulangSub" style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Mohon tunggu sebentar, sedang mencatat waktu pulang...</div>
+                                <div id="pulangLoader" style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                            </div>
+                        `;
+
+                        // Tambahkan sedikit animasi CSS putar & memantul jika belum ada
+                        if(!document.getElementById("animStyle")) {
+                            const styleAnim = document.createElement('style');
+                            styleAnim.id = "animStyle";
+                            styleAnim.innerHTML = `
+                                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                                @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+                            `;
+                            document.head.appendChild(styleAnim);
+                        }
+
+                        qr.stop().catch(e => console.log(e));
 
                         fetch(API, {
                             method: "POST",
@@ -378,25 +403,34 @@
                         .then(pulangText => {
                             let absenRes = JSON.parse(pulangText);
                             if(absenRes.sukses){
-                                document.body.style.background = "#e8f5e9";
-                                document.getElementById("hasil").className = "success-box";
-                                document.getElementById("hasil").innerHTML = `
-                                <div class="success" style="padding: 20px; text-align: center;">
-                                    <div class="icon" style="font-size: 60px; margin-bottom: 10px;">👋</div>
-                                    <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 10px;">SAMPAI JUMPA</div>
-                                    <div class="nama" style="font-size: 24px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
-                                    <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 15px;">Absen Pulang Berhasil</div>
-                                    <div style="font-size: 15px; color: #555; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat!</div>
-                                    <div style="font-size: 13px; color: #888; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu: ${new Date().toLocaleTimeString("id-ID")}</div>
+                                document.body.style.background = "linear-gradient(135deg, #065f46 0%, #047857 100%)";
+                                containerEl.innerHTML = `
+                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                                    <div style="font-size: 70px; margin-bottom: 10px;">👋</div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #065f46; margin-bottom: 5px;">SAMPAI JUMPA!</div>
+                                    <div style="font-size: 20px; font-weight: bold; color: #2563eb; margin-bottom: 12px;">${absenRes.nama}</div>
+                                    <div style="font-size: 15px; color: #047857; font-weight: 600; margin-bottom: 15px; background: #ecfdf5; padding: 8px; border-radius: 8px;">Absen Pulang Berhasil</div>
+                                    <div style="font-size: 14px; color: #475569; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat kembali ke rumah! 🏠</div>
+                                    <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">📅 Waktu Pulang: ${new Date().toLocaleTimeString("id-ID")}</div>
                                 </div>`;
                             } else {
-                                document.getElementById("hasil").className = "error-box";
-                                document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+                                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)";
+                                containerEl.innerHTML = `
+                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                                    <div style="font-size: 60px; margin-bottom: 10px;">❌</div>
+                                    <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 10px;">GAGAL ABSEN PULANG</div>
+                                    <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">${absenRes.pesan}</div>
+                                </div>`;
                             }
                             setTimeout(() => { location.reload(); }, 6000); 
                         }).catch(err => {
-                            document.getElementById("hasil").className = "error-box";
-                            document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+                            document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)";
+                            containerEl.innerHTML = `
+                            <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                                <div style="font-size: 60px; margin-bottom: 10px;">⚠️</div>
+                                <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 10px;">KONEKSI BERMASALAH</div>
+                                <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">ERROR: ${err.message}</div>
+                            </div>`;
                             setTimeout(() => { location.reload(); }, 5000);
                         });
                         return;
