@@ -588,7 +588,7 @@ document.getElementById("btnSelfie").addEventListener("click", function(){
     const foto = canvas.toDataURL("image/jpeg", 0.85);
     
     document.getElementById("hasil").className = "processing";
-    document.getElementById("hasil").innerHTML = "📤 Mengupload selfie dengan watermark...";
+    document.getElementById("hasil").innerHTML = "📤 sedang upload foto selfi";
 
     // Kirim Foto ke Google Drive
     fetch(API, {
