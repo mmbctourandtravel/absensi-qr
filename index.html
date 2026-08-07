@@ -363,389 +363,229 @@ Version 3.0 FINAL
 
 <script>
 function beep(){
-
-    const audio = new Audio(
-    "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-    );
-
-    audio.play();
-
+    const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+    audio.play().catch(e => console.log("Audio play blocked"));
 }
-    function updateClock(){
 
+function updateClock(){
     const now = new Date();
-
-    const hari = [
-        "Minggu",
-        "Senin",
-        "Selasa",
-        "Rabu",
-        "Kamis",
-        "Jumat",
-        "Sabtu"
-    ];
-
-    const bulan = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember"
-    ];
-
-    document.getElementById("tanggal").innerHTML =
-        hari[now.getDay()] + ", " +
-        now.getDate() + " " +
-        bulan[now.getMonth()] + " " +
-        now.getFullYear();
-
-    document.getElementById("jam").innerHTML =
-        now.toLocaleTimeString("id-ID");
+    const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    
+    document.getElementById("tanggal").innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
+    document.getElementById("jam").innerHTML = now.toLocaleTimeString("id-ID");
 }
 
 setInterval(updateClock,1000);
-
 updateClock();
+
+// Ambil IP Address pengunjung otomatis
+let userIP = "";
+fetch("https://api.ipify.org?format=json")
+    .then(r => r.json())
+    .then(data => { userIP = data.ip; })
+    .catch(err => console.log("Gagal mengambil IP: ", err));
+
+// URL Web App Apps Script (Pastikan ini yang paling baru dari hasil Deploy)
 const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
 const qr = new Html5Qrcode("reader");
-
 let sedangProses = false;
-
 let selfieStream = null;
-
 let qrStaffId = "";
 
+// Mulai Kamera QR
 qr.start(
     { facingMode: "environment" },
-    {
-        fps:10,
-        qrbox:250
+    { fps: 10, qrbox: 250 },
+    (decodedText) => {
+        if (sedangProses) return;
+
+        qrStaffId = decodedText;
+        sedangProses = true;
+        qr.pause(); // Pause kamera QR
+        beep(); // Bunyi tit!
+
+        document.getElementById("hasil").className = "processing";
+        document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
+
+        // Cek Status ke Apps Script
+        fetch(API, {
+            method: "POST",
+            body: JSON.stringify({ action: "cekStatus", id: decodedText })
+        })
+        .then(r => r.text())
+        .then(text => {
+            let res = JSON.parse(text);
+            
+            // 1. JIKA ABSEN MASUK (BUTUH SELFIE)
+            if(res.status == "masuk"){
+                document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
+                qr.stop().then(() => {
+                    document.getElementById("reader").style.display = "none"; // Sembunyikan kotak QR
+                    bukaKameraSelfie();
+                });
+                return;
+            }
+
+            // 2. JIKA ABSEN PULANG
+            if(res.status == "pulang"){
+                document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
+                
+                // Matikan dan Sembunyikan Kotak QR biar profesional
+                qr.stop().catch(e => console.log(e));
+                document.getElementById("reader").style.display = "none"; 
+
+                fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "absen", id: qrStaffId, ip: userIP })
+                })
+                .then(r => r.text())
+                .then(pulangText => {
+                    let absenRes = JSON.parse(pulangText);
+                    if(absenRes.sukses){
+                        document.getElementById("hasil").className = "success-box";
+                        document.getElementById("hasil").innerHTML = `
+                        <div class="success">
+                            <div class="icon">👋</div>
+                            <div class="title">SAMPAI JUMPA</div>
+                            <div class="nama">${absenRes.nama}</div>
+                            <div class="ket">Absen Pulang Berhasil</div>
+                        </div>`;
+                    } else {
+                        document.getElementById("hasil").className = "error-box";
+                        document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+                    }
+                    setTimeout(() => { location.reload(); }, 3500); // Otomatis refresh
+                }).catch(err => {
+                    document.getElementById("hasil").className = "error-box";
+                    document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+                    setTimeout(() => { location.reload(); }, 3500);
+                });
+                return;
+            }
+
+            // 3. JIKA SUDAH ABSEN
+            if(res.status == "sudah_absen"){
+                document.getElementById("hasil").className = "error-box";
+                document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
+                
+                // Matikan dan Sembunyikan Kotak QR biar gak nge-freeze jelek
+                qr.stop().catch(e => console.log(e));
+                document.getElementById("reader").style.display = "none"; 
+                
+                setTimeout(() => { location.reload(); }, 3000); // Otomatis refresh
+                return;
+            }
+        })
+        .catch(err => {
+            document.getElementById("hasil").className = "error-box";
+            document.getElementById("hasil").innerHTML = "❌ CEK STATUS ERROR : " + err;
+            setTimeout(() => { location.reload(); }, 3000);
+        });
     },
+    (errorMessage) => { /* Abaikan error scan frame kosong */ }
+).catch(err => {
+    document.getElementById("hasil").className = "error-box";
+    document.getElementById("hasil").innerHTML = "❌ Gagal membuka kamera QR";
+    sedangProses = false;
+});
 
-    (decodedText)=>{
-
-    if(sedangProses){
-        return;
+// Buka Kamera Depan (Selfie)
+async function bukaKameraSelfie(){
+    try{
+        document.getElementById("selfieArea").style.display = "block";
+        document.getElementById("btnSelfie").style.display = "block"; // Pastikan tombol muncul
+        
+        selfieStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user" }
+        });
+        document.getElementById("selfieVideo").srcObject = selfieStream;
+    }catch(err){
+        alert("Kamera Selfie tidak dapat diakses: " + err);
     }
-
-    qrStaffId = decodedText;
-    sedangProses = true;
-
-    qr.pause();
-
-    document.getElementById("hasil").className =
-    "processing";
-
-    document.getElementById("hasil").innerHTML =
-    "⏳ Memproses absensi...";
-console.log("SCAN =", decodedText);
- fetch(API,{
-    method:"POST",
-    body: JSON.stringify({
-        action:"cekStatus",
-        id: decodedText
-    })
-})
-.then(r=>r.text())
-.then(text=>{
-
-    console.log("RAW RESPONSE =", text);
-
-    let res = JSON.parse(text);
-
-    console.log("STATUS RESPONSE =", res);
-
-   if(res.status == "masuk"){
-
-    document.getElementById("hasil").innerHTML =
-    "📸 Silakan ambil selfie";
-
-    qr.stop().then(()=>{
-
-        document.getElementById("reader").style.display =
-        "none";
-
-        bukaKameraSelfie();
-    });
-
-    return;
 }
 
-if(res.status == "pulang"){
-    document.getElementById("hasil").innerHTML = "⏳ Memproses absen pulang...";
+// Proses Jepret Selfie
+document.getElementById("btnSelfie").addEventListener("click", function(){
+    
+    // UI/UX: Sembunyikan tombol biar gak ditekan 2 kali
+    this.style.display = "none"; 
 
-    // --- MULAI PERINTAH KIRIM ABSEN PULANG ---
+    const video = document.getElementById("selfieVideo");
+    
+    // UI/UX: Pause video seolah-olah difoto (efek jepret)
+    video.pause(); 
+    
+    const canvas = document.getElementById("selfieCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const foto = canvas.toDataURL("image/jpeg", 0.8);
+    
+    document.getElementById("hasil").className = "processing";
+    document.getElementById("hasil").innerHTML = "📤 Mengupload selfie...";
+
+    // Kirim Foto ke Google Drive
     fetch(API, {
         method: "POST",
-        body: JSON.stringify({
-            action: "absen",
-            id: qrStaffId,
-            ip: typeof userIP !== 'undefined' ? userIP : "" // Aman walau variabel userIP belum dipasang
-        })
+        body: JSON.stringify({ action: "uploadSelfie", id: qrStaffId, foto: foto })
+    })
+    .then(r => r.text())
+    .then(text => {
+        let hasil = JSON.parse(text);
+        if(hasil.sukses){
+            
+            // Matikan Kamera Selfie karena sudah beres upload
+            if(selfieStream){
+                selfieStream.getTracks().forEach(track => track.stop());
+                selfieStream = null;
+            }
+            video.srcObject = null;
+            video.style.display = "none"; // Hilangkan kamera selfie
+
+            document.getElementById("hasil").innerHTML = "⏳ Menyimpan absensi...";
+            
+            // Lanjut proses simpan absen masuk ke Sheet
+            return fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP })
+            });
+        } else {
+            throw new Error("Upload selfie gagal");
+        }
     })
     .then(r => r.text())
     .then(text => {
         let absenRes = JSON.parse(text);
         if(absenRes.sukses){
             document.getElementById("hasil").className = "success-box";
+            document.getElementById("selfieArea").style.display = "none"; // Bersihkan area
+            
             document.getElementById("hasil").innerHTML = `
             <div class="success">
-                <div class="icon">👋</div>
-                <div class="title">SAMPAI JUMPA</div>
+                <div class="icon">✅</div>
+                <div class="title">SELAMAT DATANG</div>
                 <div class="nama">${absenRes.nama}</div>
-                <div class="ket">Absen Pulang Berhasil</div>
+                <div class="ket">Absen Masuk Berhasil</div>
             </div>`;
             
-            // Web otomatis refresh setelah 3 detik
-            setTimeout(() => { location.reload(); }, 3000);
+            setTimeout(() => { location.reload(); }, 3500); 
+
         } else {
             document.getElementById("hasil").className = "error-box";
             document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
-            setTimeout(() => { location.reload(); }, 3000);
+            setTimeout(() => { location.reload(); }, 3500);
         }
     })
     .catch(err => {
         document.getElementById("hasil").className = "error-box";
         document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
-        setTimeout(() => { location.reload(); }, 3000);
+        setTimeout(() => { location.reload(); }, 3500);
     });
-    // --- AKHIR PERINTAH KIRIM ABSEN PULANG ---
-
-    return;
-}
-
-if(res.status == "sudah_absen"){
-    document.getElementById("hasil").className = "error-box";
-    document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
-    sedangProses = false;
-    qr.resume();
-    return;
-}
-})
-.catch(err=>{
-    alert("CEK STATUS ERROR : " + err);
-    console.log(err);
-    sedangProses = false;
-    qr.resume();
-});
-
-}, 
-
-(errorMessage)=>{
-    // abaikan error scan
-}
-
-).catch(err=>{
-
-    console.log(err);
-
-    document.getElementById("hasil").className =
-    "error-box";
-
-    document.getElementById("hasil").innerHTML =
-    "❌ Gagal membuka kamera";
-
-    sedangProses=false;
-
-});
-    async function bukaKameraSelfie(){
-
-    try{
-
-        document.getElementById(
-            "selfieArea"
-        ).style.display = "block";
-
-        selfieStream =
-        await navigator.mediaDevices.getUserMedia({
-
-            video:{
-                facingMode:"user"
-            }
-
-        });
-
-        document
-        .getElementById("selfieVideo")
-        .srcObject = selfieStream;
-
-    }catch(err){
-
-        alert(
-            "SELFIE ERROR : " + err
-        );
-
-        console.log(err);
-
-    }
-
-}
-   document.getElementById("btnSelfie")
-.addEventListener("click", async function(){
-
-    const video = document.getElementById("selfieVideo");
-
-    const canvas = document.getElementById("selfieCanvas");
-
-    const ctx = canvas.getContext("2d");
-
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-
-    ctx.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    const foto = canvas.toDataURL(
-        "image/jpeg",
-        0.8
-    );
-
-
-    document.getElementById("hasil").innerHTML =
-    "📤 Mengupload selfie...";
-
-
-   fetch(API,{
-    method:"POST",
-    body: JSON.stringify({
-        action:"uploadSelfie",
-        id: qrStaffId,
-        foto: foto
-    })
-})
-    .then(r=>{
-
-        console.log("UPLOAD RAW RESPONSE =", r);
-
-        return r.text();
-
-    })
-    .then(text=>{
-
-        console.log("UPLOAD RESPONSE =", text);
-
-        let hasil = JSON.parse(text);
-
-        if(hasil.sukses){
-const fotoUrl = hasil.url;
-console.log("FOTO URL =", fotoUrl);
-
-            // MATIKAN KAMERA SELFIE
-            if(selfieStream){
-
-    selfieStream.getTracks().forEach(track=>{
-        track.stop();
-    });
-
-    selfieStream = null;
-
-}
-
-const video = document.getElementById("selfieVideo");
-
-if(video){
-
-    video.srcObject = null;
-    video.style.display = "none";
-
-}
-            document.getElementById("hasil").innerHTML =
-            "⏳ Menyimpan absensi...";
-            console.log("KIRIM ABSEN =", qrStaffId);
-            
-            return fetch(API,{
-method:"POST",
-body: JSON.stringify({
-action:"absen",
-id: qrStaffId,
-foto: fotoUrl
-})
-});
-        }else{
-            throw new Error("Upload selfie gagal");
-        }
-    })
-    .then(r=>{
-        console.log("ABSEN RAW RESPONSE =", r);
-        return r.text();
-    })
-    .then(text=>{
-        console.log("ABSEN TEXT =", text);
-        let absenRes = JSON.parse(text);
-        console.log("ABSEN RESPONSE =", absenRes);
-
-       if(absenRes.sukses){
-            document.getElementById("hasil").className =
-            "success-box";
-
-if(absenRes.tipe=="masuk"){
-
-    document.getElementById("selfieCanvas").style.display="none";
-    const video = document.getElementById("selfieVideo");
-
-    if(video){
-        video.style.display="none";
-    }
-    document.getElementById("hasil").innerHTML = `
-    <div class="success">
-        <div class="icon">✅</div>
-        <div class="title">SELAMAT DATANG</div>
-        <div class="nama">${absenRes.nama}</div>
-        <div class="ket">Absen Masuk Berhasil</div>
-    </div>
-    `;
-
-}else{
-
-                document.getElementById("hasil").innerHTML = `
-                <div class="success">
-                    <div class="icon">👋</div>
-                    <div class="title">SAMPAI JUMPA</div>
-                    <div class="nama">${absenRes.nama}</div>
-                    <div class="ket">Absen Pulang Berhasil</div>
-                </div>
-                `;
-            }
-
-        }else{
-
-            document.getElementById("hasil").className =
-            "error-box";
-
-            document.getElementById("hasil").innerHTML =
-            "❌ " + absenRes.pesan;
-
-        }
-
-    })
-    .catch(err=>{
-
-        console.log("ABSEN / UPLOAD ERROR =", err);
-
-        document.getElementById("hasil").className =
-        "error-box";
-
-        document.getElementById("hasil").innerHTML =
-        "❌ ERROR : " + err.message;
-
-    });
-
 });
 </script>
 </body>
