@@ -117,14 +117,14 @@
         }
 
         #hasil {
-    margin-bottom: 12px; /* Jarak ke bawah (kamera) */
-    margin-top: 5px;     /* Jarak ke atas */
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    text-align: center;
-}
+            margin-bottom: 12px; 
+            margin-top: 5px;     
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
 
         .processing {
             background: #fef3c7;
@@ -211,11 +211,10 @@
         </div>
 
         <div class="scanner-wrapper">
-    <div id="hasil"></div>
-    <div id="reader"></div>
-
-    <button id="btnInstall">📱 Install Aplikasi ke HP</button>
-</div>
+            <div id="hasil"></div>
+            <div id="reader"></div>
+            <button id="btnInstall">📱 Install Aplikasi ke HP</button>
+        </div>
 
         <div id="selfieArea">
             <video id="selfieVideo" autoplay playsinline></video>
@@ -328,9 +327,21 @@
                     }
 
                     if(!res.sukses){
-                        document.getElementById("hasil").className = "error-box";
-                        document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
-                        setTimeout(() => { location.reload(); }, 4000);
+                        sembunyikanHeaderUtama();
+                        document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
+                        const containerEl = document.querySelector(".container");
+                        containerEl.innerHTML = `
+                        <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                            <div style="font-size: 65px; margin-bottom: 10px;">⚠️</div>
+                            <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">PERHATIAN</div>
+                            <div style="font-size: 15px; color: #475569; line-height: 1.5; margin-bottom: 20px;">
+                                ${res.pesan}
+                            </div>
+                            <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+                                🛡️ Sistem Absensi MMBC Tour & Travel
+                            </div>
+                        </div>`;
+                        setTimeout(() => { location.reload(); }, 5000);
                         return;
                     }
 
@@ -373,8 +384,15 @@
                                     <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">📅 Waktu Pulang: ${new Date().toLocaleTimeString("id-ID")}</div>
                                 </div>`;
                             } else {
-                                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)";
-                                containerEl.innerHTML = `<div style="padding: 30px; text-align: center; background: #fff; border-radius: 20px; color: red;"><b>Gagal:</b> ${pRes.pesan}</div>`;
+                                sembunyikanHeaderUtama();
+                                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
+                                containerEl.innerHTML = `
+                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                                    <div style="font-size: 65px; margin-bottom: 10px;">⚠️</div>
+                                    <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">GAGAL ABSEN</div>
+                                    <div style="font-size: 15px; color: #475569; line-height: 1.5; margin-bottom: 20px;">${pRes.pesan}</div>
+                                    <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">🛡️ Sistem Absensi MMBC</div>
+                                </div>`;
                             }
                             qr.stop().catch(e => console.log(e));
                             setTimeout(() => { location.reload(); }, 6000);
@@ -383,8 +401,14 @@
                     }
                 })
                 .catch(err => {
-                    document.getElementById("hasil").className = "error-box";
-                    document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+                    sembunyikanHeaderUtama();
+                    document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
+                    document.querySelector(".container").innerHTML = `
+                    <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                        <div style="font-size: 65px; margin-bottom: 10px;">❌</div>
+                        <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">TERJADI KESALAHAN</div>
+                        <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">${err.message}</div>
+                    </div>`;
                     setTimeout(() => { location.reload(); }, 4000);
                 });
             },
@@ -511,14 +535,27 @@
                     setTimeout(() => { location.reload(); }, 6000); 
 
                 } else {
-                    document.getElementById("hasil").className = "error-box";
-                    document.getElementById("hasil").innerHTML = "❌ " + absenRes.pesan;
+                    sembunyikanHeaderUtama();
+                    document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
+                    document.querySelector(".container").innerHTML = `
+                    <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                        <div style="font-size: 65px; margin-bottom: 10px;">⚠️</div>
+                        <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">GAGAL ABSEN</div>
+                        <div style="font-size: 15px; color: #475569; line-height: 1.5; margin-bottom: 20px;">${absenRes.pesan}</div>
+                        <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">🛡️ Sistem Absensi MMBC</div>
+                    </div>`;
                     setTimeout(() => { location.reload(); }, 5000);
                 }
             })
             .catch(err => {
-                document.getElementById("hasil").className = "error-box";
-                document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
+                sembunyikanHeaderUtama();
+                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
+                document.querySelector(".container").innerHTML = `
+                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                    <div style="font-size: 65px; margin-bottom: 10px;">❌</div>
+                    <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">TERJADI KESALAHAN</div>
+                    <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">${err.message}</div>
+                </div>`;
                 setTimeout(() => { location.reload(); }, 5000);
             });
         });
