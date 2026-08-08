@@ -69,10 +69,14 @@
             font-weight: 700;
         }
 
-        .subtitle {
+        .instruction-sub {
             font-size: 13px;
-            color: #64748b;
-            margin-top: 4px;
+            color: #475569;
+            font-weight: 600;
+            background: #f1f5f9;
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .clock-box {
@@ -127,8 +131,12 @@
         }
 
         .processing {
-            background: #fef3c7;
-            color: #d97706;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            font-size: 16px;
+            letter-spacing: 0.5px;
         }
 
         .error-box {
@@ -199,7 +207,6 @@
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>ABSENSI QR</h1>
-            <div class="subtitle">Silakan scan QR Code untuk melakukan absensi</div>
         </div>
 
         <div class="clock-box" id="clock">
@@ -208,6 +215,10 @@
 
         <div class="wifi-info-box" id="wifiInfoDisplay">
             <span>📡 Jaringan Terdeteksi: <b id="namaWifiText">Mendeteksi jaringan...</b></span>
+        </div>
+
+        <div class="instruction-sub">
+            💡 Silakan scan QR Code untuk melakukan absensi
         </div>
 
         <div class="scanner-wrapper">
@@ -278,18 +289,32 @@
 
         let userIP = "";
         let namaWifiAktif = "Basecamp / Kantor";
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
+        // Ambil IP Publik lalu minta nama WiFi real ke Apps Script
         fetch("https://api.ipify.org?format=json")
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
+                return fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP })
+                });
+            })
+            .then(r => r ? r.text() : null)
+            .then(text => {
+                if(!text) return;
+                let res = JSON.parse(text);
+                if(res.wifi) {
+                    namaWifiAktif = res.wifi;
+                    const elWifi = document.getElementById("namaWifiText");
+                    if(elWifi) elWifi.innerText = namaWifiAktif;
+                }
             })
             .catch(err => {
-                console.log("Gagal mengambil IP: ", err);
+                console.log("Gagal mendeteksi jaringan: ", err);
                 document.getElementById("namaWifiText").innerText = namaWifiAktif;
             });
-
-        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
@@ -309,7 +334,7 @@
                 beep();
 
                 document.getElementById("hasil").className = "processing";
-                document.getElementById("hasil").innerHTML = "⏳ Memeriksa data QR...";
+                document.getElementById("hasil").innerHTML = "✨ <b>Memeriksa data QR...</b> Mohon tunggu sebentar.";
 
                 fetch(API, {
                     method: "POST",
@@ -354,6 +379,8 @@
                             if(btnInstallEl) btnInstallEl.style.display = "none";
                             const wifiBox = document.getElementById("wifiInfoDisplay");
                             if(wifiBox) wifiBox.style.display = "none";
+                            const instSub = document.querySelector(".instruction-sub");
+                            if(instSub) instSub.style.display = "none";
 
                             bukaKameraSelfie();
                         });
@@ -423,12 +450,14 @@
             const headerEl = document.querySelector(".header-brand");
             const clockEl = document.querySelector(".clock-box");
             const wifiBoxEl = document.getElementById("wifiInfoDisplay");
+            const instSubEl = document.querySelector(".instruction-sub");
             const readerEl = document.getElementById("reader");
             const installEl = document.getElementById("btnInstall");
 
             if(headerEl) headerEl.style.display = "none";
             if(clockEl) clockEl.style.display = "none";
             if(wifiBoxEl) wifiBoxEl.style.display = "none";
+            if(instSubEl) instSubEl.style.display = "none";
             if(readerEl) readerEl.style.display = "none";
             if(installEl) installEl.style.display = "none";
         }
@@ -481,7 +510,7 @@
 
             const foto = canvas.toDataURL("image/jpeg", 0.85);
             document.getElementById("hasil").className = "processing";
-            document.getElementById("hasil").innerHTML = "📤 Menyimpan absensi & foto...";
+            document.getElementById("hasil").innerHTML = "✨ <b>Menyimpan absensi & foto...</b> Mohon tunggu.";
 
             // 1. Upload foto selfie ke Google Drive terlebih dahulu
             fetch(API, {
