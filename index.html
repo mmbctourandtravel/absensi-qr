@@ -169,7 +169,6 @@
             transform: scale(0.98);
         }
 
-        /* Tombol Install PWA di Browser */
         #btnInstall {
             display: none;
             margin-top: 15px;
@@ -335,6 +334,7 @@
                 document.getElementById("hasil").className = "processing";
                 document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
 
+                // Mengirim request tunggal ke backend Smart Router doPost
                 fetch(API, {
                     method: "POST",
                     body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
@@ -350,7 +350,7 @@
                         if(elWifi) elWifi.innerText = namaWifiAktif;
                     }
 
-                    // Jika gagal (misal WiFi tidak valid atau sudah absen)
+                    // Jika gagal (IP tidak valid, belum terdaftar, atau sudah absen hari ini)
                     if(!res.sukses){
                         document.getElementById("hasil").className = "error-box";
                         document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
@@ -399,67 +399,6 @@
                 .catch(err => {
                     document.getElementById("hasil").className = "error-box";
                     document.getElementById("hasil").innerHTML = "❌ ERROR : " + err.message;
-                    setTimeout(() => { location.reload(); }, 4000);
-                });
-
-                        fetch(API, {
-                            method: "POST",
-                            body: JSON.stringify({ action: "absen", id: qrStaffId, ip: userIP, wifi: namaWifiAktif })
-                        })
-                        .then(r => r.text())
-                        .then(pulangText => {
-                            let absenRes = JSON.parse(pulangText);
-                            if(absenRes.sukses){
-                                document.body.style.background = "linear-gradient(135deg, #065f46 0%, #047857 100%)";
-                                containerEl.innerHTML = `
-                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                                    <div style="font-size: 70px; margin-bottom: 10px;">👋</div>
-                                    <div style="font-size: 24px; font-weight: bold; color: #065f46; margin-bottom: 5px;">SAMPAI JUMPA!</div>
-                                    <div style="font-size: 20px; font-weight: bold; color: #2563eb; margin-bottom: 12px;">${absenRes.nama}</div>
-                                    <div style="font-size: 15px; color: #047857; font-weight: 600; margin-bottom: 15px; background: #ecfdf5; padding: 8px; border-radius: 8px;">Absen Pulang Berhasil</div>
-                                    <div style="font-size: 14px; color: #475569; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat kembali ke rumah! 🏠</div>
-                                    <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">📅 Waktu Pulang: ${new Date().toLocaleTimeString("id-ID")}</div>
-                                </div>`;
-                            } else {
-                                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)";
-                                containerEl.innerHTML = `
-                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                                    <div style="font-size: 60px; margin-bottom: 10px;">❌</div>
-                                    <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 10px;">GAGAL ABSEN PULANG</div>
-                                    <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">${absenRes.pesan}</div>
-                                </div>`;
-                            }
-                            setTimeout(() => { location.reload(); }, 6000); 
-                        }).catch(err => {
-                            document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)";
-                            containerEl.innerHTML = `
-                            <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                                <div style="font-size: 60px; margin-bottom: 10px;">⚠️</div>
-                                <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 10px;">KONEKSI BERMASALAH</div>
-                                <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">ERROR: ${err.message}</div>
-                            </div>`;
-                            setTimeout(() => { location.reload(); }, 5000);
-                        });
-                        return;
-                    }
-
-                    if(res.status == "sudah_absen"){
-                        qr.stop().catch(e => console.log(e));
-                        sembunyikanHeaderUtama();
-                        document.getElementById("hasil").className = "error-box";
-                        document.getElementById("hasil").innerHTML = `
-                        <div style="padding: 20px; text-align: center;">
-                            <div style="font-size: 50px; margin-bottom: 10px;">⚠️</div>
-                            <div style="font-size: 22px; font-weight: bold; color: #d32f2f; margin-bottom: 10px;">INFO ABSENSI</div>
-                            <div style="font-size: 18px; color: #555; margin-bottom: 15px;">${res.pesan}</div>
-                        </div>`;
-                        setTimeout(() => { location.reload(); }, 5000); 
-                        return;
-                    }
-                })
-                .catch(err => {
-                    document.getElementById("hasil").className = "error-box";
-                    document.getElementById("hasil").innerHTML = "❌ CEK STATUS ERROR : " + err;
                     setTimeout(() => { location.reload(); }, 4000);
                 });
             },
