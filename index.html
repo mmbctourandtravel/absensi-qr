@@ -309,11 +309,11 @@
                 beep();
 
                 document.getElementById("hasil").className = "processing";
-                document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
+                document.getElementById("hasil").innerHTML = "⏳ Memeriksa data QR...";
 
                 fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
+                    body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
                 })
                 .then(r => r.text())
                 .then(text => {
@@ -333,14 +333,13 @@
                         return;
                     }
 
-                    if(res.tipe == "masuk"){
+                    // JIKA STATUSNYA MASUK -> BUKA KAMERA SELFIE
+                    if(res.status == "masuk"){
                         document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
                         qr.stop().then(() => {
                             document.getElementById("reader").style.display = "none";
-                            
                             const btnInstallEl = document.getElementById("btnInstall");
                             if(btnInstallEl) btnInstallEl.style.display = "none";
-                            
                             const wifiBox = document.getElementById("wifiInfoDisplay");
                             if(wifiBox) wifiBox.style.display = "none";
 
@@ -349,23 +348,36 @@
                         return;
                     }
 
-                    if(res.tipe == "pulang"){
+                    // JIKA STATUSNYA PULANG -> PROSES PULANG
+                    if(res.status == "pulang"){
                         sembunyikanHeaderUtama();
                         document.body.style.background = "linear-gradient(135deg, #065f46 0%, #047857 100%)";
                         
-                        const containerEl = document.querySelector(".container");
-                        containerEl.innerHTML = `
-                        <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                            <div style="font-size: 70px; margin-bottom: 10px;">👋</div>
-                            <div style="font-size: 24px; font-weight: bold; color: #065f46; margin-bottom: 5px;">SAMPAI JUMPA!</div>
-                            <div style="font-size: 20px; font-weight: bold; color: #2563eb; margin-bottom: 12px;">${res.nama}</div>
-                            <div style="font-size: 15px; color: #047857; font-weight: 600; margin-bottom: 15px; background: #ecfdf5; padding: 8px; border-radius: 8px;">Absen Pulang Berhasil</div>
-                            <div style="font-size: 14px; color: #475569; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat kembali ke rumah! 🏠</div>
-                            <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">📅 Waktu Pulang: ${new Date().toLocaleTimeString("id-ID")}</div>
-                        </div>`;
-                        
-                        qr.stop().catch(e => console.log(e));
-                        setTimeout(() => { location.reload(); }, 6000); 
+                        fetch(API, {
+                            method: "POST",
+                            body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
+                        })
+                        .then(r => r.text())
+                        .then(pText => {
+                            let pRes = JSON.parse(pText);
+                            const containerEl = document.querySelector(".container");
+                            if(pRes.sukses){
+                                containerEl.innerHTML = `
+                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
+                                    <div style="font-size: 70px; margin-bottom: 10px;">👋</div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #065f46; margin-bottom: 5px;">SAMPAI JUMPA!</div>
+                                    <div style="font-size: 20px; font-weight: bold; color: #2563eb; margin-bottom: 12px;">${pRes.nama}</div>
+                                    <div style="font-size: 15px; color: #047857; font-weight: 600; margin-bottom: 15px; background: #ecfdf5; padding: 8px; border-radius: 8px;">Absen Pulang Berhasil</div>
+                                    <div style="font-size: 14px; color: #475569; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat kembali ke rumah! 🏠</div>
+                                    <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">📅 Waktu Pulang: ${new Date().toLocaleTimeString("id-ID")}</div>
+                                </div>`;
+                            } else {
+                                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)";
+                                containerEl.innerHTML = `<div style="padding: 30px; text-align: center; background: #fff; border-radius: 20px; color: red;"><b>Gagal:</b> ${pRes.pesan}</div>`;
+                            }
+                            qr.stop().catch(e => console.log(e));
+                            setTimeout(() => { location.reload(); }, 6000);
+                        });
                         return;
                     }
                 })
@@ -376,6 +388,7 @@
                 });
             },
             (errorMessage) => {}
+        );
         ).catch(err => {
             document.getElementById("hasil").className = "error-box";
             document.getElementById("hasil").innerHTML = "❌ Gagal membuka kamera QR";
@@ -444,8 +457,9 @@
 
             const foto = canvas.toDataURL("image/jpeg", 0.85);
             document.getElementById("hasil").className = "processing";
-            document.getElementById("hasil").innerHTML = "📤 Mengupload selfie dengan watermark...";
+            document.getElementById("hasil").innerHTML = "📤 Menyimpan absensi & foto...";
 
+            // 1. Upload foto selfie ke Google Drive terlebih dahulu
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfie", id: qrStaffId, foto: foto })
@@ -453,24 +467,28 @@
             .then(r => r.text())
             .then(text => {
                 let hasil = JSON.parse(text);
-                if(hasil.sukses){
-                    if(selfieStream){
-                        selfieStream.getTracks().forEach(track => track.stop());
-                        selfieStream = null;
-                    }
-                    video.srcObject = null;
-                    video.style.display = "none";
-                    document.getElementById("selfieArea").style.display = "none";
-
-                    document.getElementById("hasil").innerHTML = "⏳ Menyimpan absensi...";
-                    
-                    return fetch(API, {
-                        method: "POST",
-                        body: JSON.stringify({ action: "absen", id: qrStaffId, foto: hasil.url, ip: userIP, wifi: namaWifiAktif })
-                    });
-                } else {
-                    throw new Error("Upload selfie gagal");
+                if(!hasil.sukses){
+                    throw new Error("Upload selfie gagal: " + hasil.pesan);
                 }
+
+                if(selfieStream){
+                    selfieStream.getTracks().forEach(track => track.stop());
+                    selfieStream = null;
+                }
+                video.srcObject = null;
+                video.style.display = "none";
+                document.getElementById("selfieArea").style.display = "none";
+
+                // 2. Setelah link foto Drive didapat, langsung kirim ke action 'absen' (hanya 1x request)
+                return fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ 
+                        action: "absen", 
+                        id: qrStaffId, 
+                        ip: userIP, 
+                        foto: hasil.url 
+                    })
+                });
             })
             .then(r => r.text())
             .then(text => {
