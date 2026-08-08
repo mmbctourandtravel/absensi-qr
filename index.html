@@ -135,7 +135,6 @@
             color: #dc2626;
         }
 
-        /* Area Kamera Selfie */
         #selfieArea {
             display: none;
             padding: 20px;
@@ -284,7 +283,6 @@
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
-                cekInfoWifiAwal(userIP);
             })
             .catch(err => {
                 console.log("Gagal mengambil IP: ", err);
@@ -293,33 +291,12 @@
 
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
-        function cekInfoWifiAwal(ip) {
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getWifiInfo", ip: ip })
-            })
-            .then(r => r.text())
-            .then(text => {
-                try {
-                    let res = JSON.parse(text);
-                    if(res.wifi) {
-                        namaWifiAktif = res.wifi;
-                    }
-                } catch(e) {}
-                document.getElementById("namaWifiText").innerText = namaWifiAktif;
-            })
-            .catch(err => {
-                document.getElementById("namaWifiText").innerText = namaWifiAktif;
-            });
-        }
-
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
         let selfieStream = null;
         let qrStaffId = "";
         let namaStaffAktif = "";
 
-        // Mulai Kamera QR
         qr.start(
             { facingMode: "environment" },
             { fps: 10, qrbox: 230 },
@@ -334,7 +311,6 @@
                 document.getElementById("hasil").className = "processing";
                 document.getElementById("hasil").innerHTML = "⏳ Memproses absensi...";
 
-                // Mengirim request tunggal ke backend Smart Router doPost
                 fetch(API, {
                     method: "POST",
                     body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
@@ -350,7 +326,6 @@
                         if(elWifi) elWifi.innerText = namaWifiAktif;
                     }
 
-                    // Jika gagal (IP tidak valid, belum terdaftar, atau sudah absen hari ini)
                     if(!res.sukses){
                         document.getElementById("hasil").className = "error-box";
                         document.getElementById("hasil").innerHTML = "❌ " + res.pesan;
@@ -358,7 +333,6 @@
                         return;
                     }
 
-                    // JIKA ABSEN MASUK -> LANJUT KE KAMERA SELFIE
                     if(res.tipe == "masuk"){
                         document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
                         qr.stop().then(() => {
@@ -375,7 +349,6 @@
                         return;
                     }
 
-                    // JIKA ABSEN PULANG -> TAMPILKAN LAYAR SUKSES PULANG ELEGAN
                     if(res.tipe == "pulang"){
                         sembunyikanHeaderUtama();
                         document.body.style.background = "linear-gradient(135deg, #065f46 0%, #047857 100%)";
