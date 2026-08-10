@@ -69,69 +69,51 @@
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
         
-        /* FULL SCREEN OVERLAY UNTUK HASIL ABSEN (PROFESIONAL & ANIMASI) */
+        /* FULL SCREEN OVERLAY UNTUK HASIL ABSEN & KAMERA SELFIE */
         #fullScreenOverlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #f0fdf4; /* Hijau muda yang lembut */
+            background: #f0fdf4; 
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 99;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        .overlay-icon {
-            font-size: 64px;
-            margin-bottom: 15px;
-            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .overlay-icon { font-size: 54px; margin-bottom: 10px; animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .overlay-title { font-size: 20px; font-weight: 800; color: #065f46; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .overlay-name { font-size: 22px; font-weight: 700; color: #1e293b; background: #ffffff; padding: 8px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 8px 0 12px 0; border: 1px solid #a7f3d0; }
+        .overlay-wifi { font-size: 13px; color: #047857; margin-bottom: 15px; }
+        .overlay-msg { font-size: 14px; font-weight: 600; color: #047857; font-style: italic; background: #d1fae5; padding: 8px 18px; border-radius: 12px; display: inline-block; }
 
-        .overlay-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #065f46;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        /* MODAL / OVERLAY KAMERA SELFIE */
+        #selfieModal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            color: white;
+            text-align: center;
         }
+        #selfieVideo { width: 100%; max-width: 320px; height: 240px; border-radius: 12px; object-fit: cover; background: #000; margin-bottom: 15px; border: 2px solid #38bdf8; }
+        .btn-capture { background: #2563eb; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.4); }
+        .btn-capture:hover { background: #1d4ed8; }
 
-        .overlay-name {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1e293b;
-            background: #ffffff;
-            padding: 10px 25px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin: 10px 0 15px 0;
-            border: 1px solid #a7f3d0;
-        }
-
-        .overlay-wifi {
-            font-size: 13px;
-            color: #047857;
-            margin-bottom: 20px;
-        }
-
-        .overlay-msg {
-            font-size: 15px;
-            font-weight: 600;
-            color: #047857;
-            font-style: italic;
-            background: #d1fae5;
-            padding: 10px 20px;
-            border-radius: 12px;
-            display: inline-block;
-        }
-
-        /* OVERLAY ERROR / LOADING */
         #fullScreenOverlay.error-bg { background: #fef2f2; }
         #fullScreenOverlay.error-bg .overlay-title { color: #991b1b; }
         #fullScreenOverlay.error-bg .overlay-name { border-color: #fecaca; color: #991b1b; }
@@ -155,7 +137,6 @@
         .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
-        
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
 
         /* KUNCI KOLOM NAMA UTAMA */
@@ -182,6 +163,13 @@
             <div class="overlay-name" id="overlayName">Nama Staff</div>
             <div class="overlay-wifi" id="overlayWifi">Wi-Fi: Basecamp MMBC</div>
             <div class="overlay-msg" id="overlayMsg">Hati-hati di jalan, selamat beristirahat!</div>
+        </div>
+
+        <div id="selfieModal">
+            <h3 style="margin-bottom: 5px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+            <p id="selfieStaffName" style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;"></p>
+            <video id="selfieVideo" autoplay playsinline></video>
+            <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
         </div>
 
         <div class="header-brand">
@@ -394,6 +382,8 @@
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
+        let activeStaffId = "";
+        let streamSelfie = null;
 
         qr.start(
             { facingMode: "environment" },
@@ -401,7 +391,8 @@
             (decodedText) => {
                 if (sedangProses) return;
                 sedangProses = true;
-                qr.pause(); // Jeda kamera
+                qr.pause(); 
+                activeStaffId = decodedText;
 
                 const overlay = document.getElementById("fullScreenOverlay");
                 const icon = document.getElementById("overlayIcon");
@@ -410,80 +401,179 @@
                 const wifiEl = document.getElementById("overlayWifi");
                 const msgEl = document.getElementById("overlayMsg");
 
-                // Tampilkan layar loading penuh
                 overlay.className = "";
                 icon.innerText = "⏳";
-                title.innerText = "Memproses Absensi...";
+                title.innerText = "Mengecek Status...";
                 nameEl.innerText = "Mohon Tunggu Sebentar";
                 wifiEl.innerText = "";
-                msgEl.innerText = "Menghubungkan ke sistem kantor...";
+                msgEl.innerText = "Memeriksa data absensi...";
                 overlay.style.display = "flex";
 
+                // 1. Cek dulu status staff (masuk atau pulang)
                 fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
+                    body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
                 })
                 .then(r => r.json())
                 .then(res => {
-                    if (res.sukses) {
-                        let isPulang = res.tipe === "pulang";
-                        icon.innerText = isPulang ? "🏠" : "🏢";
-                        title.innerText = isPulang ? "Absen Pulang Berhasil" : "Absen Masuk Berhasil";
-                        nameEl.innerText = res.nama;
-                        wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
-                        
-                        // Kata-kata sapaan personal untuk Masuk & Pulang
-                        msgEl.innerText = isPulang ? "Hati-hati di jalan, selamat beristirahat!" : "Selamat bekerja, semoga harinya menyenangkan!";
-                        overlay.className = ""; // Latar hijau muda
+                    overlay.style.display = "none";
 
-                        // Mainkan suara beep sukses
-                        try {
-                            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                            const osc = ctx.createOscillator();
-                            const gain = ctx.createGain();
-                            osc.connect(gain);
-                            gain.connect(ctx.destination);
-                            osc.type = 'sine';
-                            osc.frequency.setValueAtTime(659.25, ctx.currentTime); // Nada E5
-                            gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                            osc.start();
-                            osc.stop(ctx.currentTime + 0.18);
-                        } catch(e) {}
-
-                    } else {
-                        // Jika Gagal (misal salah wifi atau sudah absen)
-                        overlay.className = "error-bg"; // Latar merah muda
-                        icon.innerText = "⚠️";
-                        title.innerText = "Gagal Absen";
-                        nameEl.innerText = "Perhatian";
-                        wifiEl.innerText = "";
-                        msgEl.innerText = res.pesan;
+                    if (!res.sukses && res.status === "sudah_absen") {
+                        // Jika sudah absen hari ini
+                        tampilkanPesanError(res.pesan);
+                        return;
                     }
 
-                    // Tampilkan layar sukses/error selama 8 DETIK penuh sesuai permintaanmu
-                    setTimeout(() => {
-                        overlay.style.display = "none";
-                        sedangProses = false;
-                        qr.resume();
-                    }, 8000);
+                    if (res.status === "masuk") {
+                        // --- JIKA STATUS MASUK: BUKA KAMERA SELFIE ---
+                        bukaKameraSelfie(res.nama);
+                    } else if (res.status === "pulang") {
+                        // --- JIKA STATUS PULANG: LANGSUNG PROSES ABSEN PULANG ---
+                        eksekusiAbsenFinal("");
+                    } else {
+                        tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
+                    }
                 })
                 .catch(err => {
-                    overlay.className = "error-bg";
-                    icon.innerText = "❌";
-                    title.innerText = "Gangguan Koneksi";
-                    nameEl.innerText = "Server Error";
-                    wifiEl.innerText = "";
-                    msgEl.innerText = "Periksa koneksi internet Anda.";
-
-                    setTimeout(() => {
-                        overlay.style.display = "none";
-                        sedangProses = false;
-                        qr.resume();
-                    }, 4000);
+                    tampilkanPesanError("Gangguan koneksi ke server.");
                 });
             },
             (err) => {}
         ).catch(err => console.log(err));
+
+        // Fungsi Membuka Kamera Selfie
+        function bukaKameraSelfie(namaStaff) {
+            document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
+            const modal = document.getElementById("selfieModal");
+            modal.style.display = "flex";
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+                .then(stream => {
+                    streamSelfie = stream;
+                    document.getElementById("selfieVideo").srcObject = stream;
+                })
+                .catch(err => {
+                    alert("Gagal mengakses kamera depan: " + err);
+                    modal.style.display = "none";
+                    sedangProses = false;
+                    qr.resume();
+                });
+        }
+
+        // Fungsi Ambil Foto & Kirim Absen Masuk
+        function ambilFotoDanKirim() {
+            const video = document.getElementById("selfieVideo");
+            const canvas = document.createElement("canvas");
+            canvas.width = 300;
+            canvas.height = 225;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const base64Image = canvas.toDataURL("image/jpeg", 0.7);
+
+            // Matikan kamera selfie
+            if (streamSelfie) {
+                streamSelfie.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById("selfieModal").style.display = "none";
+
+            // Tampilkan layar loading proses
+            const overlay = document.getElementById("fullScreenOverlay");
+            document.getElementById("overlayIcon").innerText = "⏳";
+            document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
+            document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+            document.getElementById("overlayWifi").innerText = "";
+            document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+            overlay.className = "";
+            overlay.style.display = "flex";
+
+            // Upload selfie dulu ke Drive
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
+            })
+            .then(r => r.json())
+            .then(resUpload => {
+                let fotoUrl = resUpload.sukses ? resUpload.url : "";
+                // Lanjut simpan absen masuk
+                eksekusiAbsenFinal(fotoUrl);
+            })
+            .catch(err => {
+                // Tetap lanjut meski gagal upload foto
+                eksekusiAbsenFinal("");
+            });
+        }
+
+        // Eksekusi Final Absen (Masuk / Pulang) ke Spreadsheet
+        function eksekusiAbsenFinal(fotoUrl) {
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "absen", id: activeStaffId, ip: userIP, foto: fotoUrl })
+            })
+            .then(r => r.json())
+            .then(res => {
+                const overlay = document.getElementById("fullScreenOverlay");
+                const icon = document.getElementById("overlayIcon");
+                const title = document.getElementById("overlayTitle");
+                const nameEl = document.getElementById("overlayName");
+                const wifiEl = document.getElementById("overlayWifi");
+                const msgEl = document.getElementById("overlayMsg");
+
+                if (res.sukses) {
+                    let isPulang = res.tipe === "pulang";
+                    icon.innerText = isPulang ? "🏠" : "🏢";
+                    title.innerText = isPulang ? "Absen Pulang Berhasil" : "Absen Masuk Berhasil";
+                    nameEl.innerText = res.nama;
+                    wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
+                    msgEl.innerText = isPulang ? "Hati-hati di jalan, selamat beristirahat!" : "Selamat bekerja, semoga harinya menyenangkan!";
+                    overlay.className = ""; 
+
+                    // Efek suara beep sukses
+                    try {
+                        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(659.25, ctx.currentTime);
+                        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.18);
+                    } catch(e) {}
+
+                } else {
+                    tampilkanPesanError(res.pesan);
+                    return;
+                }
+
+                // Tampil selama 8 detik penuh sesuai permintaan
+                setTimeout(() => {
+                    overlay.style.display = "none";
+                    sedangProses = false;
+                    qr.resume();
+                }, 8000);
+            })
+            .catch(err => {
+                tampilkanPesanError("Gangguan koneksi ke server.");
+            });
+        }
+
+        function tampilkanPesanError(pesan) {
+            const overlay = document.getElementById("fullScreenOverlay");
+            overlay.className = "error-bg";
+            document.getElementById("overlayIcon").innerText = "⚠️";
+            document.getElementById("overlayTitle").innerText = "Perhatian";
+            document.getElementById("overlayName").innerText = "Gagal Absen";
+            document.getElementById("overlayWifi").innerText = "";
+            document.getElementById("overlayMsg").innerText = pesan;
+            overlay.style.display = "flex";
+
+            setTimeout(() => {
+                overlay.style.display = "none";
+                sedangProses = false;
+                qr.resume();
+            }, 4000);
+        }
     </script>
 </body>
 </html>
