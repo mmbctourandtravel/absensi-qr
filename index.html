@@ -69,7 +69,7 @@
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
         
-        /* FULL SCREEN OVERLAY UNTUK HASIL ABSEN & KAMERA SELFIE */
+        /* FULL SCREEN OVERLAY UNTUK HASIL ABSEN */
         #fullScreenOverlay {
             position: absolute;
             top: 0;
@@ -391,65 +391,75 @@
             (decodedText) => {
                 if (sedangProses) return;
                 sedangProses = true;
-                qr.pause(); 
-                activeStaffId = decodedText;
-
-                const overlay = document.getElementById("fullScreenOverlay");
-                const icon = document.getElementById("overlayIcon");
-                const title = document.getElementById("overlayTitle");
-                const nameEl = document.getElementById("overlayName");
-                const wifiEl = document.getElementById("overlayWifi");
-                const msgEl = document.getElementById("overlayMsg");
-
-                overlay.className = "";
-                icon.innerText = "⏳";
-                title.innerText = "Mengecek Status...";
-                nameEl.innerText = "Mohon Tunggu Sebentar";
-                wifiEl.innerText = "";
-                msgEl.innerText = "Memeriksa data absensi...";
-                overlay.style.display = "flex";
-
-                // 1. Cek dulu status staff (masuk atau pulang)
-                fetch(API, {
-                    method: "POST",
-                    body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
-                })
-                .then(r => r.json())
-                .then(res => {
-                    overlay.style.display = "none";
-
-                    if (!res.sukses && res.status === "sudah_absen") {
-                        tampilkanPesanError(res.pesan);
-                        return;
-                    }
-
-                    if (res.status === "masuk") {
-                        // --- JIKA STATUS MASUK: BUKA KAMERA SELFIE ---
-                        bukaKameraSelfie(res.nama);
-                    } else if (res.status === "pulang") {
-                        // --- JIKA STATUS PULANG: PROSES ABSEN PULANG & MUNCULKAN OVERLAY LOADING ---
-                        const overlay = document.getElementById("fullScreenOverlay");
-                        document.getElementById("overlayIcon").innerText = "⏳";
-                        document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
-                        document.getElementById("overlayName").innerText = res.nama || "Staff";
-                        document.getElementById("overlayWifi").innerText = "";
-                        document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
-                        overlay.className = "";
-                        overlay.style.display = "flex";
-
-                        eksekusiAbsenFinal("");
-                    } else {
-                        tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
-                    }
-                })
-                .catch(err => {
-                    tampilkanPesanError("Gangguan koneksi ke server.");
+                
+                // Hentikan total scanner kamera belakang agar tidak bentrok dengan kamera selfie
+                qr.stop().then(() => {
+                    jalankanProsesAbsen(decodedText);
+                }).catch(err => {
+                    console.log("Gagal stop QR:", err);
+                    jalankanProsesAbsen(decodedText);
                 });
             },
             (err) => {}
         ).catch(err => console.log(err));
 
-        // Fungsi Membuka Kamera Selfie
+        function jalankanProsesAbsen(decodedText) {
+            activeStaffId = decodedText;
+
+            const overlay = document.getElementById("fullScreenOverlay");
+            const icon = document.getElementById("overlayIcon");
+            const title = document.getElementById("overlayTitle");
+            const nameEl = document.getElementById("overlayName");
+            const wifiEl = document.getElementById("overlayWifi");
+            const msgEl = document.getElementById("overlayMsg");
+
+            overlay.className = "";
+            icon.innerText = "⏳";
+            title.innerText = "Mengecek Status...";
+            nameEl.innerText = "Mohon Tunggu Sebentar";
+            wifiEl.innerText = "";
+            msgEl.innerText = "Memeriksa data absensi...";
+            overlay.style.display = "flex";
+
+            // Cek status staff (masuk atau pulang)
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
+            })
+            .then(r => r.json())
+            .then(res => {
+                overlay.style.display = "none";
+
+                if (!res.sukses && res.status === "sudah_absen") {
+                    tampilkanPesanError(res.pesan);
+                    return;
+                }
+
+                if (res.status === "masuk") {
+                    // --- JIKA STATUS MASUK: BUKA KAMERA SELFIE ---
+                    bukaKameraSelfie(res.nama);
+                } else if (res.status === "pulang") {
+                    // --- JIKA STATUS PULANG: PROSES ABSEN PULANG & MUNCULKAN OVERLAY LOADING ---
+                    const overlayPulang = document.getElementById("fullScreenOverlay");
+                    document.getElementById("overlayIcon").innerText = "⏳";
+                    document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
+                    document.getElementById("overlayName").innerText = res.nama || "Staff";
+                    document.getElementById("overlayWifi").innerText = "";
+                    document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+                    overlayPulang.className = "";
+                    overlayPulang.style.display = "flex";
+
+                    eksekusiAbsenFinal("");
+                } else {
+                    tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
+                }
+            })
+            .catch(err => {
+                tampilkanPesanError("Gangguan koneksi ke server.");
+            });
+        }
+
+        // Fungsi Membuka Kamera Selfie dengan Aman
         function bukaKameraSelfie(namaStaff) {
             document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
             const modal = document.getElementById("selfieModal");
@@ -458,8 +468,7 @@
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 alert("Browser Anda tidak mendukung akses kamera secara langsung. Pastikan menggunakan HTTPS.");
                 modal.style.display = "none";
-                sedangProses = false;
-                qr.resume();
+                resetScannerKamera();
                 return;
             }
 
@@ -474,8 +483,7 @@
                     console.error("Gagal kamera:", err);
                     alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin (Permission) kamera pada browser.\n2. Menggunakan link HTTPS.\n\nDetail error: " + err.message);
                     modal.style.display = "none";
-                    sedangProses = false;
-                    qr.resume();
+                    resetScannerKamera();
                 });
         }
 
@@ -563,11 +571,10 @@
                     return;
                 }
 
-                // Tampil selama 8 detik penuh sesuai permintaan
+                // Tampil selama 8 detik penuh sesuai permintaan, lalu reset scanner kamera belakang
                 setTimeout(() => {
                     overlay.style.display = "none";
-                    sedangProses = false;
-                    qr.resume();
+                    resetScannerKamera();
                 }, 8000);
             })
             .catch(err => {
@@ -587,9 +594,28 @@
 
             setTimeout(() => {
                 overlay.style.display = "none";
-                sedangProses = false;
-                qr.resume();
+                resetScannerKamera();
             }, 4000);
+        }
+
+        // Fungsi Menghidupkan Kembali Scanner Kamera Belakang
+        function resetScannerKamera() {
+            sedangProses = false;
+            qr.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 230 },
+                (decodedText) => {
+                    if (sedangProses) return;
+                    sedangProses = true;
+                    
+                    qr.stop().then(() => {
+                        jalankanProsesAbsen(decodedText);
+                    }).catch(err => {
+                        jalankanProsesAbsen(decodedText);
+                    });
+                },
+                (err) => {}
+            ).catch(err => console.log("Restart scanner error:", err));
         }
     </script>
 </body>
