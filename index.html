@@ -86,9 +86,9 @@
         #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 35px; z-index: 3; background: #f8fafc; text-align: left; min-width: 130px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal th:nth-child(1), #tabelJadwal th:nth-child(2) { z-index: 4; }
 
-        /* Sticky khusus Log Harian (Kolom Tanggal & Nama) */
-        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; min-width: 90px; }
-        #tabelLog th:nth-child(2), #tabelLog td:nth-child(2) { position: sticky; left: 90px; z-index: 3; background: #f8fafc; text-align: left; min-width: 130px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        /* Sticky khusus Log Harian (Kolom Tanggal & Nama) setelah ID disembunyikan */
+        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; min-width: 85px; }
+        #tabelLog th:nth-child(2), #tabelLog td:nth-child(2) { position: sticky; left: 85px; z-index: 3; background: #f8fafc; text-align: left; min-width: 130px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelLog th:nth-child(1), #tabelLog th:nth-child(2) { z-index: 4; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
@@ -239,18 +239,22 @@
                 rows.forEach((row, rowIndex) => {
                     html += '<tr>';
                     row.forEach((cell, colIndex) => {
-                        let cellText = cell !== null ? String(cell) : '';
-
-                        // Sembunyikan kolom ID atau link foto selfie Google Drive yang tidak perlu ditampilkan
-                        if (cellText.includes("drive.google.com") || cellText.toLowerCase().includes("id_staff")) {
+                        // SEMBUNYIKAN SECARA TEPAT:
+                        // Kolom 1 = ID Staff
+                        // Kolom 7 = Foto Selfie
+                        if (colIndex === 1 || colIndex === 7) {
                             return; 
                         }
 
+                        let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
+
+                        // Format tanggal ISO
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.toLocaleDateString('id-ID');
                         }
+
                         html += `<${tag}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
@@ -281,7 +285,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom Nama di Log
+                let tdNama = tr[i].getElementsByTagName('td')[1]; // Setelah kolom ID (indeks 1) dibuang, kolom Nama sekarang ada di indeks 1 (Kolom ke-2 tabel web)
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
