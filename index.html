@@ -86,8 +86,6 @@
         #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 40px; z-index: 3; background: #f8fafc; text-align: left; min-width: 140px; max-width: 140px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal th:nth-child(1), #tabelJadwal th:nth-child(2) { z-index: 4; }
 
-        /* Tabel Log Harian dibiarkan natural tanpa sticky */
-
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
         footer { margin-top: 15px; text-align: center; font-size: 11px; color: #94a3b8; }
@@ -244,9 +242,18 @@
                         let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
+                        // Format data ISO date string
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
-                            if (!isNaN(d.getTime())) cellText = d.toLocaleDateString('id-ID');
+                            if (!isNaN(d.getTime())) {
+                                // Kolom 3 = Jam Masuk, Kolom 4 = Jam Pulang -> Tampilkan Jam (HH:MM:SS)
+                                if (colIndex === 3 || colIndex === 4) {
+                                    cellText = d.toLocaleTimeString('id-ID');
+                                } else {
+                                    // Kolom lainnya (seperti Tanggal) -> Tampilkan Tanggal (DD/MM/YYYY)
+                                    cellText = d.toLocaleDateString('id-ID');
+                                }
+                            }
                         }
 
                         html += `<${tag}>${cellText}</${tag}>`;
