@@ -16,6 +16,10 @@
 
         .ip-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; }
         .ip-box b { color: #1e293b; font-size: 14px; }
+        
+        /* Style untuk Select Dropdown */
+        .select-wifi { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; transition: border-color 0.3s; }
+        .select-wifi:focus { border-color: #2563eb; }
 
         .info-text { font-size: 12px; color: #64748b; margin-bottom: 15px; line-height: 1.5; }
 
@@ -38,10 +42,18 @@
         <div class="ip-box">
             🌐 Jaringan Wi-Fi Terdeteksi IP:<br>
             <b id="currentIp">Mendeteksi...</b>
+            
+            <div style="margin-top: 15px; text-align: left;">
+                <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
+                <select id="targetWifi" class="select-wifi">
+                    <option value="basecamp">Basecamp MMBC</option>
+                    <option value="megavision">Megavision</option>
+                </select>
+            </div>
         </div>
 
         <p class="info-text">
-            ℹ️ Gunakan halaman ini saat modem kantor restart atau mati lampu. Pastikan HP/Laptop Anda sudah terhubung ke Wi-Fi kantor sebelum menekan tombol di bawah.
+            ℹ️ Pastikan Anda sudah terhubung ke Wi-Fi yang dipilih (Basecamp / Megavision) sebelum menekan tombol di bawah.
         </p>
 
         <button class="btn-update" onclick="updateIpKantor()">
@@ -52,7 +64,7 @@
     </div>
 
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec"; // Sesuaikan URL Apps Script Anda
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec"; // URL Apps Script sudah benar
         let myIp = "";
 
         // Deteksi IP Publik perangkat saat membuka link di kantor
@@ -76,11 +88,15 @@
             msg.className = "";
             msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
 
+            // Mengambil nilai dari dropdown yang dipilih user
+            let targetTerpilih = document.getElementById("targetWifi").value;
+
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({
-                    action: "updateWifi",
-                    ip: myIp
+                    action: "updateWifi", // Tetap pakai ini sesuai dengan GS
+                    ip: myIp,
+                    target: targetTerpilih // <-- Ini data tambahan yang dikirim ke GS
                 })
             })
             .then(r => r.json())
