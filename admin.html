@@ -1,23 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Maintenance</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Update IP Wi-Fi Kantor</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
+        
+        .container { width: 100%; max-width: 420px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; padding: 25px; text-align: center; }
+        
+        .header-brand { margin-bottom: 20px; }
+        .logo-text { font-size: 13px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+        h1 { font-size: 18px; color: #1e293b; font-weight: 700; }
+
+        .ip-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; }
+        .ip-box b { color: #1e293b; font-size: 14px; }
+
+        .info-text { font-size: 12px; color: #64748b; margin-bottom: 15px; line-height: 1.5; }
+
+        .btn-update { width: 100%; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
+        .btn-update:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        #statusMsg { margin-top: 15px; font-size: 13px; font-weight: 600; }
+        .success { color: #059669; }
+        .error { color: #dc2626; }
+    </style>
 </head>
+<body>
 
-<body style="
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-font-family:Arial;
-text-align:center;
-">
+    <div class="container">
+        <div class="header-brand">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>Pembaruan IP Wi-Fi Kantor</h1>
+        </div>
 
-<div>
-<h1>🚧 ABSEN QR TIDAK JADI DIGUNAKAN</h1>
-<p>Sistem Absensi Maintenance</p>
-</div>
+        <div class="ip-box">
+            🌐 Jaringan Wi-Fi Terdeteksi IP:<br>
+            <b id="currentIp">Mendeteksi...</b>
+        </div>
 
+        <p class="info-text">
+            ℹ️ Gunakan halaman ini saat modem kantor restart atau mati lampu. Pastikan HP/Laptop Anda sudah terhubung ke Wi-Fi kantor sebelum menekan tombol di bawah.
+        </p>
+
+        <button class="btn-update" onclick="updateIpKantor()">
+            🔄 Perbarui IP Wi-Fi Kantor Sekarang
+        </button>
+
+        <div id="statusMsg"></div>
+    </div>
+
+    <script>
+        const API = "URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI"; // Sesuaikan URL Apps Script Anda
+        let myIp = "";
+
+        // Deteksi IP Publik perangkat saat membuka link di kantor
+        fetch("https://api.ipify.org?format=json")
+            .then(r => r.json())
+            .then(data => {
+                myIp = data.ip;
+                document.getElementById("currentIp").innerText = myIp;
+            })
+            .catch(err => {
+                document.getElementById("currentIp").innerText = "Gagal mendeteksi IP";
+            });
+
+        function updateIpKantor() {
+            if (!myIp) {
+                alert("IP belum terdeteksi, mohon tunggu sebentar...");
+                return;
+            }
+
+            let msg = document.getElementById("statusMsg");
+            msg.className = "";
+            msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "updateMasterWifi",
+                    ip: myIp
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.sukses) {
+                    msg.className = "success";
+                    msg.innerText = "✅ " + res.pesan;
+                } else {
+                    msg.className = "error";
+                    msg.innerText = "❌ " + res.pesan;
+                }
+            })
+            .catch(err => {
+                msg.className = "error";
+                msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
+            });
+        }
+    </script>
 </body>
 </html>
