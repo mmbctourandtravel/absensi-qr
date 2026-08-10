@@ -432,7 +432,7 @@
                         nameEl.innerText = res.nama;
                         wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
                         
-                        // Kata-kata mutiara sesuai permintaan
+                        // Kata-kata sapaan personal untuk Masuk & Pulang
                         msgEl.innerText = isPulang ? "Hati-hati di jalan, selamat beristirahat!" : "Selamat bekerja, semoga harinya menyenangkan!";
                         overlay.className = ""; // Latar hijau muda
 
@@ -460,12 +460,12 @@
                         msgEl.innerText = res.pesan;
                     }
 
-                    // Tampilkan layar sukses/error selama 3.5 detik, lalu tutup dan aktifkan kamera lagi
+                    // Tampilkan layar sukses/error selama 8 DETIK penuh sesuai permintaanmu
                     setTimeout(() => {
                         overlay.style.display = "none";
                         sedangProses = false;
                         qr.resume();
-                    }, 3500);
+                    }, 8000);
                 })
                 .catch(err => {
                     overlay.className = "error-bg";
@@ -479,7 +479,7 @@
                         overlay.style.display = "none";
                         sedangProses = false;
                         qr.resume();
-                    }, 3000);
+                    }, 4000);
                 });
             },
             (err) => {}
