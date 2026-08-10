@@ -93,45 +93,57 @@
         .overlay-wifi { font-size: 13px; color: #047857; margin-bottom: 15px; }
         .overlay-msg { font-size: 14px; font-weight: 600; color: #047857; font-style: italic; background: #d1fae5; padding: 8px 18px; border-radius: 12px; display: inline-block; }
 
-        /* MODAL KAMERA SELFIE DIPERBESAR UKURANNYA */
+        /* MODAL KAMERA SELFIE FULL SCREEN */
         #selfieModal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #0f172a;
+            background: #000000;
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             z-index: 9999;
-            padding: 20px;
+            padding: 30px 20px;
             color: white;
             text-align: center;
         }
         #selfieVideo { 
-            width: 100%; 
-            max-width: 340px;  /* Diperlebar agar tidak kecil */
-            height: 380px;  /* Ditinggikan agar proporsional */
-            border-radius: 16px; 
-            object-fit: cover; 
-            background: #000; 
-            margin: 12px 0; 
-            border: 3px solid #38bdf8; 
-            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 1;
+            background: #000;
         }
+        .selfie-header, .selfie-footer {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 12px;
+            border-radius: 14px;
+            backdrop-filter: blur(5px);
+        }
+        .selfie-header { margin-top: 10px; }
+        .selfie-footer { margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
         .btn-capture { 
             background: #2563eb; 
             color: white; 
             border: none; 
-            padding: 12px 32px; 
+            padding: 14px 35px; 
             border-radius: 30px; 
             font-weight: bold; 
-            font-size: 15px; 
+            font-size: 16px; 
             cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(37,99,235,0.4); 
-            margin-top: 5px;
+            box-shadow: 0 4px 20px rgba(37,99,235,0.6); 
+            width: 100%;
+            max-width: 280px;
         }
         .btn-capture:hover { background: #1d4ed8; }
 
@@ -177,12 +189,16 @@
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE -->
+    <!-- MODAL KAMERA SELFIE FULL SCREEN -->
     <div id="selfieModal">
-        <h3 style="margin-bottom: 2px; font-size: 18px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-        <p id="selfieStaffName" style="font-size: 14px; color: #94a3b8; margin-bottom: 5px;"></p>
         <video id="selfieVideo" autoplay playsinline></video>
-        <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
+        <div class="selfie-header">
+            <h3 style="font-size: 16px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+            <p id="selfieStaffName" style="font-size: 13px; color: #e2e8f0; margin-top: 2px;"></p>
+        </div>
+        <div class="selfie-footer">
+            <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
+        </div>
     </div>
 
     <div id="tab-scanner" class="container active">
@@ -506,11 +522,11 @@
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
             const canvas = document.createElement("canvas");
-            canvas.width = 300;
-            canvas.height = 330;
+            canvas.width = video.videoWidth || 480;
+            canvas.height = video.videoHeight || 640;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const base64Image = canvas.toDataURL("image/jpeg", 0.7);
+            const base64Image = canvas.toDataURL("image/jpeg", 0.8);
 
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
