@@ -93,7 +93,7 @@
         .overlay-wifi { font-size: 13px; color: #047857; margin-bottom: 15px; }
         .overlay-msg { font-size: 14px; font-weight: 600; color: #047857; font-style: italic; background: #d1fae5; padding: 8px 18px; border-radius: 12px; display: inline-block; }
 
-        /* MODAL / OVERLAY KAMERA SELFIE (DIUBAH JADI FIXED FULL LAYAR) */
+        /* MODAL KAMERA SELFIE DIPERBESAR UKURANNYA */
         #selfieModal {
             position: fixed;
             top: 0;
@@ -112,25 +112,26 @@
         }
         #selfieVideo { 
             width: 100%; 
-            max-width: 280px; 
-            height: 210px; 
-            border-radius: 12px; 
+            max-width: 340px;  /* Diperlebar agar tidak kecil */
+            height: 380px;  /* Ditinggikan agar proporsional */
+            border-radius: 16px; 
             object-fit: cover; 
             background: #000; 
-            margin: 10px 0; 
-            border: 2px solid #38bdf8; 
+            margin: 12px 0; 
+            border: 3px solid #38bdf8; 
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3);
         }
         .btn-capture { 
             background: #2563eb; 
             color: white; 
             border: none; 
-            padding: 12px 30px; 
+            padding: 12px 32px; 
             border-radius: 30px; 
             font-weight: bold; 
             font-size: 15px; 
             cursor: pointer; 
             box-shadow: 0 4px 15px rgba(37,99,235,0.4); 
-            margin-top: 10px;
+            margin-top: 5px;
         }
         .btn-capture:hover { background: #1d4ed8; }
 
@@ -176,10 +177,10 @@
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE (DI LUAR CONTAINER UTAMA BIAR FULL LAYAR) -->
+    <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
-        <h3 style="margin-bottom: 5px; font-size: 18px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-        <p id="selfieStaffName" style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;"></p>
+        <h3 style="margin-bottom: 2px; font-size: 18px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+        <p id="selfieStaffName" style="font-size: 14px; color: #94a3b8; margin-bottom: 5px;"></p>
         <video id="selfieVideo" autoplay playsinline></video>
         <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
     </div>
@@ -506,7 +507,7 @@
             const video = document.getElementById("selfieVideo");
             const canvas = document.createElement("canvas");
             canvas.width = 300;
-            canvas.height = 225;
+            canvas.height = 330;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             const base64Image = canvas.toDataURL("image/jpeg", 0.7);
