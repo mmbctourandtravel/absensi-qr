@@ -38,6 +38,7 @@
             font-size: 12px; 
         }
         .tab-btn.active { 
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100次方); 
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
             color: #ffffff; 
             font-weight: bold;
@@ -81,14 +82,13 @@
         
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
 
-        /* KUNCI & ATUR LEBAR KHUSUS TABEL JADWAL BULANAN */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; width: 40px; min-width: 40px; max-width: 40px; }
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 40px; z-index: 3; background: #f8fafc; text-align: left; min-width: 140px; max-width: 140px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
-        #tabelJadwal th:nth-child(1), #tabelJadwal th:nth-child(2) { z-index: 4; }
+        /* KUNCI & ATUR LEBAR KOLOM NAMA DI TAB JADWAL (Karena No disembunyikan, Nama jadi urutan pertama yang menempel) */
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        #tabelJadwal th:nth-child(2) { z-index: 4; background: #f1f5f9; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
-        footer { margin-top: 15px; text-align: center; font-size: 11px; color: #94a3b8; }
+        <footer>&copy; 2026 MMBC Tour & Travel - All Rights Reserved</footer>
     </style>
 </head>
 <body>
@@ -194,6 +194,11 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
                     row.forEach((cell, colIndex) => {
+                        // Sembunyikan kolom "No" (Indeks 0) agar tampilan di HP lebih luas dan hanya menampilkan Nama
+                        if (colIndex === 0) {
+                            return;
+                        }
+
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
@@ -258,7 +263,8 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1];
+                // Karena kolom No disembunyikan, Kolom Nama sekarang bergeser ke index 0 pada elemen <td> tabel yang tampil
+                let tdNama = tr[i].getElementsByTagName('td')[0];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
