@@ -81,12 +81,12 @@
         
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
 
-        /* Sticky HANYA untuk Tabel Jadwal Bulanan */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; width: 35px; }
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 35px; z-index: 3; background: #f8fafc; text-align: left; min-width: 130px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        /* KUNCI & ATUR LEBAR KHUSUS TABEL JADWAL BULANAN */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; width: 40px; min-width: 40px; max-width: 40px; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 40px; z-index: 3; background: #f8fafc; text-align: left; min-width: 140px; max-width: 140px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal th:nth-child(1), #tabelJadwal th:nth-child(2) { z-index: 4; }
 
-        /* Tabel Log Harian TIDAK ADA STICKY (normal bergeser secara natural) */
+        /* Tabel Log Harian dibiarkan natural tanpa sticky */
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
@@ -279,7 +279,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom Nama di Log (setelah ID disembunyikan)
+                let tdNama = tr[i].getElementsByTagName('td')[1];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
