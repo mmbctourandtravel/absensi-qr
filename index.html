@@ -93,7 +93,7 @@
         .overlay-wifi { font-size: 13px; color: #047857; margin-bottom: 15px; }
         .overlay-msg { font-size: 14px; font-weight: 600; color: #047857; font-style: italic; background: #d1fae5; padding: 8px 18px; border-radius: 12px; display: inline-block; }
 
-        /* MODAL / OVERLAY KAMERA SELFIE */
+        /* MODAL / OVERLAY KAMERA SELFIE YANG SUDAH DISESUAIKAN */
         #selfieModal {
             position: absolute;
             top: 0;
@@ -106,12 +106,33 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
-            padding: 20px;
+            padding: 15px;
             color: white;
             text-align: center;
+            overflow-y: auto;
         }
-        #selfieVideo { width: 100%; max-width: 320px; height: 240px; border-radius: 12px; object-fit: cover; background: #000; margin-bottom: 15px; border: 2px solid #38bdf8; }
-        .btn-capture { background: #2563eb; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.4); }
+        #selfieVideo { 
+            width: 100%; 
+            max-width: 280px; 
+            height: 210px; 
+            border-radius: 12px; 
+            object-fit: cover; 
+            background: #000; 
+            margin: 8px 0; 
+            border: 2px solid #38bdf8; 
+        }
+        .btn-capture { 
+            background: #2563eb; 
+            color: white; 
+            border: none; 
+            padding: 10px 24px; 
+            border-radius: 30px; 
+            font-weight: bold; 
+            font-size: 14px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(37,99,235,0.4); 
+            margin-top: 5px;
+        }
         .btn-capture:hover { background: #1d4ed8; }
 
         #fullScreenOverlay.error-bg { background: #fef2f2; }
@@ -166,8 +187,8 @@
         </div>
 
         <div id="selfieModal">
-            <h3 style="margin-bottom: 5px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;"></p>
+            <h3 style="margin-bottom: 3px; font-size: 16px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+            <p id="selfieStaffName" style="font-size: 12px; color: #94a3b8; margin-bottom: 5px;"></p>
             <video id="selfieVideo" autoplay playsinline></video>
             <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
         </div>
@@ -392,11 +413,9 @@
                 if (sedangProses) return;
                 sedangProses = true;
                 
-                // Hentikan total scanner kamera belakang agar tidak bentrok dengan kamera selfie
                 qr.stop().then(() => {
                     jalankanProsesAbsen(decodedText);
                 }).catch(err => {
-                    console.log("Gagal stop QR:", err);
                     jalankanProsesAbsen(decodedText);
                 });
             },
@@ -421,7 +440,6 @@
             msgEl.innerText = "Memeriksa data absensi...";
             overlay.style.display = "flex";
 
-            // Cek status staff (masuk atau pulang)
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
@@ -436,10 +454,8 @@
                 }
 
                 if (res.status === "masuk") {
-                    // --- JIKA STATUS MASUK: BUKA KAMERA SELFIE ---
                     bukaKameraSelfie(res.nama);
                 } else if (res.status === "pulang") {
-                    // --- JIKA STATUS PULANG: PROSES ABSEN PULANG & MUNCULKAN OVERLAY LOADING ---
                     const overlayPulang = document.getElementById("fullScreenOverlay");
                     document.getElementById("overlayIcon").innerText = "⏳";
                     document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
@@ -459,7 +475,6 @@
             });
         }
 
-        // Fungsi Membuka Kamera Selfie dengan Aman
         function bukaKameraSelfie(namaStaff) {
             document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
             const modal = document.getElementById("selfieModal");
@@ -487,7 +502,6 @@
                 });
         }
 
-        // Fungsi Ambil Foto & Kirim Absen Masuk
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
             const canvas = document.createElement("canvas");
@@ -497,13 +511,11 @@
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             const base64Image = canvas.toDataURL("image/jpeg", 0.7);
 
-            // Matikan kamera selfie
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
             }
             document.getElementById("selfieModal").style.display = "none";
 
-            // Tampilkan layar loading proses
             const overlay = document.getElementById("fullScreenOverlay");
             document.getElementById("overlayIcon").innerText = "⏳";
             document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
@@ -513,7 +525,6 @@
             overlay.className = "";
             overlay.style.display = "flex";
 
-            // Upload selfie dulu ke Drive
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
@@ -528,7 +539,6 @@
             });
         }
 
-        // Eksekusi Final Absen (Masuk / Pulang) ke Spreadsheet
         function eksekusiAbsenFinal(fotoUrl) {
             fetch(API, {
                 method: "POST",
@@ -552,7 +562,6 @@
                     msgEl.innerText = isPulang ? "Hati-hati di jalan, selamat beristirahat!" : "Selamat bekerja, semoga harinya menyenangkan!";
                     overlay.className = ""; 
 
-                    // Efek suara beep sukses
                     try {
                         const ctx = new (window.AudioContext || window.webkitAudioContext)();
                         const osc = ctx.createOscillator();
@@ -571,7 +580,6 @@
                     return;
                 }
 
-                // Tampil selama 8 detik penuh sesuai permintaan, lalu reset scanner kamera belakang
                 setTimeout(() => {
                     overlay.style.display = "none";
                     resetScannerKamera();
@@ -598,7 +606,6 @@
             }, 4000);
         }
 
-        // Fungsi Menghidupkan Kembali Scanner Kamera Belakang
         function resetScannerKamera() {
             sedangProses = false;
             qr.start(
