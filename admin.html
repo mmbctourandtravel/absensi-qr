@@ -17,9 +17,9 @@
         .ip-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; }
         .ip-box b { color: #1e293b; font-size: 16px; display: block; margin-top: 5px; margin-bottom: 2px;}
         
-        /* Style untuk Select Dropdown */
-        .select-wifi { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; transition: border-color 0.3s; }
-        .select-wifi:focus { border-color: #2563eb; }
+        /* Style untuk Select Dropdown & Input Password */
+        .input-field { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; transition: border-color 0.3s; }
+        .input-field:focus { border-color: #2563eb; }
 
         .info-text { font-size: 12px; color: #64748b; margin-bottom: 15px; line-height: 1.5; }
 
@@ -29,10 +29,29 @@
         #statusMsg { margin-top: 15px; font-size: 13px; font-weight: 600; }
         .success { color: #059669; }
         .error { color: #dc2626; }
+
+        /* Style Kotak Password (Modal/Overlay) */
+        #authOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 15px; }
+        .auth-card { background: #ffffff; width: 100%; max-width: 360px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); text-align: center; }
+        .auth-card h2 { font-size: 16px; color: #1e293b; margin-bottom: 15px; }
+        .btn-login { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        #authError { color: #dc2626; font-size: 12px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
+    <!-- KOTAK PASSWORD (MUNCUL PERTAMA KALI) -->
+    <div id="authOverlay">
+        <div class="auth-card">
+            <h2>🔒 Keamanan Admin Panel</h2>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses halaman pembaruan IP Wi-Fi.</p>
+            <input type="password" id="adminPassInput" class="input-field" placeholder="Masukkan Password...">
+            <button class="btn-login" onclick="cekPassword()">Masuk</button>
+            <div id="authError">❌ Password salah! Silakan coba lagi.</div>
+        </div>
+    </div>
+
+    <!-- HALAMAN UTAMA ADMIN PANEL -->
     <div class="container">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
@@ -46,7 +65,7 @@
             
             <div style="margin-top: 18px; text-align: left; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
                 <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
-                <select id="targetWifi" class="select-wifi">
+                <select id="targetWifi" class="input-field">
                     <option value="basecamp">Basecamp MMBC</option>
                     <option value="megavision">Megavision</option>
                 </select>
@@ -68,49 +87,71 @@
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec"; 
         let myIp = "";
 
-        // 1. Dapatkan IP Publik
-        fetch("https://api.ipify.org?format=json")
-            .then(r => r.json())
-            .then(data => {
-                myIp = data.ip;
-                document.getElementById("currentIp").innerText = "IP: " + myIp;
-                document.getElementById("wifiName").innerText = "Mengecek status...";
+        // Fungsi Cek Password
+        function cekPassword() {
+            // Password standar yang kamu minta (bisa diubah kapan saja di sini)
+            const PASSWORD_BENAR = "mmbc1305"; 
+            let inputVal = document.getElementById("adminPassInput").value;
 
-                // 2. Cek apakah IP ini sudah ada di database kita
-                fetch(API, {
-                    method: "POST",
-                    body: JSON.stringify({ action: "getWifiInfo", ip: myIp })
-                })
+            if (inputVal === PASSWORD_BENAR) {
+                // Sembunyikan kotak password
+                document.getElementById("authOverlay").style.display = "none";
+                // Mulai jalankan deteksi IP setelah berhasil login
+                inisialisasiSistem();
+            } else {
+                document.getElementById("authError").style.display = "block";
+            }
+        }
+
+        // Jalankan dengan tombol Enter di keyboard
+        document.getElementById("adminPassInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                cekPassword();
+            }
+        });
+
+        function inisialisasiSistem() {
+            // 1. Dapatkan IP Publik
+            fetch("https://api.ipify.org?format=json")
                 .then(r => r.json())
-                .then(res => {
-                    if(res.wifi && res.wifi !== myIp) {
-                        // Jika terdaftar
-                        document.getElementById("wifiName").innerText = res.wifi;
-                        document.getElementById("wifiName").style.color = "#059669"; // Hijau
-                        
-                        // Otomatis ubah pilihan dropdown sesuai nama Wi-Fi
-                        let select = document.getElementById("targetWifi");
-                        for(let i = 0; i < select.options.length; i++) {
-                            if(res.wifi.toLowerCase().includes(select.options[i].value)) {
-                                select.selectedIndex = i;
-                                break;
+                .then(data => {
+                    myIp = data.ip;
+                    document.getElementById("currentIp").innerText = "IP: " + myIp;
+                    document.getElementById("wifiName").innerText = "Mengecek status...";
+
+                    // 2. Cek apakah IP ini sudah ada di database kita
+                    fetch(API, {
+                        method: "POST",
+                        body: JSON.stringify({ action: "getWifiInfo", ip: myIp })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if(res.wifi && res.wifi !== myIp) {
+                            document.getElementById("wifiName").innerText = res.wifi;
+                            document.getElementById("wifiName").style.color = "#059669";
+                            
+                            let select = document.getElementById("targetWifi");
+                            for(let i = 0; i < select.options.length; i++) {
+                                if(res.wifi.toLowerCase().includes(select.options[i].value)) {
+                                    select.selectedIndex = i;
+                                    break;
+                                }
                             }
+                        } else {
+                            document.getElementById("wifiName").innerText = "⚠️ IP Baru (Belum Terdaftar)";
+                            document.getElementById("wifiName").style.color = "#dc2626";
                         }
-                    } else {
-                        // Jika belum terdaftar
-                        document.getElementById("wifiName").innerText = "⚠️ IP Baru (Belum Terdaftar)";
-                        document.getElementById("wifiName").style.color = "#dc2626"; // Merah
-                    }
+                    })
+                    .catch(err => {
+                        document.getElementById("wifiName").innerText = "Gagal memuat nama Wi-Fi";
+                    });
+
                 })
                 .catch(err => {
-                    document.getElementById("wifiName").innerText = "Gagal memuat nama Wi-Fi";
+                    document.getElementById("currentIp").innerText = "Gagal mendeteksi IP";
+                    document.getElementById("wifiName").innerText = "Offline";
                 });
-
-            })
-            .catch(err => {
-                document.getElementById("currentIp").innerText = "Gagal mendeteksi IP";
-                document.getElementById("wifiName").innerText = "Offline";
-            });
+        }
 
         function updateIpKantor() {
             if (!myIp) {
@@ -137,7 +178,6 @@
                 if(res.sukses) {
                     msg.className = "success";
                     msg.innerText = "✅ " + res.pesan;
-                    // Ubah nama di atas menjadi berhasil
                     document.getElementById("wifiName").innerText = targetTerpilih.toUpperCase();
                     document.getElementById("wifiName").style.color = "#059669";
                 } else {
