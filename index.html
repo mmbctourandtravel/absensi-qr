@@ -93,7 +93,7 @@
         .overlay-wifi { font-size: 13px; color: #047857; margin-bottom: 15px; }
         .overlay-msg { font-size: 14px; font-weight: 600; color: #047857; font-style: italic; background: #d1fae5; padding: 8px 18px; border-radius: 12px; display: inline-block; }
 
-        /* MODAL / OVERLAY KAMERA SELFIE YANG SUDAH DISESUAIKAN */
+        /* MODAL / OVERLAY KAMERA SELFIE YANG DISEMPURNAKAN TATA LETAKNYA */
         #selfieModal {
             position: absolute;
             top: 0;
@@ -106,32 +106,31 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
-            padding: 15px;
+            padding: 10px;
             color: white;
             text-align: center;
-            overflow-y: auto;
         }
         #selfieVideo { 
             width: 100%; 
-            max-width: 280px; 
-            height: 210px; 
+            max-width: 250px; 
+            height: 185px; 
             border-radius: 12px; 
             object-fit: cover; 
             background: #000; 
-            margin: 8px 0; 
+            margin: 6px 0; 
             border: 2px solid #38bdf8; 
         }
         .btn-capture { 
             background: #2563eb; 
             color: white; 
             border: none; 
-            padding: 10px 24px; 
+            padding: 12px 28px; 
             border-radius: 30px; 
             font-weight: bold; 
-            font-size: 14px; 
+            font-size: 15px; 
             cursor: pointer; 
             box-shadow: 0 4px 15px rgba(37,99,235,0.4); 
-            margin-top: 5px;
+            margin-top: 8px;
         }
         .btn-capture:hover { background: #1d4ed8; }
 
@@ -187,8 +186,8 @@
         </div>
 
         <div id="selfieModal">
-            <h3 style="margin-bottom: 3px; font-size: 16px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 12px; color: #94a3b8; margin-bottom: 5px;"></p>
+            <h3 style="margin-bottom: 2px; font-size: 15px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+            <p id="selfieStaffName" style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;"></p>
             <video id="selfieVideo" autoplay playsinline></video>
             <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
         </div>
