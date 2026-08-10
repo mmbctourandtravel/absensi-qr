@@ -22,7 +22,7 @@
         .header-brand { background: #f8fafc; padding: 15px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
         .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
-        h1 { font-size: 20px; color: #1e293b; font-weight: 700; }
+        h1 { font-size: 18px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
 
         .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
         .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
@@ -33,11 +33,15 @@
         #hasil { margin: 10px 0; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; }
         .processing { background: #d1fae5; color: #065f46; }
 
-        /* Styling Tabel Rekap Bulanan Mungil & Rapi */
+        /* Styling Tabel Jadwal Bulanan Mungil & Rapi */
         .rekap-wrapper { padding: 10px; overflow-x: auto; max-height: 500px; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 10px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 4px 6px; text-align: center; }
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+        
+        /* Pengecilan Kolom Pertama (No) */
+        table.rekap-table th:first-child, table.rekap-table td:first-child { width: 35px; max-width: 40px; }
+
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
         footer { margin-top: 15px; text-align: center; font-size: 11px; color: #94a3b8; }
@@ -48,7 +52,7 @@
     <!-- Tombol Navigasi Tab -->
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner QR</button>
-        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Rekap Bulanan</button>
+        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal Bulanan</button>
     </div>
 
     <!-- TAB 1: SCANNER QR -->
@@ -67,15 +71,15 @@
         </div>
     </div>
 
-    <!-- TAB 2: REKAP BULANAN -->
+    <!-- TAB 2: JADWAL BULANAN -->
     <div id="tab-rekap" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
             <div class="logo-text">MMBC Tour & Travel</div>
-            <h1>REKAP ABSEN BULANAN</h1>
+            <h1 id="judulBulanHeader">JADWAL BULANAN</h1>
         </div>
         <div class="rekap-wrapper">
-            <div id="rekapContent" class="loading-rekap">Memuat data rekap dari Google Sheet...</div>
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
         </div>
     </div>
 
@@ -83,6 +87,14 @@
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
+        // Deteksi Bulan Berjalan Saat Ini Secara Otomatis (Contoh: Agustus 2026)
+        const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const currentDate = new Date();
+        const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
+
+        // Set Judul Header otomatis sesuai bulan aktif
+        document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
 
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
@@ -99,11 +111,11 @@
 
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
-            container.innerHTML = "Memuat data rekap dari Google Sheet...";
+            container.innerHTML = "Memuat jadwal dari Google Sheet...";
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "getRekapBulanan", bulan: "Agustus 2026" })
+                body: JSON.stringify({ action: "getRekapBulanan", bulan: bulanBerjalan })
             })
             .then(r => r.json())
             .then(res => {
@@ -113,16 +125,19 @@
                 }
                 
                 let rows = res.data;
-                let html = '<div style="font-weight: bold; font-size: 13px; color: #1e293b; margin-bottom: 8px; text-align: center;">📅 Periode: Agustus 2026</div>';
+                let html = `<div style="font-weight: bold; font-size: 13px; color: #1e293b; margin-bottom: 8px; text-align: center;">📅 Periode: ${bulanBerjalan}</div>`;
                 html += '<table class="rekap-table">';
                 
                 rows.forEach((row, rowIndex) => {
+                    // Lewati baris pertama jika itu baris kosong / sampah angka "1" dari sheet atas
+                    if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
+
                     html += '<tr>';
                     row.forEach((cell, colIndex) => {
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
 
-                        // Bersihkan format tanggal panjang dari Google Sheet agar jadi angka tanggal saja
+                        // Bersihkan format tanggal panjang Google Sheet jadi angka tanggal saja
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) {
@@ -146,10 +161,9 @@
         function updateClock(){
             const now = new Date();
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             const elTgl = document.getElementById("tanggal");
             const elJam = document.getElementById("jam");
-            if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
+            if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
             if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
         }
         setInterval(updateClock, 1000);
