@@ -419,7 +419,6 @@
                     overlay.style.display = "none";
 
                     if (!res.sukses && res.status === "sudah_absen") {
-                        // Jika sudah absen hari ini
                         tampilkanPesanError(res.pesan);
                         return;
                     }
@@ -428,7 +427,16 @@
                         // --- JIKA STATUS MASUK: BUKA KAMERA SELFIE ---
                         bukaKameraSelfie(res.nama);
                     } else if (res.status === "pulang") {
-                        // --- JIKA STATUS PULANG: LANGSUNG PROSES ABSEN PULANG ---
+                        // --- JIKA STATUS PULANG: PROSES ABSEN PULANG & MUNCULKAN OVERLAY LOADING ---
+                        const overlay = document.getElementById("fullScreenOverlay");
+                        document.getElementById("overlayIcon").innerText = "⏳";
+                        document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
+                        document.getElementById("overlayName").innerText = res.nama || "Staff";
+                        document.getElementById("overlayWifi").innerText = "";
+                        document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+                        overlay.className = "";
+                        overlay.style.display = "flex";
+
                         eksekusiAbsenFinal("");
                     } else {
                         tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
@@ -442,36 +450,35 @@
         ).catch(err => console.log(err));
 
         // Fungsi Membuka Kamera Selfie
-        // Fungsi Membuka Kamera Selfie dengan Penangkap Error yang Jelas
-function bukaKameraSelfie(namaStaff) {
-    document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
-    const modal = document.getElementById("selfieModal");
-    modal.style.display = "flex";
+        function bukaKameraSelfie(namaStaff) {
+            document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
+            const modal = document.getElementById("selfieModal");
+            modal.style.display = "flex";
 
-    // Cek apakah browser mendukung getUserMedia
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("Browser Anda tidak mendukug akses kamera secara langsung. Pastikan menggunakan HTTPS.");
-        modal.style.display = "none";
-        sedangProses = false;
-        qr.resume();
-        return;
-    }
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert("Browser Anda tidak mendukung akses kamera secara langsung. Pastikan menggunakan HTTPS.");
+                modal.style.display = "none";
+                sedangProses = false;
+                qr.resume();
+                return;
+            }
 
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-        .then(stream => {
-            streamSelfie = stream;
-            const videoElement = document.getElementById("selfieVideo");
-            videoElement.srcObject = stream;
-            videoElement.play().catch(e => console.log("Play error:", e));
-        })
-        .catch(err => {
-            console.error("Gagal kamera:", err);
-            alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin (Permission) kamera pada browser.\n2. Menggunakan link HTTPS.\n\nDetail error: " + err.message);
-            modal.style.display = "none";
-            sedangProses = false;
-            qr.resume();
-        });
-}
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+                .then(stream => {
+                    streamSelfie = stream;
+                    const videoElement = document.getElementById("selfieVideo");
+                    videoElement.srcObject = stream;
+                    videoElement.play().catch(e => console.log("Play error:", e));
+                })
+                .catch(err => {
+                    console.error("Gagal kamera:", err);
+                    alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin (Permission) kamera pada browser.\n2. Menggunakan link HTTPS.\n\nDetail error: " + err.message);
+                    modal.style.display = "none";
+                    sedangProses = false;
+                    qr.resume();
+                });
+        }
+
         // Fungsi Ambil Foto & Kirim Absen Masuk
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
@@ -506,11 +513,9 @@ function bukaKameraSelfie(namaStaff) {
             .then(r => r.json())
             .then(resUpload => {
                 let fotoUrl = resUpload.sukses ? resUpload.url : "";
-                // Lanjut simpan absen masuk
                 eksekusiAbsenFinal(fotoUrl);
             })
             .catch(err => {
-                // Tetap lanjut meski gagal upload foto
                 eksekusiAbsenFinal("");
             });
         }
