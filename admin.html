@@ -14,8 +14,8 @@
         .logo-text { font-size: 13px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
         h1 { font-size: 18px; color: #1e293b; font-weight: 700; }
 
-        .ip-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; }
-        .ip-box b { color: #1e293b; font-size: 14px; }
+        .ip-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; }
+        .ip-box b { color: #1e293b; font-size: 16px; display: block; margin-top: 5px; margin-bottom: 2px;}
         
         /* Style untuk Select Dropdown */
         .select-wifi { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; transition: border-color 0.3s; }
@@ -40,10 +40,11 @@
         </div>
 
         <div class="ip-box">
-            🌐 Jaringan Wi-Fi Terdeteksi IP:<br>
-            <b id="currentIp">Mendeteksi...</b>
+            🌐 Jaringan Wi-Fi Terdeteksi:<br>
+            <b id="wifiName" style="color: #2563eb;">Mendeteksi...</b>
+            <span id="currentIp" style="font-size: 13px; color: #64748b; font-weight: bold;">Mencari IP...</span>
             
-            <div style="margin-top: 15px; text-align: left;">
+            <div style="margin-top: 18px; text-align: left; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
                 <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
                 <select id="targetWifi" class="select-wifi">
                     <option value="basecamp">Basecamp MMBC</option>
@@ -64,18 +65,51 @@
     </div>
 
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec"; // URL Apps Script sudah benar
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec"; 
         let myIp = "";
 
-        // Deteksi IP Publik perangkat saat membuka link di kantor
+        // 1. Dapatkan IP Publik
         fetch("https://api.ipify.org?format=json")
             .then(r => r.json())
             .then(data => {
                 myIp = data.ip;
-                document.getElementById("currentIp").innerText = myIp;
+                document.getElementById("currentIp").innerText = "IP: " + myIp;
+                document.getElementById("wifiName").innerText = "Mengecek status...";
+
+                // 2. Cek apakah IP ini sudah ada di database kita
+                fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "getWifiInfo", ip: myIp })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if(res.wifi && res.wifi !== myIp) {
+                        // Jika terdaftar
+                        document.getElementById("wifiName").innerText = res.wifi;
+                        document.getElementById("wifiName").style.color = "#059669"; // Hijau
+                        
+                        // Otomatis ubah pilihan dropdown sesuai nama Wi-Fi
+                        let select = document.getElementById("targetWifi");
+                        for(let i = 0; i < select.options.length; i++) {
+                            if(res.wifi.toLowerCase().includes(select.options[i].value)) {
+                                select.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    } else {
+                        // Jika belum terdaftar
+                        document.getElementById("wifiName").innerText = "⚠️ IP Baru (Belum Terdaftar)";
+                        document.getElementById("wifiName").style.color = "#dc2626"; // Merah
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("wifiName").innerText = "Gagal memuat nama Wi-Fi";
+                });
+
             })
             .catch(err => {
                 document.getElementById("currentIp").innerText = "Gagal mendeteksi IP";
+                document.getElementById("wifiName").innerText = "Offline";
             });
 
         function updateIpKantor() {
@@ -88,15 +122,14 @@
             msg.className = "";
             msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
 
-            // Mengambil nilai dari dropdown yang dipilih user
             let targetTerpilih = document.getElementById("targetWifi").value;
 
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({
-                    action: "updateWifi", // Tetap pakai ini sesuai dengan GS
+                    action: "updateWifi",
                     ip: myIp,
-                    target: targetTerpilih // <-- Ini data tambahan yang dikirim ke GS
+                    target: targetTerpilih
                 })
             })
             .then(r => r.json())
@@ -104,6 +137,9 @@
                 if(res.sukses) {
                     msg.className = "success";
                     msg.innerText = "✅ " + res.pesan;
+                    // Ubah nama di atas menjadi berhasil
+                    document.getElementById("wifiName").innerText = targetTerpilih.toUpperCase();
+                    document.getElementById("wifiName").style.color = "#059669";
                 } else {
                     msg.className = "error";
                     msg.innerText = "❌ " + res.pesan;
