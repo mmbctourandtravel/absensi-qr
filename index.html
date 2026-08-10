@@ -442,24 +442,36 @@
         ).catch(err => console.log(err));
 
         // Fungsi Membuka Kamera Selfie
-        function bukaKameraSelfie(namaStaff) {
-            document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
-            const modal = document.getElementById("selfieModal");
-            modal.style.display = "flex";
+        // Fungsi Membuka Kamera Selfie dengan Penangkap Error yang Jelas
+function bukaKameraSelfie(namaStaff) {
+    document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
+    const modal = document.getElementById("selfieModal");
+    modal.style.display = "flex";
 
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-                .then(stream => {
-                    streamSelfie = stream;
-                    document.getElementById("selfieVideo").srcObject = stream;
-                })
-                .catch(err => {
-                    alert("Gagal mengakses kamera depan: " + err);
-                    modal.style.display = "none";
-                    sedangProses = false;
-                    qr.resume();
-                });
-        }
+    // Cek apakah browser mendukung getUserMedia
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Browser Anda tidak mendukug akses kamera secara langsung. Pastikan menggunakan HTTPS.");
+        modal.style.display = "none";
+        sedangProses = false;
+        qr.resume();
+        return;
+    }
 
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+        .then(stream => {
+            streamSelfie = stream;
+            const videoElement = document.getElementById("selfieVideo");
+            videoElement.srcObject = stream;
+            videoElement.play().catch(e => console.log("Play error:", e));
+        })
+        .catch(err => {
+            console.error("Gagal kamera:", err);
+            alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin (Permission) kamera pada browser.\n2. Menggunakan link HTTPS.\n\nDetail error: " + err.message);
+            modal.style.display = "none";
+            sedangProses = false;
+            qr.resume();
+        });
+}
         // Fungsi Ambil Foto & Kirim Absen Masuk
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
