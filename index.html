@@ -70,6 +70,8 @@
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
         #hasil { margin: 10px 0; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; }
         .processing { background: #d1fae5; color: #065f46; }
+        .success-box { background: #d1fae5; color: #065f46; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+        .error-box { background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; }
 
         .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
@@ -81,9 +83,9 @@
         
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
 
-        /* KUNCI KOLOM NAMA (Kolom index ke-1 setelah 'No' disembunyikan) */
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
-        #tabelJadwal th:nth-child(2) { z-index: 4; background: #f1f5f9; }
+        /* KUNCI KOLOM NAMA UTAMA (Kolom index ke-0 setelah kolom No dihapus) */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        #tabelJadwal th:nth-child(1) { z-index: 4; background: #f1f5f9; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
@@ -193,7 +195,8 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
                     row.forEach((cell, colIndex) => {
-                        // Hanya hilangkan kolom index 0 (Nomor urut)
+                        // KOREKSI UTAMA: Buang kolom No (Indeks 0 & 1 sekaligus jika di sheet ada 2 kolom pertama untuk nomor/kosong, pastikan index 0 dibuang dan index 1 menjadi Nama)
+                        // Berdasarkan spreadsheet Anda: Kolom 0 = Kosong/No, Kolom 1 = Nama. Kita skip Kolom 0.
                         if (colIndex === 0) {
                             return;
                         }
@@ -261,6 +264,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
+                // Kolom Nama sekarang bergeser tepat di index 0 setelah kolom No di-skip
                 let tdNama = tr[i].getElementsByTagName('td')[0];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
@@ -323,19 +327,40 @@
                 document.getElementById("hasil").className = "processing";
                 document.getElementById("hasil").innerHTML = "✨ Memeriksa QR Code...";
 
+                // PERBAIKAN UTAMA ABSEN MASUK/PULANG:
+                // Langsung kirim action "absen" agar tereksekusi ke Google Sheets (bukan cuma cekStatus doang)
                 fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
+                    body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
                 })
                 .then(r => r.json())
                 .then(res => {
-                    alert("Scan Berhasil untuk ID: " + decodedText);
-                    location.reload();
+                    if (res.sukses) {
+                        let tipeTeks = res.tipe === "pulang" ? "ABSEN PULANG BERHASIL" : "ABSEN MASUK BERHASIL";
+                        document.getElementById("hasil").className = "success-box";
+                        document.getElementById("hasil").innerHTML = `✅ ${tipeTeks}<br><b>${res.nama}</b><br>Wi-Fi: ${res.wifi}`;
+                    } else {
+                        document.getElementById("hasil").className = "error-box";
+                        document.getElementById("hasil").innerHTML = `❌ ${res.pesan}`;
+                    }
+
+                    // Beri jeda 3 detik sebelum scanner aktif kembali untuk scan berikutnya
+                    setTimeout(() => {
+                        document.getElementById("hasil").innerHTML = "";
+                        document.getElementById("hasil").className = "";
+                        sedangProses = false;
+                        qr.resume();
+                    }, 3500);
                 })
                 .catch(err => {
-                    alert("Error: " + err);
-                    sedangProses = false;
-                    qr.resume();
+                    document.getElementById("hasil").className = "error-box";
+                    document.getElementById("hasil").innerHTML = "❌ Terjadi kesalahan koneksi server.";
+                    setTimeout(() => {
+                        document.getElementById("hasil").innerHTML = "";
+                        document.getElementById("hasil").className = "";
+                        sedangProses = false;
+                        qr.resume();
+                    }, 3000);
                 });
             },
             (err) => {}
