@@ -11,6 +11,299 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
+        /* Navigasi Tab Profesional & Smooth */
+        .nav-tabs { 
+            display: flex; 
+            width: 100%; 
+            max-width: 600px; 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px; 
+            padding: 6px; 
+            margin-bottom: 15px; 
+            gap: 8px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px; 
+            text-align: center; 
+            background: transparent; 
+            border: none; 
+            color: #94a3b8; 
+            font-weight: 600; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 13px; 
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
+            color: #ffffff; 
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.5); 
+            transform: translateY(-1px);
+        }
+
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; }
+        .container.active { display: block; }
+
+        .header-brand { background: #f8fafc; padding: 15px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
+        h1 { font-size: 18px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
+
+        .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
+        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+
+        .scanner-wrapper { padding: 15px; text-align: center; }
+        #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
+        #hasil { margin: 10px 0; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; }
+        .processing { background: #d1fae5; color: #065f46; }
+
+        /* Kotak Pencarian Nama */
+        .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
+        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
+
+        /* Styling Tabel Jadwal Bulanan dengan STICKY COLUMN */
+        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 450px; position: relative; }
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 10px; white-space: nowrap; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 5px 7px; text-align: center; background: #ffffff; }
+        
+        /* Baris Header Atas (Sticky vertikal) */
+        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+
+        /* KUNCI KOLOM 1 (No) & KOLOM 2 (Nama) AGAR TETAP DIAM SAAT DIGESER KE KANAN */
+        table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) {
+            position: sticky; left: 0; z-index: 3; background: #f8fafc; width: 30px; max-width: 35px;
+        }
+        table.rekap-table th:nth-child(2), table.rekap-table td:nth-child(2) {
+            position: sticky; left: 30px; z-index: 3; background: #f8fafc; text-align: left; min-width: 110px; box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+        table.rekap-table th:nth-child(1), table.rekap-table th:nth-child(2) {
+            z-index: 4; 
+        }
+
+        .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
+
+        footer { margin-top: 15px; text-align: center; font-size: 11px; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <!-- Tombol Navigasi Tab -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner QR</button>
+        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal Bulanan</button>
+    </div>
+
+    <!-- TAB 1: SCANNER QR -->
+    <div id="tab-scanner" class="container active">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>ABSENSI QR</h1>
+        </div>
+        <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
+        <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
+        <div class="instruction-sub">💡 Silakan scan QR Code untuk absensi</div>
+        <div class="scanner-wrapper">
+            <div id="hasil"></div>
+            <div id="reader"></div>
+        </div>
+    </div>
+
+    <!-- TAB 2: JADWAL BULANAN -->
+    <div id="tab-rekap" class="container">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1 id="judulBulanHeader">JADWAL BULANAN</h1>
+        </div>
+        
+        <!-- Kotak Pencarian Nama Karyawan -->
+        <div class="search-box-wrapper">
+            <input type="text" id="searchNama" class="search-input" placeholder="🔍 Cari nama staff (cth: Ahmad Rifai)..." onkeyup="filterTabelNama()">
+        </div>
+
+        <div class="rekap-wrapper">
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 MMBC Tour & Travel - All Rights Reserved</footer>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
+        const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const currentDate = new Date();
+        const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
+
+        document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            if(tabName === 'scanner') {
+                document.getElementById('tab-scanner').classList.add('active');
+            } else {
+                document.getElementById('tab-rekap').classList.add('active');
+                if(!window.cachedRekapData) {
+                    loadRekapBulanan();
+                }
+            }
+            btn.classList.add('active');
+        }
+
+        let rawSheetData = [];
+
+        function loadRekapBulanan() {
+            const container = document.getElementById('rekapContent');
+            container.innerHTML = "Memuat jadwal dari Google Sheet...";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getRekapBulanan", bulan: bulanBerjalan })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    container.innerHTML = "❌ Gagal memuat data: " + res.pesan;
+                    return;
+                }
+                
+                rawSheetData = res.data;
+                renderTabel(rawSheetData);
+            })
+            .catch(err => {
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server.";
+            });
+        }
+
+        function renderTabel(rows) {
+            const container = document.getElementById('rekapContent');
+            let html = `<div style="font-weight: bold; font-size: 12px; color: #1e293b; margin: 6px 0; text-align: center;">📅 Periode: ${bulanBerjalan}</div>`;
+            html += '<table class="rekap-table" id="tabelJadwal">';
+            
+            rows.forEach((row, rowIndex) => {
+                if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
+
+                html += '<tr>';
+                row.forEach((cell, colIndex) => {
+                    let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
+                    let cellText = cell !== null ? String(cell) : '';
+
+                    if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
+                        let d = new Date(cellText);
+                        if (!isNaN(d.getTime())) {
+                            cellText = d.getDate();
+                        }
+                    }
+
+                    html += `<${tag}>${cellText}</${tag}>`;
+                });
+                html += '</tr>';
+            });
+            html += '</table>';
+            container.innerHTML = html;
+        }
+
+        function filterTabelNama() {
+            let input = document.getElementById('searchNama').value.toLowerCase();
+            let table = document.getElementById('tabelJadwal');
+            if(!table) return;
+            let tr = table.getElementsByTagName('tr');
+
+            for (let i = 2; i < tr.length; i++) {
+                let tdNama = tr[i].getElementsByTagName('td')[1];
+                if (tdNama) {
+                    let txtValue = tdNama.textContent || tdNama.innerText;
+                    if (txtValue.toLowerCase().indexOf(input) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // --- SKRIP SCANNER QR UTAMA ---
+        function updateClock(){
+            const now = new Date();
+            const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const elTgl = document.getElementById("tanggal");
+            const elJam = document.getElementById("jam");
+            if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
+            if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let userIP = "";
+        fetch("https://api.ipify.org?format=json")
+            .then(r => r.json())
+            .then(data => { 
+                userIP = data.ip; 
+                return fetch(API, { method: "POST", body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) });
+            })
+            .then(r => r ? r.text() : null)
+            .then(text => {
+                if(!text) return;
+                let res = JSON.parse(text);
+                if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
+            }).catch(e => console.log(e));
+
+        const qr = new Html5Qrcode("reader");
+        let sedangProses = false;
+
+        qr.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 230 },
+            (decodedText) => {
+                if (sedangProses) return;
+                sedangProses = true;
+                qr.pause();
+
+                document.getElementById("hasil").className = "processing";
+                document.getElementById("hasil").innerHTML = "✨ Memeriksa QR Code...";
+
+                fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    alert("Scan Berhasil untuk ID: " + decodedText);
+                    location.reload();
+                })
+                .catch(err => {
+                    alert("Error: " + err);
+                    sedangProses = false;
+                    qr.resume();
+                });
+            },
+            (err) => {}
+        ).catch(err => console.log(err));
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi - MMBC Tour & Travel</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        
         /* Navigasi Tab */
         .nav-tabs { display: flex; width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 5px; margin-bottom: 15px; gap: 5px; }
         .tab-btn { flex: 1; padding: 10px; text-align: center; background: transparent; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 14px; }
