@@ -242,24 +242,6 @@
                         let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
-                        if (cellText.includes('T') && cellText.length > 15) {
-                            // Jika ini Kolom Jam Masuk (3) atau Jam Pulang (4), potong langsung string waktunya (Indeks 11 sampai 19 untuk format HH:MM:SS)
-                            if (colIndex === 3 || colIndex === 4) {
-                                if (cellText.includes('T')) {
-                                    let timePart = cellText.split('T')[1];
-                                    if (timePart) {
-                                        cellText = timePart.substring(0, 8); // Ambil persis HH:MM:SS
-                                    }
-                                }
-                            } else {
-                                // Kolom Tanggal (0)
-                                let d = new Date(cellText);
-                                if (!isNaN(d.getTime())) {
-                                    cellText = d.toLocaleDateString('id-ID');
-                                }
-                            }
-                        }
-
                         html += `<${tag}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
