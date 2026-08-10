@@ -11,28 +11,27 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
-        /* Navigasi Tab Profesional & Smooth */
+        /* Navigasi Tab Lebih Terang & Kontras */
         .nav-tabs { 
             display: flex; 
             width: 100%; 
             max-width: 600px; 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #1e293b; 
+            border: 2px solid #334155;
             border-radius: 14px; 
             padding: 6px; 
             margin-bottom: 15px; 
             gap: 8px; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             transition: max-width 0.3s;
         }
         .tab-btn { 
             flex: 1; 
             padding: 12px; 
             text-align: center; 
-            background: transparent; 
+            background: #334155; 
             border: none; 
-            color: #94a3b8; 
+            color: #e2e8f0; 
             font-weight: 600; 
             border-radius: 10px; 
             cursor: pointer; 
@@ -50,9 +49,8 @@
         .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; }
         .container.active { display: block; }
 
-        /* KODE RESPONSIF KHUSUS LAPTOP/PC (Layar Lebar) */
+        /* Responsif Khusus Laptop/PC (Layar Lebar) */
         @media screen and (min-width: 900px) {
-            /* Saat tab Jadwal Bulanan aktif di laptop, buat kontainer jadi full layar */
             #tab-rekap.container.active {
                 max-width: 96% !important;
             }
@@ -80,7 +78,7 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* Styling Tabel Jadwal Bulanan dengan STICKY COLUMN */
+        /* Styling Tabel Jadwal Bulanan dengan Sticky Column */
         .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
