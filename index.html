@@ -93,44 +93,44 @@
         .overlay-wifi { font-size: 13px; color: #047857; margin-bottom: 15px; }
         .overlay-msg { font-size: 14px; font-weight: 600; color: #047857; font-style: italic; background: #d1fae5; padding: 8px 18px; border-radius: 12px; display: inline-block; }
 
-        /* MODAL / OVERLAY KAMERA SELFIE YANG DISEMPURNAKAN TATA LETAKNYA */
+        /* MODAL / OVERLAY KAMERA SELFIE (DIUBAH JADI FIXED FULL LAYAR) */
         #selfieModal {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: #0f172a;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 100;
-            padding: 10px;
+            z-index: 9999;
+            padding: 20px;
             color: white;
             text-align: center;
         }
         #selfieVideo { 
             width: 100%; 
-            max-width: 250px; 
-            height: 185px; 
+            max-width: 280px; 
+            height: 210px; 
             border-radius: 12px; 
             object-fit: cover; 
             background: #000; 
-            margin: 6px 0; 
+            margin: 10px 0; 
             border: 2px solid #38bdf8; 
         }
         .btn-capture { 
             background: #2563eb; 
             color: white; 
             border: none; 
-            padding: 12px 28px; 
+            padding: 12px 30px; 
             border-radius: 30px; 
             font-weight: bold; 
             font-size: 15px; 
             cursor: pointer; 
             box-shadow: 0 4px 15px rgba(37,99,235,0.4); 
-            margin-top: 8px;
+            margin-top: 10px;
         }
         .btn-capture:hover { background: #1d4ed8; }
 
@@ -176,6 +176,14 @@
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
     </div>
 
+    <!-- MODAL KAMERA SELFIE (DI LUAR CONTAINER UTAMA BIAR FULL LAYAR) -->
+    <div id="selfieModal">
+        <h3 style="margin-bottom: 5px; font-size: 18px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+        <p id="selfieStaffName" style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;"></p>
+        <video id="selfieVideo" autoplay playsinline></video>
+        <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
+    </div>
+
     <div id="tab-scanner" class="container active">
         <div id="fullScreenOverlay">
             <div class="overlay-icon" id="overlayIcon">✅</div>
@@ -183,13 +191,6 @@
             <div class="overlay-name" id="overlayName">Nama Staff</div>
             <div class="overlay-wifi" id="overlayWifi">Wi-Fi: Basecamp MMBC</div>
             <div class="overlay-msg" id="overlayMsg">Hati-hati di jalan, selamat beristirahat!</div>
-        </div>
-
-        <div id="selfieModal">
-            <h3 style="margin-bottom: 2px; font-size: 15px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;"></p>
-            <video id="selfieVideo" autoplay playsinline></video>
-            <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
         </div>
 
         <div class="header-brand">
