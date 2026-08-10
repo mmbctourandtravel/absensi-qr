@@ -6,588 +6,188 @@
     <title>Absensi - MMBC Tour & Travel</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e40af">
-    
     <script src="https://unpkg.com/html5-qrcode"></script>
-    
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        
+        /* Navigasi Tab */
+        .nav-tabs { display: flex; width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 5px; margin-bottom: 15px; gap: 5px; }
+        .tab-btn { flex: 1; padding: 10px; text-align: center; background: transparent; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .tab-btn.active { background: #2563eb; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4); }
 
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px;
-        }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; }
+        .container.active { display: block; }
 
-        .container {
-            width: 100%;
-            max-width: 450px;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            margin-top: 10px;
-        }
+        .header-brand { background: #f8fafc; padding: 15px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
+        h1 { font-size: 20px; color: #1e293b; font-weight: 700; }
 
-        .header-brand {
-            background: #f8fafc;
-            padding: 15px 20px;
-            text-align: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
+        .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
+        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        .logo-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .scanner-wrapper { padding: 15px; text-align: center; }
+        #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
+        #hasil { margin: 10px 0; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; }
+        .processing { background: #d1fae5; color: #065f46; }
 
-        .logo-text {
-            font-size: 13px;
-            font-weight: 700;
-            color: #2563eb;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 2px;
-        }
+        /* Styling Tabel Rekap Bulanan */
+        .rekap-wrapper { padding: 15px; overflow-x: auto; max-height: 500px; }
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; }
+        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; }
+        .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
-        h1 {
-            font-size: 22px;
-            color: #1e293b;
-            font-weight: 700;
-        }
-
-        .instruction-sub {
-            font-size: 13px;
-            color: #475569;
-            font-weight: 600;
-            background: #f1f5f9;
-            padding: 8px;
-            text-align: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .clock-box {
-            background: #eff6ff;
-            padding: 10px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 600;
-            color: #1d4ed8;
-            border-bottom: 1px solid #dbeafe;
-        }
-
-        .wifi-info-box {
-            background: #f0fdf4;
-            color: #15803d;
-            padding: 8px 12px;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
-            border-bottom: 1px solid #dcfce7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .scanner-wrapper {
-            padding: 20px;
-            text-align: center;
-        }
-
-        #reader {
-            width: 100% !important;
-            border: none !important;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        #reader video {
-            border-radius: 12px;
-        }
-
-        #hasil {
-            margin-bottom: 12px; 
-            margin-top: 5px;     
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .processing {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #065f46;
-            border: 1px solid #6ee7b7;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        .error-box {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        #selfieArea {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
-
-        #selfieVideo {
-            width: 100%;
-            max-height: 320px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #000;
-        }
-
-        .btn-custom {
-            margin-top: 15px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-            transition: 0.2s;
-        }
-
-        .btn-custom:active {
-            transform: scale(0.98);
-        }
-
-        #btnInstall {
-            display: none;
-            margin-top: 15px;
-            background: #059669;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
-        }
-
-        footer {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: #94a3b8;
-        }
+        footer { margin-top: 15px; text-align: center; font-size: 11px; color: #94a3b8; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <!-- Tombol Navigasi Tab -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner QR</button>
+        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Rekap Bulanan</button>
+    </div>
+
+    <!-- TAB 1: SCANNER QR -->
+    <div id="tab-scanner" class="container active">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>ABSENSI QR</h1>
         </div>
-
-        <div class="clock-box" id="clock">
-            <span id="tanggal">Memuat tanggal...</span> | <span id="jam">00:00:00</span>
-        </div>
-
-        <div class="wifi-info-box" id="wifiInfoDisplay">
-            <span>📡 Jaringan Terdeteksi: <b id="namaWifiText">Mendeteksi jaringan...</b></span>
-        </div>
-
-        <div class="instruction-sub">
-            💡 Silakan scan QR Code untuk melakukan absensi
-        </div>
-
+        <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
+        <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
+        <div class="instruction-sub">💡 Silakan scan QR Code untuk absensi</div>
         <div class="scanner-wrapper">
             <div id="hasil"></div>
             <div id="reader"></div>
-            <button id="btnInstall">📱 Install Aplikasi ke HP</button>
-        </div>
-
-        <div id="selfieArea">
-            <video id="selfieVideo" autoplay playsinline></video>
-            <canvas id="selfieCanvas" style="display:none;"></canvas>
-            <button class="btn-custom" id="btnSelfie">📸 Ambil Foto Selfie</button>
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 MMBC Tour & Travel - All Rights Reserved
-    </footer>
+    <!-- TAB 2: REKAP BULANAN -->
+    <div id="tab-rekap" class="container">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>REKAP ABSEN BULANAN</h1>
+        </div>
+        <div class="rekap-wrapper">
+            <div id="rekapContent" class="loading-rekap">Memuat data rekap dari Google Sheet...</div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 MMBC Tour & Travel - All Rights Reserved</footer>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('ServiceWorker Berhasil Terdaftar: ', reg.scope))
-                    .catch(err => console.log('ServiceWorker Gagal: ', err));
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            if(tabName === 'scanner') {
+                document.getElementById('tab-scanner').classList.add('active');
+            } else {
+                document.getElementById('tab-rekap').classList.add('active');
+                loadRekapBulanan();
+            }
+            btn.classList.add('active');
+        }
+
+        function loadRekapBulanan() {
+            const container = document.getElementById('rekapContent');
+            container.innerHTML = "Memuat data rekap dari Google Sheet...";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getRekapBulanan", bulan: "Agustus 2026" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    container.innerHTML = "❌ Gagal memuat data: " + res.pesan;
+                    return;
+                }
+                
+                let rows = res.data;
+                let html = '<table class="rekap-table">';
+                rows.forEach((row, index) => {
+                    html += '<tr>';
+                    row.forEach(cell => {
+                        let tag = index === 0 ? 'th' : 'td';
+                        html += `<${tag}>${cell !== null ? cell : ''}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server.";
             });
         }
 
-        let deferredPrompt;
-        const btnInstall = document.getElementById('btnInstall');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            btnInstall.style.display = 'block'; 
-        });
-
-        btnInstall.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('Pengguna menerima instalasi PWA');
-                }
-                deferredPrompt = null;
-                btnInstall.style.display = 'none';
-            }
-        });
-
-        function beep(){
-            const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-            audio.play().catch(e => console.log("Audio play blocked"));
-        }
-
+        // --- SKRIP SCANNER QR UTAMA ---
         function updateClock(){
             const now = new Date();
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            
             const elTgl = document.getElementById("tanggal");
             const elJam = document.getElementById("jam");
             if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + bulan[now.getMonth()] + " " + now.getFullYear();
             if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
         }
-
         setInterval(updateClock, 1000);
         updateClock();
 
         let userIP = "";
-        let namaWifiAktif = "Basecamp / Kantor";
-        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
-
-        // Ambil IP Publik lalu minta nama WiFi real ke Apps Script
         fetch("https://api.ipify.org?format=json")
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
-                return fetch(API, {
-                    method: "POST",
-                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP })
-                });
+                return fetch(API, { method: "POST", body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) });
             })
             .then(r => r ? r.text() : null)
             .then(text => {
                 if(!text) return;
                 let res = JSON.parse(text);
-                if(res.wifi) {
-                    namaWifiAktif = res.wifi;
-                    const elWifi = document.getElementById("namaWifiText");
-                    if(elWifi) elWifi.innerText = namaWifiAktif;
-                }
-            })
-            .catch(err => {
-                console.log("Gagal mendeteksi jaringan: ", err);
-                document.getElementById("namaWifiText").innerText = namaWifiAktif;
-            });
+                if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
+            }).catch(e => console.log(e));
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
-        let selfieStream = null;
-        let qrStaffId = "";
-        let namaStaffAktif = "";
 
         qr.start(
             { facingMode: "environment" },
             { fps: 10, qrbox: 230 },
             (decodedText) => {
                 if (sedangProses) return;
-
-                qrStaffId = decodedText;
                 sedangProses = true;
                 qr.pause();
-                beep();
 
                 document.getElementById("hasil").className = "processing";
-                document.getElementById("hasil").innerHTML = "✨ <b>Memeriksa data QR...</b> Mohon tunggu sebentar.";
+                document.getElementById("hasil").innerHTML = "✨ Memeriksa QR Code...";
 
                 fetch(API, {
                     method: "POST",
                     body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
                 })
-                .then(r => r.text())
-                .then(text => {
-                    let res = JSON.parse(text);
-                    
-                    if(res.nama) { namaStaffAktif = res.nama; }
-                    if(res.wifi) { 
-                        namaWifiAktif = res.wifi; 
-                        const elWifi = document.getElementById("namaWifiText");
-                        if(elWifi) elWifi.innerText = namaWifiAktif;
-                    }
-
-                    if(!res.sukses){
-                        sembunyikanHeaderUtama();
-                        document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
-                        const containerEl = document.querySelector(".container");
-                        containerEl.innerHTML = `
-                        <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                            <div style="font-size: 65px; margin-bottom: 10px;">⚠️</div>
-                            <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">PERHATIAN</div>
-                            <div style="font-size: 15px; color: #475569; line-height: 1.5; margin-bottom: 20px;">
-                                ${res.pesan}
-                            </div>
-                            <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
-                                🛡️ Sistem Absensi MMBC Tour & Travel
-                            </div>
-                        </div>`;
-                        setTimeout(() => { location.reload(); }, 5000);
-                        return;
-                    }
-
-                    // JIKA STATUSNYA MASUK -> BUKA KAMERA SELFIE
-                    if(res.status == "masuk"){
-                        document.getElementById("hasil").innerHTML = "📸 Silakan ambil selfie";
-                        qr.stop().then(() => {
-                            document.getElementById("reader").style.display = "none";
-                            const btnInstallEl = document.getElementById("btnInstall");
-                            if(btnInstallEl) btnInstallEl.style.display = "none";
-                            const wifiBox = document.getElementById("wifiInfoDisplay");
-                            if(wifiBox) wifiBox.style.display = "none";
-                            const instSub = document.querySelector(".instruction-sub");
-                            if(instSub) instSub.style.display = "none";
-
-                            bukaKameraSelfie();
-                        });
-                        return;
-                    }
-
-                    // JIKA STATUSNYA PULANG -> PROSES PULANG
-                    if(res.status == "pulang"){
-                        sembunyikanHeaderUtama();
-                        document.body.style.background = "linear-gradient(135deg, #065f46 0%, #047857 100%)";
-                        
-                        fetch(API, {
-                            method: "POST",
-                            body: JSON.stringify({ action: "absen", id: decodedText, ip: userIP })
-                        })
-                        .then(r => r.text())
-                        .then(pText => {
-                            let pRes = JSON.parse(pText);
-                            const containerEl = document.querySelector(".container");
-                            if(pRes.sukses){
-                                containerEl.innerHTML = `
-                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                                    <div style="font-size: 70px; margin-bottom: 10px;">👋</div>
-                                    <div style="font-size: 24px; font-weight: bold; color: #065f46; margin-bottom: 5px;">SAMPAI JUMPA!</div>
-                                    <div style="font-size: 20px; font-weight: bold; color: #2563eb; margin-bottom: 12px;">${pRes.nama}</div>
-                                    <div style="font-size: 15px; color: #047857; font-weight: 600; margin-bottom: 15px; background: #ecfdf5; padding: 8px; border-radius: 8px;">Absen Pulang Berhasil</div>
-                                    <div style="font-size: 14px; color: #475569; margin-bottom: 20px;">Hati-hati di jalan, selamat beristirahat kembali ke rumah! 🏠</div>
-                                    <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">📅 Waktu Pulang: ${new Date().toLocaleTimeString("id-ID")}</div>
-                                </div>`;
-                            } else {
-                                sembunyikanHeaderUtama();
-                                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
-                                containerEl.innerHTML = `
-                                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                                    <div style="font-size: 65px; margin-bottom: 10px;">⚠️</div>
-                                    <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">GAGAL ABSEN</div>
-                                    <div style="font-size: 15px; color: #475569; line-height: 1.5; margin-bottom: 20px;">${pRes.pesan}</div>
-                                    <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">🛡️ Sistem Absensi MMBC</div>
-                                </div>`;
-                            }
-                            qr.stop().catch(e => console.log(e));
-                            setTimeout(() => { location.reload(); }, 6000);
-                        });
-                        return;
-                    }
+                .then(r => r.json())
+                .then(res => {
+                    alert("Scan Berhasil untuk ID: " + decodedText);
+                    location.reload();
                 })
                 .catch(err => {
-                    sembunyikanHeaderUtama();
-                    document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
-                    document.querySelector(".container").innerHTML = `
-                    <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                        <div style="font-size: 65px; margin-bottom: 10px;">❌</div>
-                        <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">TERJADI KESALAHAN</div>
-                        <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">${err.message}</div>
-                    </div>`;
-                    setTimeout(() => { location.reload(); }, 4000);
+                    alert("Error: " + err);
+                    sedangProses = false;
+                    qr.resume();
                 });
             },
-            (errorMessage) => {}
-        ).catch(err => {
-            document.getElementById("hasil").className = "error-box";
-            document.getElementById("hasil").innerHTML = "❌ Gagal membuka kamera QR";
-            sedangProses = false;
-        });
-
-        function sembunyikanHeaderUtama() {
-            const headerEl = document.querySelector(".header-brand");
-            const clockEl = document.querySelector(".clock-box");
-            const wifiBoxEl = document.getElementById("wifiInfoDisplay");
-            const instSubEl = document.querySelector(".instruction-sub");
-            const readerEl = document.getElementById("reader");
-            const installEl = document.getElementById("btnInstall");
-
-            if(headerEl) headerEl.style.display = "none";
-            if(clockEl) clockEl.style.display = "none";
-            if(wifiBoxEl) wifiBoxEl.style.display = "none";
-            if(instSubEl) instSubEl.style.display = "none";
-            if(readerEl) readerEl.style.display = "none";
-            if(installEl) installEl.style.display = "none";
-        }
-
-        async function bukaKameraSelfie(){
-            try{
-                document.getElementById("selfieArea").style.display = "block";
-                document.getElementById("btnSelfie").style.display = "block";
-                selfieStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-                document.getElementById("selfieVideo").srcObject = selfieStream;
-            }catch(err){
-                alert("Kamera Selfie tidak dapat diakses: " + err);
-            }
-        }
-
-        document.getElementById("btnSelfie").addEventListener("click", function(){
-            this.style.display = "none"; 
-            const video = document.getElementById("selfieVideo");
-            video.pause(); 
-            
-            const canvas = document.getElementById("selfieCanvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const now = new Date();
-            const tglStr = now.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
-            const jamStr = now.toLocaleTimeString("id-ID");
-            const waktuLengkap = `${tglStr}, ${jamStr}`;
-
-            const boxHeight = 130;
-            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-            ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
-
-            ctx.fillStyle = "#ffffff";
-            ctx.textBaseline = "top";
-            let fontSize = Math.max(14, Math.floor(canvas.width / 35));
-            ctx.font = `bold ${fontSize}px Arial`;
-
-            let startX = 20;
-            let startY = canvas.height - boxHeight + 15;
-            let lineSpacing = fontSize + 8;
-
-            ctx.fillText("🏢 MMBC Tour & Travel", startX, startY);
-            ctx.fillText(`👤 Nama: ${namaStaffAktif || "Staff"}`, startX, startY + lineSpacing);
-            ctx.fillText(`🌐 Jaringan: ${namaWifiAktif}`, startX, startY + (lineSpacing * 2));
-            ctx.fillText(`🕒 Waktu: ${waktuLengkap}`, startX, startY + (lineSpacing * 3));
-
-            const foto = canvas.toDataURL("image/jpeg", 0.85);
-            document.getElementById("hasil").className = "processing";
-            document.getElementById("hasil").innerHTML = "✨ <b>Menyimpan absensi & foto...</b> Mohon tunggu.";
-
-            // 1. Upload foto selfie ke Google Drive terlebih dahulu
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "uploadSelfie", id: qrStaffId, foto: foto })
-            })
-            .then(r => r.text())
-            .then(text => {
-                let hasil = JSON.parse(text);
-                if(!hasil.sukses){
-                    throw new Error("Upload selfie gagal: " + hasil.pesan);
-                }
-
-                if(selfieStream){
-                    selfieStream.getTracks().forEach(track => track.stop());
-                    selfieStream = null;
-                }
-                video.srcObject = null;
-                video.style.display = "none";
-                document.getElementById("selfieArea").style.display = "none";
-
-                // 2. Setelah link foto Drive didapat, langsung kirim ke action 'absen' (hanya 1x request)
-                return fetch(API, {
-                    method: "POST",
-                    body: JSON.stringify({ 
-                        action: "absen", 
-                        id: qrStaffId, 
-                        ip: userIP, 
-                        foto: hasil.url 
-                    })
-                });
-            })
-            .then(r => r.text())
-            .then(text => {
-                let absenRes = JSON.parse(text);
-                if(absenRes.sukses){
-                    sembunyikanHeaderUtama();
-                    document.body.style.background = "#e8f5e9";
-
-                    document.getElementById("hasil").className = "success-box";
-                    document.getElementById("hasil").innerHTML = `
-                    <div class="success" style="padding: 20px; text-align: center;">
-                        <div class="icon" style="font-size: 65px; margin-bottom: 10px;">👍</div>
-                        <div class="title" style="font-size: 26px; font-weight: bold; color: #2e7d32; margin-bottom: 8px;">SELAMAT DATANG</div>
-                        <div class="nama" style="font-size: 25px; font-weight: bold; color: #1565c0; margin-bottom: 10px;">${absenRes.nama}</div>
-                        <div class="ket" style="font-size: 18px; color: #43a047; font-weight: bold; margin-bottom: 12px;">Absen Masuk Berhasil</div>
-                        <div style="font-size: 16px; color: #333; font-weight: 500; margin-bottom: 20px;">Selamat bekerja dan tetap semangat! 🚀</div>
-                        <div style="font-size: 13px; color: #777; border-top: 1px dashed #c8e6c9; padding-top: 10px; margin-top: 10px;">📅 Waktu Absen: ${new Date().toLocaleTimeString("id-ID")}</div>
-                    </div>`;
-                    
-                    setTimeout(() => { location.reload(); }, 6000); 
-
-                } else {
-                    sembunyikanHeaderUtama();
-                    document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
-                    document.querySelector(".container").innerHTML = `
-                    <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                        <div style="font-size: 65px; margin-bottom: 10px;">⚠️</div>
-                        <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">GAGAL ABSEN</div>
-                        <div style="font-size: 15px; color: #475569; line-height: 1.5; margin-bottom: 20px;">${absenRes.pesan}</div>
-                        <div style="font-size: 12px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 12px;">🛡️ Sistem Absensi MMBC</div>
-                    </div>`;
-                    setTimeout(() => { location.reload(); }, 5000);
-                }
-            })
-            .catch(err => {
-                sembunyikanHeaderUtama();
-                document.body.style.background = "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)";
-                document.querySelector(".container").innerHTML = `
-                <div style="padding: 30px 20px; text-align: center; background: #ffffff; border-radius: 20px;">
-                    <div style="font-size: 65px; margin-bottom: 10px;">❌</div>
-                    <div style="font-size: 22px; font-weight: bold; color: #991b1b; margin-bottom: 8px;">TERJADI KESALAHAN</div>
-                    <div style="font-size: 15px; color: #475569; margin-bottom: 20px;">${err.message}</div>
-                </div>`;
-                setTimeout(() => { location.reload(); }, 5000);
-            });
-        });
+            (err) => {}
+        ).catch(err => console.log(err));
     </script>
 </body>
 </html>
