@@ -684,7 +684,13 @@
                 (err) => {}
             ).catch(err => console.log("Restart scanner error:", err));
         }
-
+if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Berhasil Terdaftar!', reg))
+                    .catch(err => console.log('Service Worker Gagal:', err));
+            });
+        }
         // --- LOGIKA TOMBOL INSTAL PWA ---
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
