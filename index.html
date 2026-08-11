@@ -18,7 +18,7 @@
         .container.active { display: block; }
 
         .header-brand { background: #f8fafc; padding: 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .logo-img { width: 50px; height: 50px; border-radius: 50%; }
+        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border-radius: 12px; background: #000; }
 
@@ -28,7 +28,16 @@
 
         #selfieModal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; align-items: center; justify-content: space-between; z-index: 9999; padding: 25px; }
         #selfieVideo { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; }
-        .selfie-ui { position: relative; z-index: 2; width: 100%; max-width: 420px; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 16px; color: white; }
+        .selfie-ui { position: relative; z-index: 2; width: 100%; max-width: 420px; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 16px; color: white; text-align: center; }
+
+        .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; }
+        .rekap-wrapper { padding: 10px; overflow-x: auto; max-height: 65vh; }
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
+        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+        
+        footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -57,11 +66,11 @@
         </div>
     </div>
 
+    <!-- TAB 1: SCANNER -->
     <div id="tab-scanner" class="container active">
         <div class="header-brand"><img src="logo.png" class="logo-img"><h1>ABSENSI QR</h1></div>
         <div class="scanner-wrapper"><div id="reader"></div></div>
         
-        <!-- TOMBOL INSTAL PWA -->
         <div id="installContainer" style="display:none; padding: 10px 20px 20px 20px; text-align: center;">
             <button id="btnInstall" style="background: #10b981; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);">
                 📲 Install Aplikasi Absensi
@@ -69,13 +78,121 @@
         </div>
     </div>
 
-    <div id="tab-rekap" class="container">...</div>
-    <div id="tab-log" class="container">...</div>
+    <!-- TAB 2: JADWAL -->
+    <div id="tab-rekap" class="container">
+        <div class="header-brand"><img src="logo.png" class="logo-img"><h1 id="judulBulanHeader">JADWAL BULANAN</h1></div>
+        <div class="search-box-wrapper"><input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff..." onkeyup="filterTabelJadwal()"></div>
+        <div class="rekap-wrapper"><div id="rekapContent" style="text-align:center; padding:20px; color:#64748b;">Memuat jadwal...</div></div>
+    </div>
+
+    <!-- TAB 3: LOG -->
+    <div id="tab-log" class="container">
+        <div class="header-brand"><img src="logo.png" class="logo-img"><h1>LOG ABSEN HARI INI</h1></div>
+        <div class="search-box-wrapper"><input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari staff..." onkeyup="filterTabelLog()"></div>
+        <div class="rekap-wrapper"><div id="logContent" style="text-align:center; padding:20px; color:#64748b;">Memuat log...</div></div>
+    </div>
+
+    <footer>&copy; 2026 MMBC Tour & Travel</footer>
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
+        const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const currentDate = new Date();
+        const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
+        document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
+
         let activeStaffId = "";
         let streamSelfie = null;
+        let windowLoadedJadwal = false;
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            if(tabName === 'scanner') {
+                document.getElementById('tab-scanner').classList.add('active');
+            } else if(tabName === 'rekap') {
+                document.getElementById('tab-rekap').classList.add('active');
+                if(!windowLoadedJadwal) loadRekapBulanan();
+            } else if(tabName === 'log') {
+                document.getElementById('tab-log').classList.add('active');
+                loadLogHariIni();
+            }
+            btn.classList.add('active');
+        }
+
+        function loadRekapBulanan() {
+            const container = document.getElementById('rekapContent');
+            container.innerHTML = "Memuat jadwal dari Google Sheet...";
+            fetch(API, { method: "POST", body: JSON.stringify({ action: "getRekapBulanan", bulan: bulanBerjalan }) })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) { container.innerHTML = "❌ " + res.pesan; return; }
+                windowLoadedJadwal = true;
+                let rows = res.data;
+                let html = `<table class="rekap-table" id="tabelJadwal">`;
+                rows.forEach((row, rowIndex) => {
+                    if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
+                    html += '<tr>';
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 0) return;
+                        let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
+                        let cellText = cell !== null ? String(cell) : '';
+                        html += `<${tag}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            }).catch(() => container.innerHTML = "❌ Gagal memuat jadwal.");
+        }
+
+        function loadLogHariIni() {
+            const container = document.getElementById('logContent');
+            container.innerHTML = "Memuat log absensi...";
+            fetch(API, { method: "POST", body: JSON.stringify({ action: "getLogHariIni" }) })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) { container.innerHTML = "❌ " + res.pesan; return; }
+                let rows = res.data;
+                if(rows.length <= 1) { container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff absen hari ini.</div>"; return; }
+                let html = '<table class="rekap-table" id="tabelLog">';
+                rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 1 || colIndex === 7) return; 
+                        let cellText = cell !== null ? String(cell) : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+                        html += `<${tag}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            }).catch(() => container.innerHTML = "❌ Gagal memuat log.");
+        }
+
+        function filterTabelJadwal() {
+            let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
+            let table = document.getElementById('tabelJadwal');
+            if(!table) return;
+            let tr = table.getElementsByTagName('tr');
+            for (let i = 2; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName('td')[0];
+                if (td) tr[i].style.display = td.textContent.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
+
+        function filterTabelLog() {
+            let input = document.getElementById('searchLog').value.toLowerCase();
+            let table = document.getElementById('tabelLog');
+            if(!table) return;
+            let tr = table.getElementsByTagName('tr');
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName('td')[1];
+                if (td) tr[i].style.display = td.textContent.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
 
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
@@ -84,7 +201,6 @@
             const ctx = canvas.getContext("2d");
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Watermark
             ctx.fillStyle = "rgba(0,0,0,0.7)"; ctx.fillRect(0, canvas.height - 110, canvas.width, 110);
             ctx.fillStyle = "#38bdf8"; ctx.font = "bold 22px Arial"; ctx.fillText("👤 " + (window.activeStaffNama || "Staff"), 20, canvas.height - 72);
             ctx.fillStyle = "#fff"; ctx.font = "15px Arial"; ctx.fillText("📅 " + new Date().toLocaleString(), 20, canvas.height - 44);
@@ -136,12 +252,7 @@
             (decodedText) => {
                 if (sedangProses) return;
                 sedangProses = true;
-                
-                qr.stop().then(() => {
-                    jalankanProsesAbsen(decodedText);
-                }).catch(err => {
-                    jalankanProsesAbsen(decodedText);
-                });
+                qr.stop().then(() => jalankanProsesAbsen(decodedText)).catch(() => jalankanProsesAbsen(decodedText));
             },
             (err) => {}
         ).catch(err => console.log(err));
@@ -150,23 +261,15 @@
             activeStaffId = decodedText;
             tampilkanOverlay("⏳", "Mengecek Status...", "Mohon tunggu sebentar...");
 
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "cekStatus", id: decodedText })
-            })
+            fetch(API, { method: "POST", body: JSON.stringify({ action: "cekStatus", id: decodedText }) })
             .then(r => r.json())
             .then(res => {
                 document.getElementById("fullScreenOverlay").style.display = "none";
-
                 if (!res.sukses && res.status === "sudah_absen") {
                     tampilkanOverlay("⚠️", "Perhatian", res.pesan);
-                    setTimeout(() => {
-                        document.getElementById("fullScreenOverlay").style.display = "none";
-                        resetScannerKamera();
-                    }, 4000);
+                    setTimeout(() => { document.getElementById("fullScreenOverlay").style.display = "none"; resetScannerKamera(); }, 4000);
                     return;
                 }
-
                 if (res.status === "masuk") {
                     window.activeStaffNama = res.nama;
                     bukaKameraSelfie(res.nama);
@@ -175,18 +278,12 @@
                     eksekusiAbsenFinal("");
                 } else {
                     tampilkanOverlay("⚠️", "Perhatian", res.pesan || "Terjadi kesalahan sistem.");
-                    setTimeout(() => {
-                        document.getElementById("fullScreenOverlay").style.display = "none";
-                        resetScannerKamera();
-                    }, 4000);
+                    setTimeout(() => { document.getElementById("fullScreenOverlay").style.display = "none"; resetScannerKamera(); }, 4000);
                 }
             })
             .catch(() => {
                 tampilkanOverlay("⚠️", "Error", "Gangguan koneksi ke server.");
-                setTimeout(() => {
-                    document.getElementById("fullScreenOverlay").style.display = "none";
-                    resetScannerKamera();
-                }, 4000);
+                setTimeout(() => { document.getElementById("fullScreenOverlay").style.display = "none"; resetScannerKamera(); }, 4000);
             });
         }
 
@@ -234,9 +331,7 @@
             document.getElementById('installContainer').style.display = 'none';
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => {
-                    deferredPrompt = null;
-                });
+                deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
             }
         });
 
