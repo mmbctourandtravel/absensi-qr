@@ -1,7 +1,8 @@
-const CACHE_NAME = 'mmbc-absen-v3'; // Naikkan jadi v3
+const CACHE_NAME = 'mmbc-absen-v3';
 const urlsToCache = [
-  './index.html',
-  './manifest.json'
+    './index.html',
+    './manifest.json',
+    './logo.png'
 ];
 
 // Install Service Worker
