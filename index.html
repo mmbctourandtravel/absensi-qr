@@ -561,6 +561,8 @@
         }
 
         function bukaKameraSelfie(namaStaff) {
+            window.activeStaffNama = namaStaff;
+            
             document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
             const modal = document.getElementById("selfieModal");
             modal.style.display = "flex";
@@ -587,44 +589,84 @@
                 });
         }
 
-        function ambilFotoDanKirim() {
-            const video = document.getElementById("selfieVideo");
-            const canvas = document.createElement("canvas");
-            canvas.width = video.videoWidth || 480;
-            canvas.height = video.videoHeight || 640;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const base64Image = canvas.toDataURL("image/jpeg", 0.8);
+function ambilFotoDanKirim() {
+    const video = document.getElementById("selfieVideo");
+    const canvas = document.createElement("canvas");
+    
+    // Validasi apakah video stream sudah siap
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+        alert("Kamera sedang bersiap, silakan coba ketuk tombol ambil foto sekali lagi.");
+        return;
+    }
 
-            if (streamSelfie) {
-                streamSelfie.getTracks().forEach(track => track.stop());
-            }
-            document.getElementById("selfieModal").style.display = "none";
+    // Set dimensi canvas sesuai video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    
+    // 1. Gambar video asli ke canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            const overlay = document.getElementById("fullScreenOverlay");
-            document.getElementById("overlayIcon").innerText = "⏳";
-            document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
-            document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
-            document.getElementById("overlayTime").innerText = "";
-            document.getElementById("overlayWifi").innerText = "";
-            document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
-            overlay.className = "theme-loading";
-            overlay.style.display = "flex";
+    // 2. Tambahkan Watermark Elegan di Bawah Foto
+    const nowWib = new Date();
+    const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const tglStr = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
+    
+    // Kotak latar belakang transparan
+    ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
+    ctx.fillRect(0, canvas.height - 110, canvas.width, 110);
 
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
-            })
-            .then(r => r.json())
-            .then(resUpload => {
-                let fotoUrl = resUpload.sukses ? resUpload.url : "";
-                eksekusiAbsenFinal(fotoUrl);
-            })
-            .catch(err => {
-                eksekusiAbsenFinal("");
-            });
-        }
+    // Teks 1: Nama Staff
+    ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillText("👤 " + (window.activeStaffNama || "Staff MMBC"), 20, canvas.height - 72);
 
+    // Teks 2: Tanggal & Waktu
+    ctx.font = "15px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("📅 " + tglStr, 20, canvas.height - 44);
+
+    // Teks 3: Keterangan Perusahaan
+    ctx.font = "14px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillText("📍 MMBC Tour & Travel", 20, canvas.height - 18);
+
+    // Konversi canvas ke base64 (jpeg)
+    const base64Image = canvas.toDataURL("image/jpeg", 0.85);
+
+    // Stop semua stream kamera agar lampu kamera mati
+    if (streamSelfie) {
+        streamSelfie.getTracks().forEach(track => track.stop());
+    }
+    document.getElementById("selfieModal").style.display = "none";
+
+    // Tampilkan overlay loading
+    const overlay = document.getElementById("fullScreenOverlay");
+    document.getElementById("overlayIcon").innerText = "⏳";
+    document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
+    document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+    document.getElementById("overlayTime").innerText = "";
+    document.getElementById("overlayWifi").innerText = "";
+    document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+    overlay.className = "theme-loading";
+    overlay.style.display = "flex";
+
+    // Kirim ke backend untuk upload selfie
+    fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
+    })
+    .then(r => r.json())
+    .then(resUpload => {
+        // Lanjut ke proses absen final dengan membawa URL foto
+        let fotoUrl = resUpload.sukses ? resUpload.url : "";
+        eksekusiAbsenFinal(fotoUrl);
+    })
+    .catch(err => {
+        // Jika gagal upload, tetap lanjut absen (foto kosong)
+        eksekusiAbsenFinal("");
+    });
+}
         function eksekusiAbsenFinal(fotoUrl) {
             fetch(API, {
                 method: "POST",
