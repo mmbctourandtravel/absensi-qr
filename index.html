@@ -60,8 +60,13 @@
     <div id="tab-scanner" class="container active">
         <div class="header-brand"><img src="logo.png" class="logo-img"><h1>ABSENSI QR</h1></div>
         <div class="scanner-wrapper"><div id="reader"></div></div>
+<!-- TOMBOL INSTAL DITARUH DI SINI -->
+        <div id="installContainer" style="display:none; padding: 10px 20px 20px 20px; text-align: center;">
+            <button id="btnInstall" style="background: #10b981; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);">
+                📲 Install Aplikasi Absensi
+            </button>
+        </div>
     </div>
-
     <!-- Container Tab lain (Rekap/Log) seperti kode sebelumnya -->
     <div id="tab-rekap" class="container">...</div>
     <div id="tab-log" class="container">...</div>
@@ -119,6 +124,31 @@
                 setTimeout(() => location.reload(), 3000);
             });
         }
+        <script>
+    // ... semua fungsi yang sudah ada ...
+    
+    // --- LOGIKA TOMBOL INSTAL PWA ---
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installContainer').style.display = 'block';
+    });
+
+    document.getElementById('btnInstall').addEventListener('click', (e) => {
+        document.getElementById('installContainer').style.display = 'none';
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
+            });
+        }
+    });
+
+    window.addEventListener('appinstalled', (evt) => {
+        document.getElementById('installContainer').style.display = 'none';
+    });
+
     </script>
 </body>
 </html>
