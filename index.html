@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi - MMBC Tour & Travel</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#090d16">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        body { background: #090d16; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
         .nav-tabs { 
             display: flex; 
             width: 100%; 
             max-width: 600px; 
-            background: #1e293b; 
-            border: 1px solid #334155;
-            border-radius: 14px; 
+            background: #111827; 
+            border: 1px solid #1f2937;
+            border-radius: 16px; 
             padding: 6px; 
             margin-bottom: 15px; 
             gap: 6px; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             transition: max-width 0.3s;
         }
         .tab-btn { 
@@ -30,21 +30,21 @@
             text-align: center; 
             background: transparent; 
             border: none; 
-            color: #94a3b8; 
+            color: #9ca3af; 
             font-weight: 600; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             cursor: pointer; 
-            transition: all 0.3s ease; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             font-size: 12px; 
         }
         .tab-btn.active { 
-            background: #2563eb; 
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
             color: #ffffff; 
-            font-weight: bold;
+            font-weight: 700;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
         .container.active { display: block; }
 
         @media screen and (min-width: 900px) {
@@ -54,56 +54,59 @@
             .nav-tabs { max-width: 96% !important; }
         }
 
-        .header-brand { background: #f8fafc; padding: 15px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
-        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
-        h1 { font-size: 18px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
+        .header-brand { background: #f8fafc; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-bottom: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1.5px; text-transform: uppercase; }
+        h1 { font-size: 18px; color: #0f172a; font-weight: 800; text-transform: uppercase; margin-top: 2px; }
 
-        .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
-        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
-        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .clock-box { background: #eff6ff; padding: 10px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
+        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 10px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        .scanner-wrapper { padding: 15px; text-align: center; }
-        #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
+        .scanner-wrapper { padding: 20px; text-align: center; }
+        #reader { width: 100% !important; border: none !important; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         
-        /* FULL SCREEN OVERLAY HASIL ABSEN (PROFESIONAL & ELEGAN) */
+        /* FULL SCREEN OVERLAY HASIL ABSEN (SUPER ELEGAN & BERKELAS) */
         #fullScreenOverlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #0f172a; 
+            background: rgba(9, 13, 22, 0.85); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 99999;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
-            animation: fadeIn 0.25s ease-in-out;
+            animation: fadeInOverlay 0.3s ease-out;
         }
 
         .overlay-card {
             background: #ffffff;
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             padding: 35px 25px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: scaleUpCard 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .overlay-icon { font-size: 60px; margin-bottom: 15px; }
-        .overlay-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .overlay-name { font-size: 20px; font-weight: 700; color: #2563eb; margin: 10px 0 15px 0; }
-        .overlay-wifi { font-size: 13px; color: #64748b; margin-bottom: 20px; font-weight: 500; }
-        .overlay-msg { font-size: 13px; font-weight: 600; color: #059669; background: #ecfdf5; padding: 10px 16px; border-radius: 12px; width: 100%; border: 1px solid #a7f3d0; }
+        .overlay-icon { font-size: 64px; margin-bottom: 12px; }
+        .overlay-title { font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .overlay-name { font-size: 21px; font-weight: 800; color: #2563eb; margin: 10px 0 12px 0; }
+        .overlay-wifi { font-size: 12px; color: #64748b; margin-bottom: 20px; font-weight: 600; }
+        .overlay-msg { font-size: 13px; font-weight: 600; color: #047857; background: #ecfdf5; padding: 12px 16px; border-radius: 14px; width: 100%; border: 1px solid #a7f3d0; line-height: 1.4; }
 
-        /* MODAL KAMERA SELFIE FULL SCREEN ELEGAN */
+        /* MODAL KAMERA SELFIE FULL SCREEN MODERN */
         #selfieModal {
             position: fixed;
             top: 0;
@@ -116,7 +119,7 @@
             align-items: center;
             justify-content: space-between;
             z-index: 9999;
-            padding: 25px 20px;
+            padding: 30px 20px;
             color: white;
             text-align: center;
         }
@@ -130,64 +133,73 @@
             z-index: 1;
             background: #000;
         }
-        .selfie-header, .selfie-footer {
+        .selfie-header {
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 450px;
-            background: rgba(15, 23, 42, 0.75);
-            padding: 15px;
-            border-radius: 16px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 420px;
+            background: rgba(15, 23, 42, 0.65);
+            padding: 14px 20px;
+            border-radius: 18px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-top: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-        .selfie-header { margin-top: 10px; }
-        .selfie-footer { margin-bottom: 10px; }
+        .selfie-footer {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 420px;
+            margin-bottom: 15px;
+        }
 
         .btn-capture { 
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
             color: white; 
             border: none; 
-            padding: 14px 30px; 
-            border-radius: 30px; 
-            font-weight: bold; 
+            padding: 16px 30px; 
+            border-radius: 35px; 
+            font-weight: 700; 
             font-size: 16px; 
             cursor: pointer; 
-            box-shadow: 0 4px 20px rgba(37,99,235,0.6); 
+            box-shadow: 0 8px 25px rgba(37,99,235,0.6); 
             width: 100%;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
         }
-        .btn-capture:active { transform: scale(0.96); }
+        .btn-capture:active { transform: scale(0.97); }
 
-        #fullScreenOverlay.error-bg .overlay-card { border-top: 5px solid #dc2626; }
+        #fullScreenOverlay.error-bg .overlay-card { border-top: 6px solid #dc2626; }
         #fullScreenOverlay.error-bg .overlay-title { color: #dc2626; }
         #fullScreenOverlay.error-bg .overlay-msg { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
 
-        @keyframes fadeIn {
+        @keyframes fadeInOverlay {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        @keyframes scaleUp {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes scaleUpCard {
+            from { transform: scale(0.85) translateY(15px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
-        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
+        .search-box-wrapper { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #fff; }
+        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
+        .rekap-wrapper { padding: 0 10px 15px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
-        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: center; background: #ffffff; }
+        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: 700; }
 
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal th:nth-child(1) { z-index: 4; background: #f1f5f9; }
 
-        .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
+        .loading-rekap { text-align: center; padding: 35px; font-weight: 600; color: #64748b; }
 
-        footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
+        footer { color: #64748b; font-size: 12px; margin-top: 20px; text-align: center; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -198,19 +210,19 @@
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE FULL SCREEN ELEGAN -->
+    <!-- MODAL KAMERA SELFIE FULL SCREEN MODERN -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
-            <h3 style="font-size: 16px; color: #38bdf8; font-weight: 700;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 13px; color: #f1f5f9; margin-top: 3px; font-weight: 500;"></p>
+            <h3 style="font-size: 16px; color: #38bdf8; font-weight: 800;">📸 Ambil Foto Selfie</h3>
+            <p id="selfieStaffName" style="font-size: 13px; color: #f1f5f9; margin-top: 4px; font-weight: 600;"></p>
         </div>
         <div class="selfie-footer">
             <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
         </div>
     </div>
 
-    <!-- FULL SCREEN OVERLAY HASIL ABSEN (PROFESIONAL STYLE) -->
+    <!-- FULL SCREEN OVERLAY HASIL ABSEN (SUPER ELEGAN & BERKELAS) -->
     <div id="fullScreenOverlay">
         <div class="overlay-card">
             <div class="overlay-icon" id="overlayIcon">✅</div>
