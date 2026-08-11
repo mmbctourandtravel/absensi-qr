@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi - MMBC Tour & Travel</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#090d16">
+    <meta name="theme-color" content="#0f172a">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #090d16; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
         .nav-tabs { 
             display: flex; 
             width: 100%; 
             max-width: 600px; 
-            background: #111827; 
-            border: 1px solid #1f2937;
-            border-radius: 16px; 
+            background: #1e293b; 
+            border: 1px solid #334155;
+            border-radius: 14px; 
             padding: 6px; 
             margin-bottom: 15px; 
             gap: 6px; 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             transition: max-width 0.3s;
         }
         .tab-btn { 
@@ -30,52 +30,48 @@
             text-align: center; 
             background: transparent; 
             border: none; 
-            color: #9ca3af; 
+            color: #94a3b8; 
             font-weight: 600; 
-            border-radius: 12px; 
+            border-radius: 10px; 
             cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.3s ease; 
             font-size: 12px; 
         }
         .tab-btn.active { 
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
+            background: #2563eb; 
             color: #ffffff; 
-            font-weight: 700;
+            font-weight: bold;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
         .container.active { display: block; }
 
         @media screen and (min-width: 900px) {
-            #tab-rekap.container.active, #tab-log.container.active {
-                max-width: 96% !important;
-            }
+            #tab-rekap.container.active, #tab-log.container.active { max-width: 96% !important; }
             .nav-tabs { max-width: 96% !important; }
         }
 
-        .header-brand { background: #f8fafc; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .logo-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-bottom: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1.5px; text-transform: uppercase; }
-        h1 { font-size: 18px; color: #0f172a; font-weight: 800; text-transform: uppercase; margin-top: 2px; }
+        .header-brand { background: #f8fafc; padding: 15px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
+        h1 { font-size: 18px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
 
-        .clock-box { background: #eff6ff; padding: 10px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
-        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 10px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
-        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 10px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
+        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        .scanner-wrapper { padding: 20px; text-align: center; }
-        #reader { width: 100% !important; border: none !important; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .scanner-wrapper { padding: 15px; text-align: center; }
+        #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
         
-        /* FULL SCREEN OVERLAY HASIL ABSEN (SUPER ELEGAN & BERKELAS) */
+        /* FULL SCREEN OVERLAY DINAMIS (HIJAU / BIRU / GELAP) */
         #fullScreenOverlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(9, 13, 22, 0.85); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: #0f172a; 
             display: none;
             flex-direction: column;
             align-items: center;
@@ -83,30 +79,65 @@
             z-index: 99999;
             padding: 25px;
             text-align: center;
-            animation: fadeInOverlay 0.3s ease-out;
+            transition: background 0.4s ease;
+        }
+
+        /* Tema Warna Background Full Screen */
+        #fullScreenOverlay.theme-masuk {
+            background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 100%) !important; /* Biru Telor Asin Terang */
+        }
+        #fullScreenOverlay.theme-pulang {
+            background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%) !important; /* Hijau Muda Cerah */
+        }
+        #fullScreenOverlay.theme-loading {
+            background: rgba(15, 23, 42, 0.9) !important;
+            backdrop-filter: blur(10px);
+        }
+        #fullScreenOverlay.error-bg {
+            background: linear-gradient(135deg, #fecaca 0%, #f87171 100%) !important; /* Merah Lembut */
         }
 
         .overlay-card {
             background: #ffffff;
             width: 100%;
-            max-width: 380px;
-            padding: 35px 25px;
-            border-radius: 28px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            max-width: 400px;
+            padding: 30px 20px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: scaleUpCard 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: scaleUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .overlay-icon { font-size: 64px; margin-bottom: 12px; }
-        .overlay-title { font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .overlay-name { font-size: 21px; font-weight: 800; color: #2563eb; margin: 10px 0 12px 0; }
-        .overlay-wifi { font-size: 12px; color: #64748b; margin-bottom: 20px; font-weight: 600; }
-        .overlay-msg { font-size: 13px; font-weight: 600; color: #047857; background: #ecfdf5; padding: 12px 16px; border-radius: 14px; width: 100%; border: 1px solid #a7f3d0; line-height: 1.4; }
+        .overlay-icon { font-size: 56px; margin-bottom: 10px; animation: bounceIcon 0.6s infinite alternate; }
+        .overlay-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .overlay-name { font-size: 20px; font-weight: 700; color: #2563eb; margin: 6px 0; background: #f8fafc; padding: 6px 16px; border-radius: 30px; border: 1px solid #e2e8f0; width: 100%; }
+        .overlay-time { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px; }
+        .overlay-wifi { font-size: 12px; color: #64748b; margin-bottom: 15px; font-weight: 500; }
+        
+        .overlay-msg-box {
+            background: #f1f5f9;
+            padding: 10px 14px;
+            border-radius: 12px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+        .waving-hand {
+            display: inline-block;
+            animation: wave 1.2s infinite;
+            transform-origin: 70% 70%;
+            font-size: 18px;
+        }
 
-        /* MODAL KAMERA SELFIE FULL SCREEN MODERN */
+        /* MODAL KAMERA SELFIE MODERN & TOMBOL INTERAKTIF */
         #selfieModal {
             position: fixed;
             top: 0;
@@ -119,7 +150,7 @@
             align-items: center;
             justify-content: space-between;
             z-index: 9999;
-            padding: 30px 20px;
+            padding: 25px 20px;
             color: white;
             text-align: center;
         }
@@ -133,73 +164,85 @@
             z-index: 1;
             background: #000;
         }
-        .selfie-header {
+        .selfie-header, .selfie-footer {
             position: relative;
             z-index: 2;
             width: 100%;
             max-width: 420px;
-            background: rgba(15, 23, 42, 0.65);
-            padding: 14px 20px;
-            border-radius: 18px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.7);
+            padding: 14px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.15);
-            margin-top: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-        .selfie-footer {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 420px;
-            margin-bottom: 15px;
-        }
+        .selfie-header { margin-top: 5px; }
+        .selfie-footer { margin-bottom: 10px; }
 
+        /* Tombol Ambil Selfie Elegan dengan Animasi Kamera */
         .btn-capture { 
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
             color: white; 
             border: none; 
-            padding: 16px 30px; 
+            padding: 14px 28px; 
             border-radius: 35px; 
-            font-weight: 700; 
+            font-weight: bold; 
             font-size: 16px; 
             cursor: pointer; 
-            box-shadow: 0 8px 25px rgba(37,99,235,0.6); 
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); 
             width: 100%;
-            transition: all 0.2s ease;
-            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn-capture:active { transform: scale(0.97); }
-
-        #fullScreenOverlay.error-bg .overlay-card { border-top: 6px solid #dc2626; }
-        #fullScreenOverlay.error-bg .overlay-title { color: #dc2626; }
-        #fullScreenOverlay.error-bg .overlay-msg { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
-
-        @keyframes fadeInOverlay {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes scaleUpCard {
-            from { transform: scale(0.85) translateY(15px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
+        .btn-capture:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4); }
+        
+        .camera-anim-icon {
+            font-size: 20px;
+            animation: pulseCamera 1.5s infinite;
         }
 
-        .search-box-wrapper { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-        .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #fff; }
-        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        @keyframes bounceIcon {
+            from { transform: translateY(0); }
+            to { transform: translateY(-6px); }
+        }
 
-        .rekap-wrapper { padding: 0 10px 15px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(14deg); }
+            40% { transform: rotate(-8deg); }
+            60% { transform: rotate(14deg); }
+            80% { transform: rotate(-4deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes pulseCamera {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
+        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
+
+        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: center; background: #ffffff; }
-        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: 700; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
+        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
 
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal th:nth-child(1) { z-index: 4; background: #f1f5f9; }
 
-        .loading-rekap { text-align: center; padding: 35px; font-weight: 600; color: #64748b; }
+        .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
 
-        footer { color: #64748b; font-size: 12px; margin-top: 20px; text-align: center; font-weight: 500; }
+        footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -210,26 +253,31 @@
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE FULL SCREEN MODERN -->
+    <!-- MODAL KAMERA SELFIE MODERN -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
-            <h3 style="font-size: 16px; color: #38bdf8; font-weight: 800;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 13px; color: #f1f5f9; margin-top: 4px; font-weight: 600;"></p>
+            <h3 style="font-size: 16px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
+            <p id="selfieStaffName" style="font-size: 13px; color: #e2e8f0; margin-top: 2px;"></p>
         </div>
         <div class="selfie-footer">
-            <button class="btn-capture" onclick="ambilFotoDanKirim()">Kirim Absen Masuk</button>
+            <button class="btn-capture" onclick="ambilFotoDanKirim()">
+                <span class="camera-anim-icon">📸</span> Ambil & Kirim Absen Masuk
+            </button>
         </div>
     </div>
 
-    <!-- FULL SCREEN OVERLAY HASIL ABSEN (SUPER ELEGAN & BERKELAS) -->
+    <!-- FULL SCREEN OVERLAY DINAMIS (HASIL SUKSES & STATUS) -->
     <div id="fullScreenOverlay">
         <div class="overlay-card">
             <div class="overlay-icon" id="overlayIcon">✅</div>
             <div class="overlay-title" id="overlayTitle">Absen Berhasil</div>
             <div class="overlay-name" id="overlayName">Nama Staff</div>
+            <div class="overlay-time" id="overlayTime">📅 11 Agustus 2026 | 10:30:00</div>
             <div class="overlay-wifi" id="overlayWifi">📡 Jaringan Wi-Fi: -</div>
-            <div class="overlay-msg" id="overlayMsg">Pesan status absensi...</div>
+            <div class="overlay-msg-box" id="overlayMsgBox">
+                <span id="overlayMsg">Pesan mutiara...</span>
+            </div>
         </div>
     </div>
 
@@ -463,15 +511,17 @@
             const icon = document.getElementById("overlayIcon");
             const title = document.getElementById("overlayTitle");
             const nameEl = document.getElementById("overlayName");
+            const timeEl = document.getElementById("overlayTime");
             const wifiEl = document.getElementById("overlayWifi");
             const msgEl = document.getElementById("overlayMsg");
 
-            overlay.className = "";
+            overlay.className = "theme-loading";
             icon.innerText = "⏳";
             title.innerText = "Mengecek Status...";
             nameEl.innerText = "Mohon Tunggu Sebentar";
+            timeEl.innerText = "";
             wifiEl.innerText = "";
-            msgEl.innerText = "Memeriksa data absensi...";
+            msgEl.innerHTML = "Memeriksa data absensi...";
             overlay.style.display = "flex";
 
             fetch(API, {
@@ -494,9 +544,10 @@
                     document.getElementById("overlayIcon").innerText = "⏳";
                     document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
                     document.getElementById("overlayName").innerText = res.nama || "Staff";
+                    document.getElementById("overlayTime").innerText = "";
                     document.getElementById("overlayWifi").innerText = "";
                     document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
-                    overlayPulang.className = "";
+                    overlayPulang.className = "theme-loading";
                     overlayPulang.style.display = "flex";
 
                     eksekusiAbsenFinal("");
@@ -554,9 +605,10 @@
             document.getElementById("overlayIcon").innerText = "⏳";
             document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
             document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+            document.getElementById("overlayTime").innerText = "";
             document.getElementById("overlayWifi").innerText = "";
             document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
-            overlay.className = "";
+            overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
             fetch(API, {
@@ -584,17 +636,32 @@
                 const icon = document.getElementById("overlayIcon");
                 const title = document.getElementById("overlayTitle");
                 const nameEl = document.getElementById("overlayName");
+                const timeEl = document.getElementById("overlayTime");
                 const wifiEl = document.getElementById("overlayWifi");
                 const msgEl = document.getElementById("overlayMsg");
 
                 if (res.sukses) {
                     let isPulang = res.tipe === "pulang";
-                    icon.innerText = isPulang ? "🏠" : "🏢";
-                    title.innerText = isPulang ? "Absen Pulang Berhasil" : "Absen Masuk Berhasil";
+                    const nowWib = new Date();
+                    const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                    const tglFormat = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
+
+                    if (isPulang) {
+                        overlay.className = "theme-pulang"; // Background Hijau Muda Cerah Full Layar
+                        icon.innerText = "🏡";
+                        title.innerText = "Absen Pulang Berhasil";
+                        msgEl.innerHTML = `Hati-hati di jalan, selamat beristirahat! <span class="waving-hand">👋</span>`;
+                    } else {
+                        overlay.className = "theme-masuk"; // Background Biru Telor Asin Terang Full Layar
+                        icon.innerText = "🏢";
+                        title.innerText = "Absen Masuk Berhasil";
+                        msgEl.innerHTML = `Selamat bekerja, semoga harinya menyenangkan! <span class="waving-hand">👋</span>`;
+                    }
+
                     nameEl.innerText = res.nama;
+                    timeEl.innerText = "📅 " + tglFormat;
                     wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
-                    msgEl.innerText = isPulang ? "Hati-hati di jalan, selamat beristirahat!" : "Selamat bekerja, semoga harinya menyenangkan!";
-                    overlay.className = ""; 
+                    overlay.style.display = "flex";
 
                     try {
                         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -630,6 +697,7 @@
             document.getElementById("overlayIcon").innerText = "⚠️";
             document.getElementById("overlayTitle").innerText = "Perhatian";
             document.getElementById("overlayName").innerText = "Gagal Absen";
+            document.getElementById("overlayTime").innerText = "";
             document.getElementById("overlayWifi").innerText = "";
             document.getElementById("overlayMsg").innerText = pesan;
             overlay.style.display = "flex";
