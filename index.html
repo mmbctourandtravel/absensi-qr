@@ -321,54 +321,52 @@
         }
 
 function loadLogHariIni() {
-            const container = document.getElementById('logContent');
-            container.innerHTML = "Memuat log absensi hari ini...";
+    const container = document.getElementById('logContent');
+    container.innerHTML = "Memuat log absensi hari ini...";
 
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getLogHariIni" })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if(!res.sukses) {
-                    container.innerHTML = "❌ Gagal memuat log: " + res.pesan;
-                    return;
-                }
-                let rows = res.data;
-                if(rows.length <= 1) {
-                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
-                    return;
-                }
-
-                let html = '<table class="rekap-table" id="tabelLog">';
-                
-                // Hitung total data staff (total baris dikurangi 1 untuk header)
-                let totalData = rows.length - 1;
-
-                rows.forEach((row, rowIndex) => {
-                    html += '<tr>';
-                    
-                    if (rowIndex === 0) {
-                        html += `<th>No</th>`;
-                    } else {
-                        // Dibalik: Baris pertama data (paling atas) mendapat nomor terbesar, baris terakhir (paling pagi) jadi No. 1
-                        let nomorUrut = totalData - (rowIndex - 1);
-                        html += `<td>${nomorUrut}</td>`;
-                    }
-
-                    row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; // Lewati kolom ID & Foto Selfie
-                        let cellText = cell !== null ? String(cell) : '';
-                        let tag = rowIndex === 0 ? 'th' : 'td';
-                        html += `<${tag}>${cellText}</${tag}>`;
-                    });
-                    html += '</tr>';
-                });
-                html += '</table>';
-                container.innerHTML = html;
-            })
-            .catch(err => { container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; });
+    fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ action: "getLogHariIni" })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if(!res.sukses) {
+            container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
+            return;
         }
+        let rows = res.data;
+        if(!rows || rows.length <= 1) {
+            container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
+            return;
+        }
+
+        let totalData = rows.length - 1;
+        let html = '<table class="rekap-table" id="tabelLog">';
+        
+        rows.forEach((row, rowIndex) => {
+            html += '<tr>';
+            if (rowIndex === 0) {
+                html += `<th>No</th>`;
+            } else {
+                let nomorUrut = totalData - (rowIndex - 1);
+                html += `<td>${nomorUrut}</td>`;
+            }
+
+            row.forEach((cell, colIndex) => {
+                if (colIndex === 1 || colIndex === 7) return; // Lewati kolom ID & Foto
+                let cellText = cell !== null ? String(cell) : '';
+                let tag = rowIndex === 0 ? 'th' : 'td';
+                html += `<${tag}>${cellText}</${tag}>`;
+            });
+            html += '</tr>';
+        });
+        html += '</table>';
+        container.innerHTML = html;
+    })
+    .catch(err => { 
+        container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
+    });
+}
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
