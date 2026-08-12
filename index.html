@@ -320,7 +320,7 @@
             .catch(err => { container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; });
         }
 
-        function loadLogHariIni() {
+function loadLogHariIni() {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
 
@@ -343,8 +343,16 @@
                 let html = '<table class="rekap-table" id="tabelLog">';
                 rows.forEach((row, rowIndex) => {
                     html += '<tr>';
+                    
+                    // Tambahkan Kolom Nomor di baris pertama (Header) dan baris data (Isi)
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        html += `<td>${rowIndex}</td>`;
+                    }
+
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; 
+                        if (colIndex === 1 || colIndex === 7) return; // Lewati kolom ID & Foto Selfie jika disembunyikan
                         let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
                         html += `<${tag}>${cellText}</${tag}>`;
@@ -356,7 +364,6 @@
             })
             .catch(err => { container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; });
         }
-
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
