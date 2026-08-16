@@ -48,7 +48,7 @@
         .container.active { display: block; }
 
         @media screen and (min-width: 900px) {
-            #tab-rekap.container.active, #tab-log.container.active { max-width: 96% !important; }
+            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 96% !important; }
             .nav-tabs { max-width: 96% !important; }
         }
 
@@ -64,65 +64,29 @@
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
         
-        /* FULL SCREEN OVERLAY DINAMIS */
         #fullScreenOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #0f172a; 
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            padding: 25px;
-            text-align: center;
-            transition: background 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0f172a; display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 99999; padding: 25px; text-align: center; transition: background 0.4s ease;
         }
-
         #fullScreenOverlay.theme-masuk { background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 100%) !important; }
         #fullScreenOverlay.theme-pulang { background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%) !important; }
         #fullScreenOverlay.theme-loading { background: rgba(15, 23, 42, 0.9) !important; backdrop-filter: blur(10px); }
         #fullScreenOverlay.error-bg { background: linear-gradient(135deg, #fecaca 0%, #f87171 100%) !important; }
 
         .overlay-card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 400px;
-            padding: 30px 20px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: #ffffff; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; align-items: center;
             animation: scaleUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         .overlay-icon { font-size: 56px; margin-bottom: 10px; animation: bounceIcon 0.6s infinite alternate; }
-        .overlay-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .overlay-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-transform: uppercase; }
         .overlay-name { font-size: 20px; font-weight: 700; color: #2563eb; margin: 6px 0; background: #f8fafc; padding: 6px 16px; border-radius: 30px; border: 1px solid #e2e8f0; width: 100%; }
         .overlay-time { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px; }
         .overlay-wifi { font-size: 12px; color: #64748b; margin-bottom: 15px; font-weight: 500; }
-        
-        .overlay-msg-box {
-            background: #f1f5f9;
-            padding: 10px 14px;
-            border-radius: 12px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #334155;
-            border: 1px solid #e2e8f0;
-        }
+        .overlay-msg-box { background: #f1f5f9; padding: 10px 14px; border-radius: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; }
         .waving-hand { display: inline-block; animation: wave 1.2s infinite; transform-origin: 70% 70%; font-size: 18px; }
 
-        /* MODAL KAMERA SELFIE MODERN */
         #selfieModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000000;
             display: none; flex-direction: column; align-items: center; justify-content: space-between;
@@ -130,21 +94,10 @@
         }
         #selfieVideo { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; background: #000; }
         .selfie-header, .selfie-footer { position: relative; z-index: 2; width: 100%; max-width: 420px; background: rgba(15, 23, 42, 0.7); padding: 14px; border-radius: 16px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); }
-        .selfie-header { margin-top: 5px; }
-        .selfie-footer { margin-bottom: 10px; }
-
-        .btn-capture { 
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
-            color: white; border: none; padding: 14px 28px; border-radius: 35px; 
-            font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); 
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; 
-        }
-        .btn-capture:active { transform: scale(0.96); }
-        .camera-anim-icon { font-size: 20px; animation: pulseCamera 1.5s infinite; }
+        .btn-capture { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 14px 28px; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); }
 
         @keyframes bounceIcon { from { transform: translateY(0); } to { transform: translateY(-6px); } }
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
-        @keyframes pulseCamera { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
@@ -172,7 +125,7 @@
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE MODERN -->
+    <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
@@ -181,20 +134,20 @@
         </div>
         <div class="selfie-footer">
             <button class="btn-capture" onclick="ambilFotoDanKirim()">
-                <span class="camera-anim-icon">📸</span> Ambil & Kirim Absen Masuk
+                <span>📸</span> Ambil & Kirim Absen Masuk
             </button>
         </div>
     </div>
 
-    <!-- FULL SCREEN OVERLAY DINAMIS -->
+    <!-- FULL SCREEN OVERLAY -->
     <div id="fullScreenOverlay">
         <div class="overlay-card">
             <div class="overlay-icon" id="overlayIcon">✅</div>
             <div class="overlay-title" id="overlayTitle">Absen Berhasil</div>
             <div class="overlay-name" id="overlayName">Nama Staff</div>
-            <div class="overlay-time" id="overlayTime">📅 11 Agustus 2026 | 10:30:00</div>
+            <div class="overlay-time" id="overlayTime">📅 11 Agustus 2026</div>
             <div class="overlay-wifi" id="overlayWifi">📡 Jaringan Wi-Fi: -</div>
-            <div class="overlay-msg-box" id="overlayMsgBox">
+            <div class="overlay-msg-box">
                 <span id="overlayMsg">Pesan mutiara...</span>
             </div>
         </div>
@@ -212,13 +165,6 @@
         <div class="instruction-sub">💡 Silakan scan QR Code untuk absensi</div>
         <div class="scanner-wrapper">
             <div id="reader"></div>
-        </div>
-
-        <!-- TOMBOL INSTAL PWA -->
-        <div id="installContainer" style="display:none; padding: 10px 20px 20px 20px; text-align: center;">
-            <button id="btnInstall" style="background: #10b981; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);">
-                📲 Install Aplikasi Absensi
-            </button>
         </div>
     </div>
 
@@ -251,27 +197,30 @@
             <div id="logContent" class="loading-rekap">Memuat log absensi hari ini...</div>
         </div>
     </div>
-<!-- TAB 4: ADMIN UPDATE IP -->
+
+    <!-- TAB 4: ADMIN UPDATE IP -->
     <div id="tab-admin" class="container" style="max-width: 450px !important;">
+        <div class="header-brand">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>Admin Panel Wi-Fi</h1>
+        </div>
+        
         <!-- KOTAK LOGIN PASSWORD ADMIN -->
-        <div id="authOverlay" style="padding: 20px; text-align: center;">
+        <div id="authOverlay" style="padding: 25px; text-align: center;">
             <h2>🔒 Keamanan Admin</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
-            <button onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
+            <button onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
 
-        <!-- ISI KONTROL ADMIN (TERSEMBUNYI SEBELUM LOGIN) -->
-        <div id="adminContentBody" style="display: none; padding: 20px; text-align: center;">
-            <div class="logo-text" style="margin-bottom: 5px;">MMBC Tour & Travel</div>
-            <h1 style="font-size: 16px; margin-bottom: 15px;">Pembaruan IP Wi-Fi Kantor</h1>
-
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #475569; text-align: left;">
+        <!-- ISI KONTROL ADMIN -->
+        <div id="adminContentBody" style="display: none; padding: 25px; text-align: center;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #475569; text-align: left;">
                 🌐 Jaringan Anda saat ini:<br>
-                <b id="adminCurrentIp" style="color: #2563eb; font-size: 14px; display: block; margin-top: 3px;">Mendeteksi IP...</b>
+                <b id="adminCurrentIp" style="color: #2563eb; font-size: 14px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
                 
-                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
                     <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
                     <select id="targetWifi" class="search-input" style="margin-top: 5px;">
                         <option value="basecamp">Basecamp MMBC</option>
@@ -287,6 +236,7 @@
             <div id="statusMsgAdmin" style="margin-top: 12px; font-size: 12px; font-weight: 600;"></div>
         </div>
     </div>
+
     <footer>&copy; 2026 MMBC Tour & Travel - All Rights Reserved</footer>
 
     <script>
@@ -306,14 +256,76 @@
                 document.getElementById('tab-scanner').classList.add('active');
             } else if(tabName === 'rekap') {
                 document.getElementById('tab-rekap').classList.add('active');
-                if(!window.loadedJadwal) {
-                    loadRekapBulanan();
-                }
+                if(!window.loadedJadwal) { loadRekapBulanan(); }
             } else if(tabName === 'log') {
                 document.getElementById('tab-log').classList.add('active');
                 loadLogHariIni();
+            } else if(tabName === 'admin') {
+                document.getElementById('tab-admin').classList.add('active');
             }
             btn.classList.add('active');
+        }
+
+        // FUNGSI KEAMANAN & UPDATE IP DI DALAM TAB ADMIN
+        function cekPasswordAdmin() {
+            const PASSWORD_BENAR = "mmbc1305"; 
+            let inputVal = document.getElementById("adminPassInput").value;
+
+            if (inputVal === PASSWORD_BENAR) {
+                document.getElementById("authOverlay").style.display = "none";
+                document.getElementById("adminContentBody").style.display = "block";
+                muatIpAdmin();
+            } else {
+                document.getElementById("authError").style.display = "block";
+            }
+        }
+
+        function muatIpAdmin() {
+            fetch("https://api.ipify.org?format=json")
+                .then(r => r.json())
+                .then(data => {
+                    window.adminMyIp = data.ip;
+                    document.getElementById("adminCurrentIp").innerText = "IP Publik: " + window.adminMyIp;
+                })
+                .catch(err => {
+                    document.getElementById("adminCurrentIp").innerText = "Gagal mendeteksi IP";
+                });
+        }
+
+        function updateIpKantorDariTab() {
+            if (!window.adminMyIp) {
+                alert("IP belum terdeteksi, mohon tunggu sebentar...");
+                return;
+            }
+
+            let msg = document.getElementById("statusMsgAdmin");
+            msg.style.color = "#1e293b";
+            msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
+
+            let targetTerpilih = document.getElementById("targetWifi").value;
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "updateWifi",
+                    ip: window.adminMyIp,
+                    target: targetTerpilih
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.sukses) {
+                    msg.style.color = "#059669";
+                    msg.innerText = "✅ " + res.pesan;
+                } else {
+                    msg.style.color = "#dc2626";
+                    msg.innerText = "❌ " + res.pesan;
+                }
+            })
+            .catch(err => {
+                msg.style.color = "#dc2626";
+                msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
+            });
         }
 
         function loadRekapBulanan() {
@@ -356,53 +368,54 @@
             .catch(err => { container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; });
         }
 
-function loadLogHariIni() {
-    const container = document.getElementById('logContent');
-    container.innerHTML = "Memuat log absensi hari ini...";
+        function loadLogHariIni() {
+            const container = document.getElementById('logContent');
+            container.innerHTML = "Memuat log absensi hari ini...";
 
-    fetch(API, {
-        method: "POST",
-        body: JSON.stringify({ action: "getLogHariIni" })
-    })
-    .then(r => r.json())
-    .then(res => {
-        if(!res.sukses) {
-            container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
-            return;
-        }
-        let rows = res.data;
-        if(!rows || rows.length <= 1) {
-            container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
-            return;
-        }
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getLogHariIni" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
+                    return;
+                }
+                let rows = res.data;
+                if(!rows || rows.length <= 1) {
+                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
+                    return;
+                }
 
-        let totalData = rows.length - 1;
-        let html = '<table class="rekap-table" id="tabelLog">';
-        
-        rows.forEach((row, rowIndex) => {
-            html += '<tr>';
-            if (rowIndex === 0) {
-                html += `<th>No</th>`;
-            } else {
-                let nomorUrut = totalData - (rowIndex - 1);
-                html += `<td>${nomorUrut}</td>`;
-            }
+                let totalData = rows.length - 1;
+                let html = '<table class="rekap-table" id="tabelLog">';
+                
+                rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        let nomorUrut = totalData - (rowIndex - 1);
+                        html += `<td>${nomorUrut}</td>`;
+                    }
 
-            row.forEach((cell, colIndex) => {
-                if (colIndex === 1 || colIndex === 7) return; // Lewati kolom ID & Foto
-                let cellText = cell !== null ? String(cell) : '';
-                let tag = rowIndex === 0 ? 'th' : 'td';
-                html += `<${tag}>${cellText}</${tag}>`;
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 1 || colIndex === 7) return; 
+                        let cellText = cell !== null ? String(cell) : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+                        html += `<${tag}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => { 
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
             });
-            html += '</tr>';
-        });
-        html += '</table>';
-        container.innerHTML = html;
-    })
-    .catch(err => { 
-        container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
-    });
-}
+        }
+
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
@@ -431,7 +444,6 @@ function loadLogHariIni() {
             }
         }
 
-        // --- SKRIP SCANNER QR & WATERMARK ---
         function updateClock(){
             const now = new Date();
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -555,8 +567,7 @@ function loadLogHariIni() {
                     videoElement.play().catch(e => console.log("Play error:", e));
                 })
                 .catch(err => {
-                    console.error("Gagal kamera:", err);
-                    alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin (Permission) kamera pada browser.\n2. Menggunakan link HTTPS.\n\nDetail error: " + err.message);
+                    alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin kamera pada browser.\n2. Menggunakan link HTTPS.");
                     modal.style.display = "none";
                     resetScannerKamera();
                 });
@@ -575,10 +586,8 @@ function loadLogHariIni() {
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext("2d");
             
-            // 1. Gambar video asli ke canvas
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // 2. Tambahkan Watermark Elegan di Bawah Foto
             const nowWib = new Date();
             const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             const tglStr = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
@@ -724,40 +733,20 @@ function loadLogHariIni() {
                     qr.stop().then(() => {
                         jalankanProsesAbsen(decodedText);
                     }).catch(err => {
-                        jalankanProsesAbsen(decodedText);
+                        jalankanProsesAbsen(decodedTest);
                     });
                 },
                 (err) => {}
             ).catch(err => console.log("Restart scanner error:", err));
         }
-if ('serviceWorker' in navigator) {
+
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker Berhasil Terdaftar!', reg))
+                    .then(reg => console.log('Service Worker Terdaftar!', reg))
                     .catch(err => console.log('Service Worker Gagal:', err));
             });
         }
-        // --- LOGIKA TOMBOL INSTAL PWA ---
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installContainer').style.display = 'block';
-        });
-
-        document.getElementById('btnInstall').addEventListener('click', () => {
-            document.getElementById('installContainer').style.display = 'none';
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => {
-                    deferredPrompt = null;
-                });
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            document.getElementById('installContainer').style.display = 'none';
-        });
     </script>
 </body>
 </html>
