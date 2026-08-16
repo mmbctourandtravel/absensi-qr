@@ -169,6 +169,7 @@
         <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
         <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal</button>
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
+        <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
     <!-- MODAL KAMERA SELFIE MODERN -->
@@ -250,7 +251,42 @@
             <div id="logContent" class="loading-rekap">Memuat log absensi hari ini...</div>
         </div>
     </div>
+<!-- TAB 4: ADMIN UPDATE IP -->
+    <div id="tab-admin" class="container" style="max-width: 450px !important;">
+        <!-- KOTAK LOGIN PASSWORD ADMIN -->
+        <div id="authOverlay" style="padding: 20px; text-align: center;">
+            <h2>🔒 Keamanan Admin</h2>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
+            <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
+            <button onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
+            <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
+        </div>
 
+        <!-- ISI KONTROL ADMIN (TERSEMBUNYI SEBELUM LOGIN) -->
+        <div id="adminContentBody" style="display: none; padding: 20px; text-align: center;">
+            <div class="logo-text" style="margin-bottom: 5px;">MMBC Tour & Travel</div>
+            <h1 style="font-size: 16px; margin-bottom: 15px;">Pembaruan IP Wi-Fi Kantor</h1>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #475569; text-align: left;">
+                🌐 Jaringan Anda saat ini:<br>
+                <b id="adminCurrentIp" style="color: #2563eb; font-size: 14px; display: block; margin-top: 3px;">Mendeteksi IP...</b>
+                
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
+                    <select id="targetWifi" class="search-input" style="margin-top: 5px;">
+                        <option value="basecamp">Basecamp MMBC</option>
+                        <option value="megavision">Megavision</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="updateIpKantorDariTab()" style="width: 100%; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">
+                🔄 Perbarui IP Wi-Fi Sekarang
+            </button>
+
+            <div id="statusMsgAdmin" style="margin-top: 12px; font-size: 12px; font-weight: 600;"></div>
+        </div>
+    </div>
     <footer>&copy; 2026 MMBC Tour & Travel - All Rights Reserved</footer>
 
     <script>
