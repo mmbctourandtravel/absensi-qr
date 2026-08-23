@@ -104,13 +104,41 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
+        /* TABEL ELEGAN & STICKY HEADER GANDA */
+        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; border-radius: 12px; background: #ffffff; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
-        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: center; background: #ffffff; }
+        
+        table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 3; }
 
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
-        #tabelJadwal th:nth-child(1) { z-index: 4; background: #f1f5f9; }
+        /* Baris pertama header (Nama Hari) nempel paling atas */
+        table.rekap-table tr:nth-child(1) th { top: 0; z-index: 5; background: #1e293b !important; }
+
+        /* Baris kedua header (Angka Tanggal) nempel tepat di bawah baris hari */
+        table.rekap-table tr:nth-child(2) th { top: 27px; z-index: 4; background: #1e293b !important; }
+
+        /* Kolom Nama Staff (di pojok kiri) nempel sticky secara horizontal & vertikal */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; border-right: 1px solid #e2e8f0; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 0; z-index: 2; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; }
+        
+        /* Pertemuan pojok kiri atas (Header Kolom Nama) paling tinggi agar tidak tembus */
+        table.rekap-table tr:nth-child(1) th:nth-child(2) { z-index: 7; background: #1e293b !important; }
+        table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 6; background: #1e293b !important; }
+
+        /* DESAIN BADGE STATUS JADWAL (S1 & S2 WARNA SAMA, TULISAN BEDA) */
+        .badge-shift {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 11px;
+            text-align: center;
+            min-width: 32px;
+        }
+        .badge-s1, .badge-s2 { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+        .badge-off { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .badge-cuti { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .badge-tlt { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
@@ -179,7 +207,7 @@
             <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
         </div>
         <div class="rekap-wrapper">
-            <div id="rekapContent" class="loading-rekap">Mohon Tunggu...</div>
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
         </div>
     </div>
 
@@ -202,12 +230,12 @@
     <div id="tab-admin" class="container" style="max-width: 450px !important;">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
-            <h1>admin</h1>
+            <h1>Admin Panel Wi-Fi</h1>
         </div>
         
         <!-- KOTAK LOGIN PASSWORD ADMIN -->
         <div id="authOverlay" style="padding: 25px; text-align: center;">
-            <h2>Update IP WiFi Kantor</h2>
+            <h2>🔒 Keamanan Admin</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
             <button onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
@@ -237,7 +265,7 @@
         </div>
     </div>
 
-    <footer>&copy; 2026 HR MMBC Tour & Travel </footer>
+    <footer>&copy; 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
@@ -267,7 +295,6 @@
             btn.classList.add('active');
         }
 
-        // FUNGSI KEAMANAN & UPDATE IP DI DALAM TAB ADMIN (TERHUBUNG KE BACKEND GS)
         function cekPasswordAdmin() {
             let inputVal = document.getElementById("adminPassInput").value;
             let errDiv = document.getElementById("authError");
@@ -280,11 +307,9 @@
             .then(res => res.json())
             .then(data => {
                 if (data.sukses) {
-                    // Jika password benar, sembunyikan kotak login dan tampilkan isi admin
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                 } else {
-                    // Jika password salah, tampilkan pesan error
                     errDiv.innerText = "❌ " + (data.pesan || "Password salah!");
                     errDiv.style.display = "block";
                 }
@@ -369,11 +394,29 @@
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
-                        let cellText = cell !== null ? String(cell) : '';
+                        let cellText = cell !== null ? String(cell).trim() : '';
+
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
+
+                        // Berikan badge warna otomatis untuk baris data staff (indeks >= 2)
+                        if (rowIndex >= 2 && colIndex > 2 && cellText !== '') {
+                            let upperVal = cellText.toUpperCase();
+                            let badgeClass = "";
+                            
+                            if (upperVal === "S1") badgeClass = "badge-shift badge-s1";
+                            else if (upperVal === "S2") badgeClass = "badge-shift badge-s2"; // Warna sama dengan S1
+                            else if (upperVal === "OFF" || upperVal === "LIBUR") badgeClass = "badge-shift badge-off";
+                            else if (upperVal.includes("CUTI")) badgeClass = "badge-shift badge-cuti";
+                            else if (upperVal === "TLT" || upperVal === "T") badgeClass = "badge-shift badge-tlt";
+
+                            if (badgeClass !== "") {
+                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                            }
+                        }
+
                         html += `<${tag}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
@@ -749,7 +792,7 @@
                     qr.stop().then(() => {
                         jalankanProsesAbsen(decodedText);
                     }).catch(err => {
-                        jalankanProsesAbsen(decodedTest);
+                        jalankanProsesAbsen(decodedText);
                     });
                 },
                 (err) => {}
