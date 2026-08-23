@@ -117,14 +117,17 @@
         /* Baris kedua header (Angka Tanggal) nempel tepat di bawah baris hari */
         table.rekap-table tr:nth-child(2) th { top: 27px; z-index: 4; background: #1e293b !important; }
 
-        /* Kolom Nama Staff (di pojok kiri) nempel sticky secara horizontal & vertikal */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; border-right: 1px solid #e2e8f0; }
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 0; z-index: 2; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; }
+        /* PERBAIKAN LEBAR KOLOM SISA CUTI & NAMA STAFF */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; border-right: 1px solid #e2e8f0; min-width: 55px; max-width: 65px; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: static; border-right: 1px solid #e2e8f0; min-width: 60px; max-width: 70px; }
         
-        /* Pertemuan pojok kiri atas (Header Kolom Nama) paling tinggi agar tidak tembus */
-        table.rekap-table tr:nth-child(1) th:nth-child(2) { z-index: 7; background: #1e293b !important; }
-        table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 6; background: #1e293b !important; }
-
+        #tabelJadwal th:nth-child(3), #tabelJadwal td:nth-child(3) { 
+            position: sticky; left: 0; z-index: 2; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; 
+        }
+        
+        /* Pertemuan pojok kiri atas untuk header kolom Sisa, Cuti & Nama */
+        table.rekap-table tr:nth-child(1) th:nth-child(3) { z-index: 7; background: #1e293b !important; }
+        table.rekap-table tr:nth-child(2) th:nth-child(3) { z-index: 6; background: #1e293b !important; }
         /* DESAIN BADGE STATUS JADWAL (S1 & S2 WARNA SAMA, TULISAN BEDA) */
         .badge-shift {
             display: inline-block;
