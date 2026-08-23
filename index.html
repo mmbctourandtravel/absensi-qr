@@ -104,30 +104,35 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* TABEL ELEGAN & STICKY HEADER GANDA */
+        /* --- TABEL ELEGAN & STICKY HEADER GANDA (FINAL FIX) --- */
         .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; border-radius: 12px; background: #ffffff; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: center; background: #ffffff; }
         
         table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 3; }
 
-        /* Baris pertama header (Nama Hari) nempel paling atas */
+        /* Baris pertama & kedua header (Hari & Tanggal) nempel di atas secara sticky */
         table.rekap-table tr:nth-child(1) th { top: 0; z-index: 5; background: #1e293b !important; }
-
-        /* Baris kedua header (Angka Tanggal) nempel tepat di bawah baris hari */
         table.rekap-table tr:nth-child(2) th { top: 27px; z-index: 4; background: #1e293b !important; }
 
-        /* PERBAIKAN LEBAR KOLOM SISA CUTI & NAMA STAFF */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; border-right: 1px solid #e2e8f0; min-width: 55px; max-width: 65px; }
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: static; border-right: 1px solid #e2e8f0; min-width: 60px; max-width: 70px; }
+        /* ATUR LEBAR & STICKY HORIZONTAL KOLOM KIRI */
+        /* Kolom 1 (biasanya nomor/kosong) */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; min-width: 40px; max-width: 50px; }
         
-        #tabelJadwal th:nth-child(3), #tabelJadwal td:nth-child(3) { 
+        /* Kolom 2: SISA CUTI (dibuat kecil dan kompak) */
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: static; min-width: 55px; max-width: 65px; border-right: 1px solid #e2e8f0; }
+        
+        /* Kolom 3: TOTAL TELAT (dibuat kecil dan kompak, sejajar dengan sisa cuti) */
+        #tabelJadwal th:nth-child(3), #tabelJadwal td:nth-child(3) { position: static; min-width: 60px; max-width: 70px; border-right: 1px solid #e2e8f0; }
+
+        /* Kolom 4: NAMA STAFF (dibuat lebar dan di-sticky horizontal di sebelah kiri) */
+        #tabelJadwal th:nth-child(4), #tabelJadwal td:nth-child(4) { 
             position: sticky; left: 0; z-index: 2; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; 
         }
         
-        /* Pertemuan pojok kiri atas untuk header kolom Sisa, Cuti & Nama */
-        table.rekap-table tr:nth-child(1) th:nth-child(3) { z-index: 7; background: #1e293b !important; }
-        table.rekap-table tr:nth-child(2) th:nth-child(3) { z-index: 6; background: #1e293b !important; }
+        /* Pertemuan pojok kiri atas untuk header kolom Nama agar tidak tembus */
+        table.rekap-table tr:nth-child(1) th:nth-child(4) { z-index: 7; background: #1e293b !important; }
+        table.rekap-table tr:nth-child(2) th:nth-child(4) { z-index: 6; background: #1e293b !important; }
         /* DESAIN BADGE STATUS JADWAL (S1 & S2 WARNA SAMA, TULISAN BEDA) */
         .badge-shift {
             display: inline-block;
