@@ -262,34 +262,39 @@
                 loadLogHariIni();
             } else if(tabName === 'admin') {
                 document.getElementById('tab-admin').classList.add('active');
+                muatIpAdmin();
             }
             btn.classList.add('active');
         }
 
-        // FUNGSI KEAMANAN & UPDATE IP DI DALAM TAB ADMIN
+        // FUNGSI KEAMANAN & UPDATE IP DI DALAM TAB ADMIN (TERHUBUNG KE BACKEND GS)
         function cekPasswordAdmin() {
-  let inputVal = document.getElementById("adminPassInput").value;
-  // Kirim password ke Google Apps Script secara rahasia
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "cekPassword", password: inputVal })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.status) {
-      // Jika password benar (masuk ke menu admin)
-      alert("Login Berhasil!");
-      // Masukkan fungsi untuk membuka tampilan menu admin di sini
-    } else {
-      // Jika password salah
-      alert(data.pesan || "Password salah!");
-    }
-  })
-  .catch(err => {
-    alert("Gagal terhubung ke server.");
-    console.error(err);
-  });
-}
+            let inputVal = document.getElementById("adminPassInput").value;
+            let errDiv = document.getElementById("authError");
+            errDiv.style.display = "none";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "cekPassword", password: inputVal })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sukses) {
+                    // Jika password benar, sembunyikan kotak login dan tampilkan isi admin
+                    document.getElementById("authOverlay").style.display = "none";
+                    document.getElementById("adminContentBody").style.display = "block";
+                } else {
+                    // Jika password salah, tampilkan pesan error
+                    errDiv.innerText = "❌ " + (data.pesan || "Password salah!");
+                    errDiv.style.display = "block";
+                }
+            })
+            .catch(err => {
+                errDiv.innerText = "❌ Gagal terhubung ke server.";
+                errDiv.style.display = "block";
+                console.error(err);
+            });
+        }
 
         function muatIpAdmin() {
             fetch("https://api.ipify.org?format=json")
