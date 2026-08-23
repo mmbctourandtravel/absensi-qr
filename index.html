@@ -104,46 +104,46 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-/* --- TABEL ELEGAN & STICKY HEADER GANDA (FINAL FIX PRESISI NAMA) --- */
-        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; border-radius: 12px; background: #ffffff; }
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: center; background: #ffffff; }
-        
-        table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 3; }
+/* --- TABEL ELEGAN & STICKY HEADER GANDA (FINAL FIX PRESISI KOLOM KOSONG) --- */
+.rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; border-radius: 12px; background: #ffffff; }
+table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
+table.rekap-table th, table.rekap-table td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: center; background: #ffffff; }
 
-        /* Baris pertama & kedua header (Hari & Tanggal) nempel di atas secara sticky */
-        table.rekap-table tr:nth-child(1) th { top: 0; z-index: 5; background: #1e293b !important; }
-        table.rekap-table tr:nth-child(2) th { top: 27px; z-index: 4; background: #1e293b !important; }
+table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 3; }
 
-        /* ATUR LEBAR & STICKY HORIZONTAL TIAP KOLOM BERDASARKAN RENDER JS */
-        /* Kolom 1 (Nomor) - Kompak/Kecil */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; min-width: 35px; max-width: 45px; border-right: 1px solid #e2e8f0; }
-        
-        /* Kolom 2 (NAMA) - HANYA INI YANG LEBAR DAN STICKY DI KIRI */
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { 
-            position: sticky; left: 35px; z-index: 2; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; 
-        }
+/* Baris pertama & kedua header (Hari & Tanggal) nempel di atas secara sticky */
+table.rekap-table tr:nth-child(1) th { top: 0; z-index: 5; background: #1e293b !important; }
+table.rekap-table tr:nth-child(2) th { top: 27px; z-index: 4; background: #1e293b !important; }
 
-        /* Kolom 3 (SISA CUTI) - Kecil/Kompak, Tidak Sticky */
-        #tabelJadwal th:nth-child(3), #tabelJadwal td:nth-child(3) { position: static; min-width: 55px; max-width: 65px; border-right: 1px solid #e2e8f0; }
-        
-        /* Kolom 4 (TOTAL TELAT) - Kecil/Kompak, Tidak Sticky */
-        #tabelJadwal th:nth-child(4), #tabelJadwal td:nth-child(4) { position: static; min-width: 60px; max-width: 70px; border-right: 1px solid #e2e8f0; }
+/* --- ATUR LEBAR & STICKY HORIZONTAL TIAP KOLOM --- */
+/* Kolom 1: Kolom kosong/nomor (yang di-hide di Android) - Buat super kecil */
+#tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: static; min-width: 15px !important; max-width: 15px !important; padding: 6px 1px !important; border-right: 1px solid #e2e8f0; }
 
-        /* MEMBUAT KOLOM-KOLOM PEMBATAS KOSONG MENJADI TIPIS/KECIL */
-        table.rekap-table th:empty, table.rekap-table td:empty {
-            min-width: 12px !important;
-            max-width: 15px !important;
-            padding: 6px 1px !important;
-            background: #f8fafc !important;
-        }
+/* Kolom 2: NAMA (DI-STICKY HORIZONTAL DI SEBELAH KIRI) - Ini yang dilebarkan */
+#tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { 
+    position: sticky; left: 15px; z-index: 2; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; 
+}
 
-        /* Pertemuan pojok kiri atas untuk header kolom No & Nama agar tidak tembus */
-        table.rekap-table tr:nth-child(1) th:nth-child(1) { z-index: 8; background: #1e293b !important; }
-        table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 7; background: #1e293b !important; }
-        
-        table.rekap-table tr:nth-child(1) th:nth-child(2) { z-index: 7; background: #1e293b !important; left: 35px; position: sticky; }
-        table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 6; background: #1e293b !important; left: 35px; position: sticky; }
+/* Kolom 3: SISA CUTI - Tidak sticky, normal kompak */
+#tabelJadwal th:nth-child(3), #tabelJadwal td:nth-child(3) { position: static; min-width: 50px; max-width: 60px; border-right: 1px solid #e2e8f0; }
+
+/* Kolom 4: TOTAL TELAT - Tidak sticky, normal kompak */
+#tabelJadwal th:nth-child(4), #tabelJadwal td:nth-child(4) { position: static; min-width: 50px; max-width: 60px; border-right: 1px solid #e2e8f0; }
+
+/* MEMBUAT KOLOM-KOLOM PEMBATAS KOSONG LAINNYA MENJADI TIPIS/KECIL */
+table.rekap-table th:empty:not(:nth-child(1)), table.rekap-table td:empty:not(:nth-child(1)) {
+    min-width: 12px !important;
+    max-width: 15px !important;
+    padding: 6px 1px !important;
+    background: #f8fafc !important;
+}
+
+/* Pertemuan pojok kiri atas untuk header agar tidak tembus */
+table.rekap-table tr:nth-child(1) th:nth-child(1) { z-index: 9; background: #1e293b !important; }
+table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 8; background: #1e293b !important; }
+
+table.rekap-table tr:nth-child(1) th:nth-child(2) { z-index: 8; background: #1e293b !important; left: 15px; position: sticky; }
+table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 7; background: #1e293b !important; left: 15px; position: sticky; }
         /* DESAIN BADGE STATUS JADWAL (S1 & S2 WARNA SAMA, TULISAN BEDA) */
         .badge-shift {
             display: inline-block;
