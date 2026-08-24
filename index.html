@@ -127,7 +127,7 @@
         table.rekap-table th, table.rekap-table td { 
             border-bottom: 1px solid #f1f5f9; 
             border-right: 1px solid #f1f5f9; 
-            padding: 8px 8px; /* Padding dikurangi sedikit agar lebih kompak/kecil */
+            padding: 7px 7px; /* Diperkecil agar sangat kompak dan rapi */
             text-align: center; 
             background: #ffffff; 
         }
@@ -143,42 +143,51 @@
             box-shadow: inset 0 -1px 0 #334155;
         }
         table.rekap-table tr:nth-child(1) th { top: 0; z-index: 20; }
-        table.rekap-table tr:nth-child(2) th { top: 33px; z-index: 19; }
+        table.rekap-table tr:nth-child(2) th { top: 31px; z-index: 19; }
 
-        /* PENGATURAN LEBAR & STICKY KOLOM KIRI (NO, NAMA SAJA - SISA CUTI & TOTAL TELAT TIDAK STICKY) */
-        /* Kolom 1: No */
+        /* PENGATURAN LEBAR & STICKY KOLOM KIRI (NO & NAMA STAFF SAJA) */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
             width: 35px !important; min-width: 35px !important; max-width: 35px !important;
             position: sticky !important; left: 0 !important; z-index: 4; background: #f8fafc !important; color: #475569; font-weight: 600;
         }
-        /* Kolom 2: Nama Staff */
         table.rekap-table th:nth-child(2), table.rekap-table td:nth-child(2) { 
-            width: 160px !important; min-width: 160px !important; max-width: 160px !important;
+            width: 155px !important; min-width: 155px !important; max-width: 155px !important;
             position: sticky !important; left: 35px !important; z-index: 4; background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
             border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
         }
-        /* Kolom 3 & 4: Sisa Cuti & Total Telat (TIDAK STICKY, MENGIKUTI SCROLL) */
+
+        /* Kolom Sisa Cuti & Total Telat (TIDAK STICKY, MENGIKUTI SCROLL) */
         table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3) { 
-            width: 45px !important; min-width: 45px !important; max-width: 45px !important;
+            width: 42px !important; min-width: 42px !important; max-width: 42px !important;
             position: static !important; background: #ffffff !important; font-weight: 600; color: #475569;
         }
         table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
-            width: 45px !important; min-width: 45px !important; max-width: 45px !important;
+            width: 42px !important; min-width: 42px !important; max-width: 42px !important;
             position: static !important; background: #ffffff !important; font-weight: 600; color: #475569; border-right: 2px solid #e2e8f0 !important;
         }
 
-        /* Kolom Tanggal (Diperkecil sedikit lebarnya agar lebih kompak) */
+        /* Kolom Tanggal (Kompak & Rapi) */
         table.rekap-table th:nth-child(n+5), table.rekap-table td:nth-child(n+5) {
-            width: 42px !important; min-width: 42px !important; max-width: 42px !important;
+            width: 40px !important; min-width: 40px !important; max-width: 40px !important;
+        }
+
+        /* KHUSUS BARIS PEMBATAS/KOSONG DI BAWAH (Dibuat sangat tipis & rapat) */
+        table.rekap-table tr.row-pembatas td {
+            padding: 4px 6px !important;
+            background: #f8fafc !important;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 600;
         }
 
         /* PERTEMUAN TITIK UTAMA STICKY (KIRI ATAS - HEADER GANDA KOLOM 1 & 2) */
         table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 25 !important; background: #0f172a !important; left: 0 !important; }
         table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 25 !important; background: #0f172a !important; left: 35px !important; border-right: 2px solid #334155 !important; }
 
-        /* EFEK HOVER & ZEBRA STRIPE PADA BARIS TABEL */
+        /* EFEK HOVER PADA BARIS TABEL */
         table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
         table.rekap-table tbody tr:hover td:nth-child(-n+2) { background: #f1f5f9 !important; }
+        table.rekap-table tbody tr.row-pembatas:hover td { background: #f1f5f9 !important; }
 
         /* --- CSS KHUSUS TABEL LOG (HEADER TUNGGAL NORMAL) --- */
         table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
@@ -187,7 +196,7 @@
         table.log-table td { text-align: center; }
 
         /* DESAIN BADGE STATUS JADWAL MODERN & ELEGAN */
-        .badge-shift { display: inline-block; padding: 3px 6px; border-radius: 5px; font-weight: 600; font-size: 11px; text-align: center; min-width: 30px; letter-spacing: 0.2px; }
+        .badge-shift { display: inline-block; padding: 2px 5px; border-radius: 4px; font-weight: 600; font-size: 11px; text-align: center; min-width: 28px; }
         .badge-s1, .badge-s2 { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
         .badge-off { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
         .badge-cuti { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
@@ -442,17 +451,22 @@
                 let rows = res.data;
                 let html = '<table class="rekap-table" id="tabelJadwal">';
                 
-                let counterNomor = 1; // Untuk menghitung nomor urut hanya pada baris yang ada nama staffnya
+                let counterNomor = 1;
 
                 rows.forEach((row, rowIndex) => {
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
-                    html += '<tr>';
                     
-                    // Cek apakah baris ini memiliki Nama Staff (kolom ke-1 dari sheet atau indeks row[1])
                     let namaStaffCell = (row[1] !== null && row[1] !== undefined) ? String(row[1]).trim() : '';
                     let isBarisKosong = (namaStaffCell === "" && rowIndex >= 2);
 
-                    // Kolom No Urut (Kosongkan jika baris pemisah/kosong)
+                    // Tambahkan kelas khusus 'row-pembatas' jika baris kosong di bawah
+                    if (isBarisKosong) {
+                        html += '<tr class="row-pembatas">';
+                    } else {
+                        html += '<tr>';
+                    }
+                    
+                    // Kolom No Urut (Hanya untuk baris staff aktif, dikosongkan untuk baris pembatas)
                     if (rowIndex >= 2) {
                         if (isBarisKosong) {
                             html += `<td></td>`;
@@ -477,7 +491,7 @@
                         }
 
                         // Berikan badge warna otomatis untuk baris data staff (indeks >= 2) mulai dari kolom tanggal (indeks > 4)
-                        if (rowIndex >= 2 && colIndex > 4 && cellText !== '') {
+                        if (rowIndex >= 2 && !isBarisKosong && colIndex > 4 && cellText !== '') {
                             let upperVal = cellText.toUpperCase();
                             let badgeClass = "";
                             
