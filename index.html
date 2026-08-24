@@ -127,7 +127,7 @@
         table.rekap-table th, table.rekap-table td { 
             border-bottom: 1px solid #f1f5f9; 
             border-right: 1px solid #f1f5f9; 
-            padding: 9px 12px; 
+            padding: 9px 10px; 
             text-align: center; 
             background: #ffffff; 
         }
@@ -145,44 +145,33 @@
         table.rekap-table tr:nth-child(1) th { top: 0; z-index: 20; }
         table.rekap-table tr:nth-child(2) th { top: 35px; z-index: 19; }
 
-        /* STICKY KOLOM NOMOR & NAMA STAFF DI KIRI */
-        /* Kolom 1 (No) */
+        /* PENGATURAN LEBAR & STICKY KOLOM KIRI (NO, NAMA, SISA, CUTI, TOTAL, TELAT) */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
-            width: 45px !important; 
-            min-width: 45px !important; 
-            position: sticky !important; 
-            left: 0 !important; 
-            z-index: 4; 
-            background: #f8fafc !important; 
-            color: #475569;
-            font-weight: 600;
+            width: 40px !important; min-width: 40px !important; max-width: 40px !important;
+            position: sticky !important; left: 0 !important; z-index: 4; background: #f8fafc !important; color: #475569; font-weight: 600;
         }
-        /* Kolom 2 (Nama Staff) */
         table.rekap-table th:nth-child(2), table.rekap-table td:nth-child(2) { 
-            width: 175px !important; 
-            min-width: 175px !important; 
-            max-width: 175px !important; 
-            position: sticky !important; 
-            left: 45px !important; 
-            z-index: 4; 
-            background: #f8fafc !important; 
-            text-align: left !important; 
-            font-weight: 600;
-            color: #1e293b;
-            border-right: 2px solid #cbd5e1 !important; 
-            box-shadow: 4px 0 8px rgba(0,0,0,0.03);
-            text-overflow: ellipsis;
-            overflow: hidden;
+            width: 165px !important; min-width: 165px !important; max-width: 165px !important;
+            position: sticky !important; left: 40px !important; z-index: 4; background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
+        }
+        table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3) { 
+            width: 55px !important; min-width: 55px !important; max-width: 55px !important;
+            position: sticky !important; left: 205px !important; z-index: 4; background: #f8fafc !important; font-weight: 600; color: #475569;
+        }
+        table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
+            width: 55px !important; min-width: 55px !important; max-width: 55px !important;
+            position: sticky !important; left: 260px !important; z-index: 4; background: #f8fafc !important; font-weight: 600; color: #475569; border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
         }
 
         /* PERTEMUAN TITIK UTAMA STICKY (KIRI ATAS - HEADER HEADER) */
         table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 25 !important; background: #0f172a !important; left: 0 !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 25 !important; background: #0f172a !important; left: 45px !important; border-right: 2px solid #334155 !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 25 !important; background: #0f172a !important; left: 40px !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(3), table.rekap-table tr:nth-child(2) th:nth-child(3) { z-index: 25 !important; background: #0f172a !important; left: 205px !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(4), table.rekap-table tr:nth-child(2) th:nth-child(4) { z-index: 25 !important; background: #0f172a !important; left: 260px !important; border-right: 2px solid #334155 !important; }
 
-        /* EFEK HOVER & ZEBAR STRIPE ELEGAN PADA BARIS TABEL */
+        /* EFEK HOVER & ZEBRA STRIPE PADA BARIS TABEL */
         table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
-        table.rekap-table tbody tr:hover td:nth-child(1), 
-        table.rekap-table tbody tr:hover td:nth-child(2) { background: #f1f5f9 !important; }
+        table.rekap-table tbody tr:hover td:nth-child(-n+4) { background: #f1f5f9 !important; }
 
         /* --- CSS KHUSUS TABEL LOG (HEADER TUNGGAL NORMAL) --- */
         table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
@@ -460,7 +449,7 @@
                         }
 
                         // Berikan badge warna otomatis untuk baris data staff (indeks >= 2)
-                        if (rowIndex >= 2 && colIndex > 2 && cellText !== '') {
+                        if (rowIndex >= 2 && colIndex > 4 && cellText !== '') {
                             let upperVal = cellText.toUpperCase();
                             let badgeClass = "";
                             
@@ -541,7 +530,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom 1 adalah Nama Staff
+                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom indeks ke-1 adalah Nama Staff
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -555,6 +544,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
+                // Di tabel log: Kolom ke-0 (No), Kolom ke-1 (Nama Staff)
                 let tdNama = tr[i].getElementsByTagName('td')[1];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
