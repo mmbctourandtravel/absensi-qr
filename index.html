@@ -47,7 +47,6 @@
         .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
         .container.active { display: block; }
 
-        /* KOTAK TABEL DIPERKECIL & DIOPTIMALKAN UNTUK LAPTOP/PC (TIDAK TERLALU LEBAR) */
         @media screen and (min-width: 900px) {
             #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 880px !important; }
             .nav-tabs { max-width: 880px !important; }
@@ -105,22 +104,16 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* TABEL FULL MENTOK TANPA SISA RUANG PUTIH */
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0 !important; border: none !important; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
-        /* STICKY HEADER GANDA JADWAL */
         #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
         #tabelJadwal tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
-
-        /* STICKY HEADER LOG HARI INI */
         #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
 
-        /* EFEK ZEBRA STRIPE */
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* STICKY KOLOM JADWAL (No & Nama MENTOK KIRI) */
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
@@ -129,12 +122,10 @@
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        /* STICKY KOLOM LOG HARI INI (Nama MENTOK KIRI) */
         #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
 
-        /* BADGE WARNA SHIFT */
         .badge-shift {
             display: inline-block;
             padding: 3px 8px;
@@ -163,7 +154,7 @@
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE -->
+    <!-- MODAL KAMERA SELFIE (HANYA UNTUK ABSEN MASUK) -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
@@ -304,7 +295,6 @@
             btn.classList.add('active');
         }
 
-        // FUNGSI KEAMANAN & UPDATE IP DI DALAM TAB ADMIN
         function cekPasswordAdmin() {
             const PASSWORD_BENAR = "mmbc1305"; 
             let inputVal = document.getElementById("adminPassInput").value;
@@ -389,7 +379,6 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
 
-                    // Kolom No: Hanya isi angka 1 sampai 35 khusus baris nama staff
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
                         let noHeader = rowIndex === 0 ? 'No' : '';
@@ -598,7 +587,7 @@
 
                 if (res.status === "masuk") {
                     window.activeStaffNama = res.nama;
-                    bukaKameraSelfie(res.nama);
+                    bukaKameraSelfie(res.nama); // <--- HANYA MASUK YANG PAKAI SELFIE
                 } else if (res.status === "pulang") {
                     const overlayPulang = document.getElementById("fullScreenOverlay");
                     document.getElementById("overlayIcon").innerText = "⏳";
@@ -610,7 +599,7 @@
                     overlayPulang.className = "theme-loading";
                     overlayPulang.style.display = "flex";
 
-                    eksekusiAbsenFinal("");
+                    eksekusiAbsenFinal(""); // <--- PULANG LANGSUNG TANPA SELFIE (INSTAN)
                 } else {
                     tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
                 }
@@ -655,8 +644,9 @@
                 return;
             }
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            // Kompres ukuran foto agar ringan dan tidak bikin lemot
+            canvas.width = 480;
+            canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
             const ctx = canvas.getContext("2d");
             
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -666,21 +656,21 @@
             const tglStr = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
             
             ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
-            ctx.fillRect(0, canvas.height - 110, canvas.width, 110);
+            ctx.fillRect(0, canvas.height - 75, canvas.width, 75);
 
-            ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+            ctx.font = "bold 15px 'Segoe UI', Arial, sans-serif";
             ctx.fillStyle = "#38bdf8";
-            ctx.fillText("👤 " + (window.activeStaffNama || "Staff MMBC"), 20, canvas.height - 72);
+            ctx.fillText("👤 " + (window.activeStaffNama || "Staff MMBC"), 12, canvas.height - 48);
 
-            ctx.font = "15px 'Segoe UI', Arial, sans-serif";
+            ctx.font = "11px 'Segoe UI', Arial, sans-serif";
             ctx.fillStyle = "#ffffff";
-            ctx.fillText("📅 " + tglStr, 20, canvas.height - 44);
+            ctx.fillText("📅 " + tglStr, 12, canvas.height - 30);
 
-            ctx.font = "14px 'Segoe UI', Arial, sans-serif";
+            ctx.font = "10px 'Segoe UI', Arial, sans-serif";
             ctx.fillStyle = "#cbd5e1";
-            ctx.fillText("📍 MMBC Tour & Travel", 20, canvas.height - 18);
+            ctx.fillText("📍 MMBC Tour & Travel", 12, canvas.height - 12);
 
-            const base64Image = canvas.toDataURL("image/jpeg", 0.85);
+            const base64Image = canvas.toDataURL("image/jpeg", 0.65);
 
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
@@ -697,6 +687,22 @@
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
+            // Kirim foto dan absen masuk sekaligus dalam 1 request agar anti-lemot
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
+            })
+            .then(r => r.json())
+            .then(res => {
+                handleHasilAbsen(res);
+            })
+            .catch(err => {
+                // Fallback ke metode lama jika Apps Script belum support action gabungan
+                uploadSelfieTerpisah(base64Image);
+            });
+        }
+
+        function uploadSelfieTerpisah(base64Image) {
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
@@ -718,63 +724,67 @@
             })
             .then(r => r.json())
             .then(res => {
-                const overlay = document.getElementById("fullScreenOverlay");
-                const icon = document.getElementById("overlayIcon");
-                const title = document.getElementById("overlayTitle");
-                const nameEl = document.getElementById("overlayName");
-                const timeEl = document.getElementById("overlayTime");
-                const wifiEl = document.getElementById("overlayWifi");
-                const msgEl = document.getElementById("overlayMsg");
-
-                if (res.sukses) {
-                    let isPulang = res.tipe === "pulang";
-                    const nowWib = new Date();
-                    const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-                    const tglFormat = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
-
-                    if (isPulang) {
-                        overlay.className = "theme-pulang";
-                        icon.innerText = "🏡";
-                        title.innerText = "Absen Pulang Berhasil";
-                        msgEl.innerHTML = `Hati-hati di jalan, selamat beristirahat! <span class="waving-hand">👋</span>`;
-                    } else {
-                        overlay.className = "theme-masuk";
-                        icon.innerText = "🏢";
-                        title.innerText = "Absen Masuk Berhasil";
-                        msgEl.innerHTML = `Selamat bekerja, semoga harinya menyenangkan! <span class="waving-hand">👋</span>`;
-                    }
-
-                    nameEl.innerText = res.nama;
-                    timeEl.innerText = "📅 " + tglFormat;
-                    wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
-                    overlay.style.display = "flex";
-
-                    try {
-                        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(659.25, ctx.currentTime);
-                        gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                        osc.start();
-                        osc.stop(ctx.currentTime + 0.18);
-                    } catch(e) {}
-
-                } else {
-                    tampilkanPesanError(res.pesan);
-                    return;
-                }
-
-                setTimeout(() => {
-                    overlay.style.display = "none";
-                    resetScannerKamera();
-                }, 8000);
+                handleHasilAbsen(res);
             })
             .catch(err => {
-                tampilkanPesanError("Gangguan koneksi ke server.");
+                tampilkanPesanError("Gangguan koneksi, namun sistem sedang memproses.");
             });
+        }
+
+        function handleHasilAbsen(res) {
+            const overlay = document.getElementById("fullScreenOverlay");
+            const icon = document.getElementById("overlayIcon");
+            const title = document.getElementById("overlayTitle");
+            const nameEl = document.getElementById("overlayName");
+            const timeEl = document.getElementById("overlayTime");
+            const wifiEl = document.getElementById("overlayWifi");
+            const msgEl = document.getElementById("overlayMsg");
+
+            if (res.sukses) {
+                let isPulang = res.tipe === "pulang";
+                const nowWib = new Date();
+                const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                const tglFormat = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
+
+                if (isPulang) {
+                    overlay.className = "theme-pulang";
+                    icon.innerText = "🏡";
+                    title.innerText = "Absen Pulang Berhasil";
+                    msgEl.innerHTML = `Hati-hati di jalan, selamat beristirahat! <span class="waving-hand">👋</span>`;
+                } else {
+                    overlay.className = "theme-masuk";
+                    icon.innerText = "🏢";
+                    title.innerText = "Absen Masuk Berhasil";
+                    msgEl.innerHTML = `Selamat bekerja, semoga harinya menyenangkan! <span class="waving-hand">👋</span>`;
+                }
+
+                nameEl.innerText = res.nama;
+                timeEl.innerText = "📅 " + tglFormat;
+                wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
+                overlay.style.display = "flex";
+
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.18);
+                } catch(e) {}
+
+            } else {
+                tampilkanPesanError(res.pesan);
+                return;
+            }
+
+            setTimeout(() => {
+                overlay.style.display = "none";
+                resetScannerKamera();
+            }, 5000);
         }
 
         function tampilkanPesanError(pesan) {
