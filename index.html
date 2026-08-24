@@ -412,7 +412,8 @@
 
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
-            container.innerHTML = "Memuat jadwal dari Google Sheet...";
+            container.innerHTML = '<div class="spinner"></div><span>Sedang mengambil data jadwal...</span>';
+...
 
             fetch(API, {
                 method: "POST",
@@ -511,7 +512,8 @@
 
         function loadLogHariIni() {
             const container = document.getElementById('logContent');
-            container.innerHTML = "Memuat log absensi hari ini...";
+            container.innerHTML = '<div class="spinner"></div><span>Memuat log absensi...</span>';
+...
 
             fetch(API, {
                 method: "POST",
