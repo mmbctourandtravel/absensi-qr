@@ -63,14 +63,8 @@
         }
 
         @keyframes fadeInContainer {
-            from {
-                opacity: 0;
-                transform: translateY(12px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @media screen and (min-width: 900px) {
@@ -180,7 +174,7 @@
         table.rekap-table tr:nth-child(1) th { top: 0px; z-index: 30; }
         table.rekap-table tr:nth-child(2) th { top: 31px; z-index: 29; }
 
-        /* --- STICKY KOLOM NO, NAMA, SISA CUTI, TOTAL TELAT --- */
+        /* --- TAB JADWAL: HANYA KOLOM NO & NAMA YANG STICKY. SISA CUTI & TOTAL TELAT DILEPAS --- */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
             width: 35px !important; min-width: 35px !important; max-width: 35px !important;
             position: sticky !important; left: 0px !important; z-index: 20; 
@@ -190,52 +184,52 @@
             width: 155px !important; min-width: 155px !important; max-width: 155px !important;
             position: sticky !important; left: 35px !important; z-index: 20; 
             background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
-        }
-        table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3) { 
-            width: 60px !important; min-width: 60px !important; max-width: 60px !important;
-            position: sticky !important; left: 190px !important; z-index: 20; 
-            background: #f8fafc !important; font-weight: 600; color: #d97706; text-align: center !important;
-        }
-        table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
-            width: 60px !important; min-width: 60px !important; max-width: 60px !important;
-            position: sticky !important; left: 250px !important; z-index: 20; 
-            background: #f8fafc !important; font-weight: 600; color: #ea580c; text-align: center !important;
             border-right: 2px solid #cbd5e1 !important;
+        }
+        
+        /* Kolom Sisa Cuti & Total Telat dilepas sticky-nya agar ikut bergerak bebas ke samping */
+        table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3),
+        table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) {
+            position: static !important;
+            width: 65px !important; min-width: 65px !important;
         }
 
         /* MEMASTIKAN HEADER BARIS 1 & 2 MEMILIKI GARIS BAWAH YANG JELAS & ELEGAN */
-        table.rekap-table tr:nth-child(1) th:nth-child(-n+4) {
+        table.rekap-table tr:nth-child(1) th:nth-child(-n+2) {
             border-bottom: 1px solid #334155 !important;
         }
-        table.rekap-table tr:nth-child(2) th:nth-child(-n+4) {
+        table.rekap-table tr:nth-child(2) th:nth-child(-n+2) {
             border-bottom: 2px solid #334155 !important;
         }
 
-        /* TITIK PERTEMUAN SUDUT KIRI ATAS (DIKUNCI GANDA TOP & LEFT PRESISI) */
+        /* TITIK PERTEMUAN SUDUT KIRI ATAS TABEL JADWAL */
         table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 40 !important; background: #0f172a !important; left: 0px !important; top: 0px !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 40 !important; background: #0f172a !important; left: 35px !important; top: 0px !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(3), table.rekap-table tr:nth-child(2) th:nth-child(3) { z-index: 40 !important; background: #0f172a !important; left: 190px !important; top: 0px !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(4), table.rekap-table tr:nth-child(2) th:nth-child(4) { z-index: 40 !important; background: #0f172a !important; left: 250px !important; top: 0px !important; border-right: 2px solid #334155 !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 40 !important; background: #0f172a !important; left: 35px !important; top: 0px !important; border-right: 2px solid #334155 !important; }
 
         /* EFEK HOVER PADA BARIS TABEL JADWAL */
         table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
-        table.rekap-table tbody tr:hover td:nth-child(-n+4) { background: #f1f5f9 !important; }
+        table.rekap-table tbody tr:hover td:nth-child(-n+2) { background: #f1f5f9 !important; }
         table.rekap-table tbody tr.row-pembatas:hover td { background: #f1f5f9 !important; }
 
-        /* --- CSS KHUSUS TABEL LOG HARI INI --- */
-        table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
-        table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 8px 10px; background: #ffffff; text-align: center; }
+        /* --- CSS KHUSUS TABEL LOG HARI INI (NAMA STICKY & LEBIH JELAS) --- */
+        table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; white-space: nowrap; }
+        table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 10px 12px; background: #ffffff; text-align: center; }
         table.log-table th { background: #1e293b !important; color: #ffffff !important; position: sticky; top: 0; z-index: 5; } 
         
-        /* STICKY KOLOM NOMOR PADA TABEL LOG DI HP */
+        /* Kolom No di Log Hari Ini (Tidak Sticky) */
         table.log-table th:nth-child(1), table.log-table td:nth-child(1) {
-            width: 45px !important; min-width: 45px !important; max-width: 45px !important;
+            width: 45px !important; min-width: 45px !important; text-align: center; color: #64748b; font-weight: 600;
+        }
+
+        /* Kolom Nama di Log Hari Ini (STICKY DI KIRI) */
+        table.log-table th:nth-child(2), table.log-table td:nth-child(2) {
+            width: 160px !important; min-width: 160px !important; max-width: 160px !important;
             position: sticky !important; left: 0px !important; z-index: 4;
-            background: #f8fafc !important; color: #475569; font-weight: 600;
+            background: #f8fafc !important; color: #1e293b; font-weight: 600; text-align: left !important;
             border-right: 2px solid #cbd5e1 !important;
         }
-        table.log-table th:nth-child(1) { z-index: 6 !important; background: #1e293b !important; color: #ffffff !important; }
-        table.log-table tbody tr:hover td:nth-child(1) { background: #f1f5f9 !important; }
+        table.log-table th:nth-child(2) { z-index: 6 !important; background: #1e293b !important; color: #ffffff !important; }
+        table.log-table tbody tr:hover td:nth-child(2) { background: #f1f5f9 !important; }
 
         /* DESAIN BADGE STATUS JADWAL */
         .badge-shift { display: inline-block; padding: 2px 5px; border-radius: 4px; font-weight: 600; font-size: 11px; text-align: center; min-width: 28px; }
@@ -545,13 +539,11 @@
                             cellText = cellText !== "" ? cellText : "1";
                         }
 
-                        // Sesuai sheet: Kolom C (Sisa Cuti) & D (Total Telat) ada di colIndex 2 dan 3
                         if (rowIndex >= 2 && !isBarisKosong && (colIndex === 2 || colIndex === 3) && cellText === '') {
                             cellText = '0';
                         }
 
                         let isKolomPembatas = false;
-                        // Tanggal mulai dari colIndex 4 (kolom E di sheet)
                         if (colIndex >= 5) {
                             let headerVal1 = rows[0] && rows[0][colIndex] !== null ? String(rows[0][colIndex]).trim() : "";
                             let headerVal2 = rows[1] && rows[1][colIndex] !== null ? String(rows[1][colIndex]).trim() : "";
@@ -617,7 +609,8 @@
                 
                 rows.forEach((row, rowIndex) => {
                     html += '<tr>';
-                    // Memastikan kolom No tampil di sebelah kiri nama (di HP & Desktop)
+                    
+                    // Kolom No (Tidak sticky)
                     if (rowIndex === 0) {
                         html += `<th>No</th>`;
                     } else {
@@ -625,6 +618,7 @@
                         html += `<td>${nomorUrut}</td>`;
                     }
 
+                    // Kolom Data Lainnya (Kolom index 2 adalah Nama Staff -> Dijadikan Sticky)
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 1 || colIndex === 7) return; 
                         let cellText = cell !== null ? String(cell) : '';
@@ -663,7 +657,6 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                // Kolom nama pada log sekarang berada di indeks ke-2 (karena indeks ke-0 adalah kolom No baru)
                 let tdNama = tr[i].getElementsByTagName('td')[2];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
