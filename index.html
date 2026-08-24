@@ -107,18 +107,21 @@
         .rekap-wrapper { padding: 0; overflow-x: auto; max-height: 72vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
-        table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
+        
+        /* STICKY HEADER GANDA SUPAYA TIDAK IKUT TERTUTUP SAAT DIGESER */
+        table.rekap-table tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
+        table.rekap-table tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
 
         /* EFEK ZEBRA STRIPE HALUS */
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
         /* STICKY KOLOM NO & NAMA */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
-        #tabelJadwal th:nth-child(1) { z-index: 5; background: #f1f5f9; }
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
+        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 45px; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
-        #tabelJadwal th:nth-child(2) { z-index: 5; background: #f1f5f9; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 45px; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
         /* BADGE WARNA SHIFT JADWAL */
@@ -193,7 +196,7 @@
         </div>
     </div>
 
-    <!-- TAB 2: JADWAL (LOGO ATAS DIBALIKKAN DENGAN UKURAN LEBIH KECIL) -->
+    <!-- TAB 2: JADWAL -->
     <div id="tab-rekap" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -376,7 +379,7 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
 
-                    // Kolom No di samping Nama: Hanya diberi nomor jika kolom Nama (row[1]) tidak kosong
+                    // Kolom No: Hanya isi angka 1 sampai 35 khusus baris nama staff yang terisi. Baris bawahnya dikosongkan.
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
                         let noHeader = rowIndex === 0 ? 'No' : '';
@@ -385,7 +388,9 @@
                         let tag = 'td';
                         let namaStaffCell = row[1] !== null ? String(row[1]).trim() : '';
                         let nomorUrut = '';
-                        if (namaStaffCell !== '') {
+                        
+                        // Batasi penomoran hanya sampai maksimal 35 dan pastikan baris bawahnya kosong
+                        if (namaStaffCell !== '' && counterNo <= 35) {
                             nomorUrut = counterNo;
                             counterNo++;
                         }
