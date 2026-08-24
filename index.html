@@ -104,8 +104,8 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* MENTOK RAPAT DI DALAM KOTAK PUTIH TANPA CELAH */
-        .rekap-wrapper { padding: 0; overflow: auto; max-height: 75vh; position: relative; margin: 0; }
+        /* TABEL FULL MENTOK TANPA SISA RUANG PUTIH DI SEKELILINGNYA */
+        .rekap-wrapper { padding: 0; overflow: auto; max-height: 75vh; position: relative; margin: 0; width: 100%; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
@@ -119,7 +119,7 @@
         /* EFEK ZEBRA STRIPE */
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* STICKY KOLOM JADWAL (No & Nama mentok kiri) */
+        /* STICKY KOLOM JADWAL (No & Nama mentok kiri 0) */
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
@@ -128,7 +128,7 @@
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        /* STICKY KOLOM LOG HARI INI (Nama mentok kiri) */
+        /* STICKY KOLOM LOG HARI INI (Nama mentok kiri 0) */
         #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
@@ -805,7 +805,7 @@
                     qr.stop().then(() => {
                         jalankanProsesAbsen(decodedText);
                     }).catch(err => {
-                        jalankanPosesAbsen(decodedText);
+                        jalankanProsesAbsen(decodedText);
                     });
                 },
                 (err) => {}
