@@ -104,7 +104,7 @@
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-        /* --- STYLING ELEGAN TABEL JADWAL BULANAN --- */
+        /* --- STYLING ELEGAN TABEL JADWAL BULANAN (DENGAN GARIS KOTAK TIPIS) --- */
         .rekap-wrapper { 
             overflow: auto; 
             max-height: 65vh; 
@@ -125,8 +125,8 @@
         }
 
         table.rekap-table th, table.rekap-table td { 
-            border-bottom: 1px solid #f1f5f9; 
-            border-right: 1px solid #f1f5f9; 
+            border-bottom: 1px solid #cbd5e1 !important; 
+            border-right: 1px solid #cbd5e1 !important; 
             padding: 7px 7px; 
             text-align: center; 
             background: #ffffff; 
@@ -140,7 +140,8 @@
             letter-spacing: 0.4px; 
             position: sticky; 
             z-index: 5; 
-            box-shadow: inset 0 -1px 0 #334155;
+            border-bottom: 1px solid #334155 !important;
+            border-right: 1px solid #334155 !important;
         }
         table.rekap-table tr:nth-child(1) th { top: 0; z-index: 20; background: #0f172a !important; color: #ffffff !important; }
         table.rekap-table tr:nth-child(2) th { top: 31px; z-index: 19; background: #0f172a !important; color: #ffffff !important; }
@@ -153,7 +154,7 @@
         table.rekap-table th:nth-child(2), table.rekap-table td:nth-child(2) { 
             width: 155px !important; min-width: 155px !important; max-width: 155px !important;
             position: sticky !important; left: 35px !important; z-index: 4; background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
-            border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
+            border-right: 2px solid #94a3b8 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
         }
 
         /* KOLOM 3 (SISA CUTI) DAN KOLOM 4 (TOTAL TELAT) IKUT STICKY KE ATAS TETAPI TIDAK STICKY KIRI */
@@ -169,7 +170,7 @@
             z-index: 22 !important;
         }
         table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) {
-            border-right: 2px solid #e2e8f0 !important;
+            border-right: 2px solid #cbd5e1 !important;
         }
 
         /* KOLOM TANGGAL STANDARD */
@@ -185,7 +186,7 @@
             max-width: 10px !important;
             padding: 7px 0px !important;
             background: #f8fafc !important;
-            border-right: 2px solid #cbd5e1 !important;
+            border-right: 2px solid #94a3b8 !important;
             color: transparent !important;
             user-select: none;
         }
@@ -202,7 +203,7 @@
             font-size: 11px;
             color: #64748b;
             font-weight: 600;
-            border-bottom: 1px solid #e2e8f0 !important;
+            border-bottom: 1px solid #cbd5e1 !important;
         }
 
         /* PERTEMUAN TITIK UTAMA STICKY (KIRI ATAS - HEADER GANDA KOLOM 1 & 2) */
@@ -516,7 +517,6 @@
 
                         if (rowIndex === 0 && colIndex === 1) cellText = "1";
 
-                        // Deteksi kolom pembatas vertikal (kolom kosong antar minggu / setelah total telat yang header & isinya kosong)
                         let isKolomPembatas = false;
                         if (colIndex > 4) {
                             let headerVal1 = rows[0] && rows[0][colIndex] !== null ? String(rows[0][colIndex]).trim() : "";
