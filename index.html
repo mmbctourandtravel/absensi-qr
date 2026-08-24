@@ -480,7 +480,7 @@
 
 function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
-            container.innerHTML = "Memuat jadwal dari Google Sheet...";
+            container.innerHTML = '<div class="loading-rekap">Memuat jadwal dari Google Sheet...</div>';
 
             fetch(API, {
                 method: "POST",
@@ -499,7 +499,6 @@ function loadRekapBulanan() {
                 let counterNomor = 1;
 
                 rows.forEach((row, rowIndex) => {
-                    // Jangan skip baris pertama jika itu bagian dari header/data asli spreadsheet
                     let namaStaffCell = (row[1] !== null && row[1] !== undefined) ? String(row[1]).trim() : '';
 
                     if (namaStaffCell.toLowerCase() === "rahim sildea") {
@@ -524,15 +523,20 @@ function loadRekapBulanan() {
                             counterNomor++;
                         }
                     } else if (rowIndex === 0) {
-                        html += `<th>No</th>`; // Diperbaiki agar header baris 1 kolom No sesuai
+                        html += `<th>No</th>`; // Header baris 1 untuk kolom No
                     } else if (rowIndex === 1) {
-                        html += `<th></th>`; // Baris 2 kolom No dikosongkan untuk estetika sticky header
+                        html += `<th></th>`; // Header baris 2 untuk kolom No dikosongkan agar sejajar
                     }
 
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return; 
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell).trim() : '';
+
+                        // Khusus baris 0 kolom 1 (biasanya tempat angka tanggal 1), pastikan tampil sesuai data sheet
+                        if (rowIndex === 0 && colIndex === 1) {
+                            cellText = cellText !== "" ? cellText : "1";
+                        }
 
                         let isKolomPembatas = false;
                         if (colIndex > 4) {
