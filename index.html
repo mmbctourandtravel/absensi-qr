@@ -52,10 +52,10 @@
             .nav-tabs { max-width: 96% !important; }
         }
 
-        .header-brand { background: #f8fafc; padding: 15px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .logo-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
-        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
-        h1 { font-size: 18px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
+        .header-brand { background: #f8fafc; padding: 10px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
+        .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
+        h1 { font-size: 16px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
 
         .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
         .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
@@ -104,7 +104,7 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        .rekap-wrapper { padding: 0; overflow-x: auto; max-height: 75vh; position: relative; }
+        .rekap-wrapper { padding: 0; overflow-x: auto; max-height: 72vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
@@ -193,9 +193,14 @@
         </div>
     </div>
 
-    <!-- TAB 2: JADWAL (LOGO & PERIODE DIHAPUS SUPAYA MAKSIMAL DI HP) -->
+    <!-- TAB 2: JADWAL (LOGO ATAS DIBALIKKAN DENGAN UKURAN LEBIH KECIL) -->
     <div id="tab-rekap" class="container">
-        <div class="search-box-wrapper" style="border-top-left-radius: 20px; border-top-right-radius: 20px;">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1 id="judulBulanHeader">JADWAL BULANAN</h1>
+        </div>
+        <div class="search-box-wrapper">
             <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
         </div>
         <div class="rekap-wrapper">
@@ -265,6 +270,8 @@
         const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const currentDate = new Date();
         const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
+
+        document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
 
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
@@ -369,16 +376,20 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
 
-                    // Sisipkan Kolom No di samping Nama (index 1 pada array row)
+                    // Kolom No di samping Nama: Hanya diberi nomor jika kolom Nama (row[1]) tidak kosong
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
                         let noHeader = rowIndex === 0 ? 'No' : '';
                         html += `<${tag}>${noHeader}</${tag}>`;
                     } else {
                         let tag = 'td';
-                        let nomorUrut = counterNo <= 35 ? counterNo : '';
+                        let namaStaffCell = row[1] !== null ? String(row[1]).trim() : '';
+                        let nomorUrut = '';
+                        if (namaStaffCell !== '') {
+                            nomorUrut = counterNo;
+                            counterNo++;
+                        }
                         html += `<${tag}><b>${nomorUrut}</b></${tag}>`;
-                        counterNo++;
                     }
 
                     row.forEach((cell, colIndex) => {
@@ -470,7 +481,6 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
-                // Kolom Nama Staff sekarang berada di index td ke-1 (setelah kolom No di index 0)
                 let tdNama = tr[i].getElementsByTagName('td')[1];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
