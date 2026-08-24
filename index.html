@@ -172,19 +172,36 @@
             border-right: 2px solid #e2e8f0 !important;
         }
 
-        /* KOLOM TANGGAL (MULAI KOLOM KE-5 DAN SETERUSNYA) */
+        /* KOLOM TANGGAL STANDARD */
         table.rekap-table th:nth-child(n+5), table.rekap-table td:nth-child(n+5) {
             width: 40px !important; min-width: 40px !important; max-width: 40px !important;
         }
 
-        /* --- BARIS PEMBATAS/KOSONG DI BAWAH (DIJADIKAN SUPER TIPIS SEPERTI GARIS) --- */
+        /* KHUSUS KOLOM PEMBATAS VERTIKAL (AGAR TIPIS SEPERTI GARIS PEMBATAS ANTAR MINGGU) */
+        table.rekap-table th.col-pembatas-vertikal, 
+        table.rekap-table td.col-pembatas-vertikal {
+            width: 10px !important;
+            min-width: 10px !important;
+            max-width: 10px !important;
+            padding: 7px 0px !important;
+            background: #f8fafc !important;
+            border-right: 2px solid #cbd5e1 !important;
+            color: transparent !important;
+            user-select: none;
+        }
+        table.rekap-table tr:nth-child(1) th.col-pembatas-vertikal,
+        table.rekap-table tr:nth-child(2) th.col-pembatas-vertikal {
+            background: #0f172a !important;
+            border-right: 2px solid #334155 !important;
+        }
+
+        /* BARIS KOSONG HORIZONTAL KE BAWAH */
         table.rekap-table tr.row-pembatas td {
-            padding: 1px 4px !important;
-            height: 10px !important;
-            line-height: 8px !important;
-            font-size: 9px !important;
-            background: #f1f5f9 !important;
-            color: #94a3b8 !important;
+            padding: 3px 6px !important;
+            background: #f8fafc !important;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 600;
             border-bottom: 1px solid #e2e8f0 !important;
         }
 
@@ -195,7 +212,7 @@
         /* EFEK HOVER PADA BARIS TABEL */
         table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
         table.rekap-table tbody tr:hover td:nth-child(-n+2) { background: #f1f5f9 !important; }
-        table.rekap-table tbody tr.row-pembatas:hover td { background: #e2e8f0 !important; }
+        table.rekap-table tbody tr.row-pembatas:hover td { background: #f1f5f9 !important; }
 
         /* --- CSS KHUSUS TABEL LOG (HEADER TUNGGAL NORMAL) --- */
         table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
@@ -499,7 +516,19 @@
 
                         if (rowIndex === 0 && colIndex === 1) cellText = "1";
 
-                        if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
+                        // Deteksi kolom pembatas vertikal (kolom kosong antar minggu, misal kolom E, I, N, S, dll yang kosong di header)
+                        let isKolomPembatas = false;
+                        if (colIndex > 4) {
+                            let headerVal1 = rows[0] && rows[0][colIndex] !== null ? String(rows[0][colIndex]).trim() : "";
+                            let headerVal2 = rows[1] && rows[1][colIndex] !== null ? String(rows[1][colIndex]).trim() : "";
+                            if (headerVal1 === "" && headerVal2 === "") {
+                                isKolomPembatas = true;
+                            }
+                        }
+
+                        let extraClass = isKolomPembatas ? ' col-pembatas-vertikal' : '';
+
+                        if (!isBarisKosong && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
@@ -519,7 +548,7 @@
                             }
                         }
 
-                        html += `<${tag}>${cellText}</${tag}>`;
+                        html += `<${tag}${extraClass ? ' class="' + extraClass.trim() + '"' : ''}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
                 });
