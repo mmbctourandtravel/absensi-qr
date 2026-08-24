@@ -104,18 +104,22 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        .rekap-wrapper { padding: 0 10px 10px 10px; overflow-x: auto; max-height: 70vh; position: relative; }
+        .rekap-wrapper { padding: 0; overflow-x: auto; max-height: 75vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         table.rekap-table th { background: #f1f5f9; color: #1e293b; position: sticky; top: 0; z-index: 2; font-weight: bold; }
 
-        /* EFEK ZEBRA STRIPE HALUS (TIPIS) */
+        /* EFEK ZEBRA STRIPE HALUS */
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
-        #tabelJadwal th:nth-child(1) { z-index: 4; background: #f1f5f9; }
-        /* Memastikan warna kolom sticky kiri tetap mengikuti zebra */
+        /* STICKY KOLOM NO & NAMA */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
+        #tabelJadwal th:nth-child(1) { z-index: 5; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
+
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 45px; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        #tabelJadwal th:nth-child(2) { z-index: 5; background: #f1f5f9; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
         /* BADGE WARNA SHIFT JADWAL */
         .badge-shift {
@@ -189,14 +193,9 @@
         </div>
     </div>
 
-    <!-- TAB 2: JADWAL -->
+    <!-- TAB 2: JADWAL (LOGO & PERIODE DIHAPUS SUPAYA MAKSIMAL DI HP) -->
     <div id="tab-rekap" class="container">
-        <div class="header-brand">
-            <img src="logo.png" alt="Logo MMBC" class="logo-img">
-            <div class="logo-text">MMBC Tour & Travel</div>
-            <h1 id="judulBulanHeader">JADWAL BULANAN</h1>
-        </div>
-        <div class="search-box-wrapper">
+        <div class="search-box-wrapper" style="border-top-left-radius: 20px; border-top-right-radius: 20px;">
             <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
         </div>
         <div class="rekap-wrapper">
@@ -266,8 +265,6 @@
         const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const currentDate = new Date();
         const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
-
-        document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
 
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
@@ -365,12 +362,25 @@
                 }
                 window.loadedJadwal = true;
                 let rows = res.data;
-                let html = `<div style="font-weight: bold; font-size: 13px; color: #1e293b; margin: 8px 0; text-align: center;">📅 Periode: ${bulanBerjalan}</div>`;
-                html += '<table class="rekap-table" id="tabelJadwal">';
+                let html = '<table class="rekap-table" id="tabelJadwal">';
                 
+                let counterNo = 1;
                 rows.forEach((row, rowIndex) => {
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
+
+                    // Sisipkan Kolom No di samping Nama (index 1 pada array row)
+                    if (rowIndex === 0 || rowIndex === 1) {
+                        let tag = 'th';
+                        let noHeader = rowIndex === 0 ? 'No' : '';
+                        html += `<${tag}>${noHeader}</${tag}>`;
+                    } else {
+                        let tag = 'td';
+                        let nomorUrut = counterNo <= 35 ? counterNo : '';
+                        html += `<${tag}><b>${nomorUrut}</b></${tag}>`;
+                        counterNo++;
+                    }
+
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
@@ -460,7 +470,8 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[0];
+                // Kolom Nama Staff sekarang berada di index td ke-1 (setelah kolom No di index 0)
+                let tdNama = tr[i].getElementsByTagName('td')[1];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
