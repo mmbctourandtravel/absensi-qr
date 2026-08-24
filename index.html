@@ -100,64 +100,102 @@
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
-        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
-/* --- GLOBAL TABEL STYLES --- */
-.rekap-wrapper { 
-    overflow-x: auto; 
-    max-height: 60vh; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 12px; 
-    background: #ffffff; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
-    position: relative; 
-    margin-top: 10px; 
-}
+        .search-box-wrapper { padding: 12px 18px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
+        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-.search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-.search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
-.search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
-.loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
-footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
+        /* --- STYLING ELEGAN TABEL JADWAL BULANAN --- */
+        .rekap-wrapper { 
+            overflow: auto; 
+            max-height: 65vh; 
+            border: 1px solid #e2e8f0; 
+            background: #ffffff; 
+            position: relative; 
+        }
 
-/* --- CSS KHUSUS TABEL JADWAL (DENGAN STICKY HEADER GANDA) --- */
-table.jadwal-table-fixed { 
-    width: 100%; 
-    border-collapse: separate; 
-    border-spacing: 0; 
-    font-size: 11px; 
-    white-space: nowrap; 
-    table-layout: fixed; 
-}
-table.jadwal-table-fixed th, table.jadwal-table-fixed td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: center; background: #ffffff; box-sizing: border-box; }
+        .loading-rekap { text-align: center; padding: 40px; font-weight: 600; color: #64748b; font-size: 13px; }
+        footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
 
-/* Header Vertikal (Atas) */
-table.jadwal-table-fixed th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 5; }
-table.jadwal-table-fixed tr:nth-child(1) th { top: 0; z-index: 10; border-bottom: none; }
-table.jadwal-table-fixed tr:nth-child(2) th { top: 27px; z-index: 9; }
+        table.rekap-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+            font-size: 12px; 
+            white-space: nowrap; 
+        }
 
-/* Konfigurasi Kolom Sticky & Lebar (Jadwal) */
-table.jadwal-table-fixed th:nth-child(1), table.jadwal-table-fixed td:nth-child(1) { width: 25px !important; min-width: 25px !important; max-width: 25px !important; position: static !important; }
-table.jadwal-table-fixed th:nth-child(2), table.jadwal-table-fixed td:nth-child(2) { position: sticky !important; left: 25px !important; z-index: 4; background: #f8fafc !important; text-align: left; width: 160px !important; min-width: 160px !important; max-width: 160px !important; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1 !important; }
-table.jadwal-table-fixed th:nth-child(n+3), table.jadwal-table-fixed td:nth-child(n+3) { position: static !important; width: 45px !important; min-width: 45px !important; max-width: 45px !important; }
+        table.rekap-table th, table.rekap-table td { 
+            border-bottom: 1px solid #f1f5f9; 
+            border-right: 1px solid #f1f5f9; 
+            padding: 9px 12px; 
+            text-align: center; 
+            background: #ffffff; 
+        }
 
-/* Pertemuan Pojok Kiri Atas (Header Sticky) */
-table.jadwal-table-fixed tr:nth-child(1) th:nth-child(1), table.jadwal-table-fixed tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; }
-table.jadwal-table-fixed tr:nth-child(1) th:nth-child(2), table.jadwal-table-fixed tr:nth-child(2) th:nth-child(2) { z-index: 11; background: #1e293b !important; left: 25px !important; }
+        /* STICKY HEADER GANDA (BARIS 1 & 2) */
+        table.rekap-table th { 
+            background: #0f172a !important; 
+            color: #ffffff !important; 
+            font-weight: 600; 
+            letter-spacing: 0.4px; 
+            position: sticky; 
+            z-index: 5; 
+            box-shadow: inset 0 -1px 0 #334155;
+        }
+        table.rekap-table tr:nth-child(1) th { top: 0; z-index: 20; }
+        table.rekap-table tr:nth-child(2) th { top: 35px; z-index: 19; }
 
-/* --- CSS KHUSUS TABEL LOG (HEADER TUNGGAL NORMAL) --- */
-table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
-table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; background: #ffffff; }
-table.log-table th { background: #1e293b !important; color: #ffffff !important; position: sticky; top: 0; z-index: 5; }
-table.log-table td { text-align: center; }
+        /* STICKY KOLOM NOMOR & NAMA STAFF DI KIRI */
+        /* Kolom 1 (No) */
+        table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
+            width: 45px !important; 
+            min-width: 45px !important; 
+            position: sticky !important; 
+            left: 0 !important; 
+            z-index: 4; 
+            background: #f8fafc !important; 
+            color: #475569;
+            font-weight: 600;
+        }
+        /* Kolom 2 (Nama Staff) */
+        table.rekap-table th:nth-child(2), table.rekap-table td:nth-child(2) { 
+            width: 175px !important; 
+            min-width: 175px !important; 
+            max-width: 175px !important; 
+            position: sticky !important; 
+            left: 45px !important; 
+            z-index: 4; 
+            background: #f8fafc !important; 
+            text-align: left !important; 
+            font-weight: 600;
+            color: #1e293b;
+            border-right: 2px solid #cbd5e1 !important; 
+            box-shadow: 4px 0 8px rgba(0,0,0,0.03);
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
 
-/* DESAIN BADGE STATUS JADWAL (S1 & S2 WARNA SAMA, TULISAN BEDA) */
-.badge-shift { display: inline-block; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; text-align: center; min-width: 32px; }
-.badge-s1, .badge-s2 { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-.badge-off { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-.badge-cuti { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-.badge-tlt { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+        /* PERTEMUAN TITIK UTAMA STICKY (KIRI ATAS - HEADER HEADER) */
+        table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 25 !important; background: #0f172a !important; left: 0 !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 25 !important; background: #0f172a !important; left: 45px !important; border-right: 2px solid #334155 !important; }
+
+        /* EFEK HOVER & ZEBAR STRIPE ELEGAN PADA BARIS TABEL */
+        table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
+        table.rekap-table tbody tr:hover td:nth-child(1), 
+        table.rekap-table tbody tr:hover td:nth-child(2) { background: #f1f5f9 !important; }
+
+        /* --- CSS KHUSUS TABEL LOG (HEADER TUNGGAL NORMAL) --- */
+        table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
+        table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; background: #ffffff; }
+        table.log-table th { background: #1e293b !important; color: #ffffff !important; position: sticky; top: 0; z-index: 5; }
+        table.log-table td { text-align: center; }
+
+        /* DESAIN BADGE STATUS JADWAL MODERN & ELEGAN */
+        .badge-shift { display: inline-block; padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; text-align: center; min-width: 34px; letter-spacing: 0.3px; }
+        .badge-s1, .badge-s2 { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .badge-off { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .badge-cuti { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .badge-tlt { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
     </style>
 </head>
 <body>
@@ -221,6 +259,10 @@ table.log-table td { text-align: center; }
         </div>
         <div class="search-box-wrapper">
             <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
+        </div>
+        <div style="background: #f8fafc; padding: 8px 15px; font-weight: 600; font-size: 12px; color: #334155; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+            <span id="periodeJadwalText">📅 Periode: Memuat...</span>
+            <span style="font-size: 11px; color: #64748b; font-weight: normal;">Geser tabel ke samping 👉</span>
         </div>
         <div class="rekap-wrapper">
             <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
@@ -291,6 +333,7 @@ table.log-table td { text-align: center; }
         const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
 
         document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
+        document.getElementById("periodeJadwalText").innerText = "📅 Periode: " + bulanBerjalan;
 
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
@@ -401,8 +444,7 @@ table.log-table td { text-align: center; }
                 }
                 window.loadedJadwal = true;
                 let rows = res.data;
-                let html = `<div style="font-weight: bold; font-size: 13px; color: #1e293b; margin: 8px 0; text-align: center;">📅 Periode: ${bulanBerjalan}</div>`;
-                html += '<table class="rekap-table" id="tabelJadwal">';
+                let html = '<table class="rekap-table" id="tabelJadwal">';
                 
                 rows.forEach((row, rowIndex) => {
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
@@ -423,7 +465,7 @@ table.log-table td { text-align: center; }
                             let badgeClass = "";
                             
                             if (upperVal === "S1") badgeClass = "badge-shift badge-s1";
-                            else if (upperVal === "S2") badgeClass = "badge-shift badge-s2"; // Warna sama dengan S1
+                            else if (upperVal === "S2") badgeClass = "badge-shift badge-s2"; 
                             else if (upperVal === "OFF" || upperVal === "LIBUR") badgeClass = "badge-shift badge-off";
                             else if (upperVal.includes("CUTI")) badgeClass = "badge-shift badge-cuti";
                             else if (upperVal === "TLT" || upperVal === "T") badgeClass = "badge-shift badge-tlt";
@@ -444,57 +486,54 @@ table.log-table td { text-align: center; }
         }
 
         function loadLogHariIni() {
-    const container = document.getElementById('logContent');
-    container.innerHTML = "Memuat log absensi hari ini...";
+            const container = document.getElementById('logContent');
+            container.innerHTML = "Memuat log absensi hari ini...";
 
-    fetch(API, {
-        method: "POST",
-        body: JSON.stringify({ action: "getLogHariIni" })
-    })
-    .then(r => r.json())
-    .then(res => {
-        if(!res.sukses) {
-            container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
-            return;
-        }
-        let rows = res.data;
-        if(!rows || rows.length <= 1) {
-            container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
-            return;
-        }
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getLogHariIni" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
+                    return;
+                }
+                let rows = res.data;
+                if(!rows || rows.length <= 1) {
+                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
+                    return;
+                }
 
-        let totalData = rows.length - 1;
-        // PENTING: GUNAKAN KELAS CSS 'log-table' BUKAN 'rekap-table'
-        let html = '<table class="log-table" id="tabelLog">';
-        
-        rows.forEach((row, rowIndex) => {
-            html += '<tr>';
-            if (rowIndex === 0) {
-                html += `<th>No</th>`;
-            } else {
-                let nomorUrut = totalData - (rowIndex - 1);
-                html += `<td>${nomorUrut}</td>`;
-            }
+                let totalData = rows.length - 1;
+                let html = '<table class="log-table" id="tabelLog">';
+                
+                rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        let nomorUrut = totalData - (rowIndex - 1);
+                        html += `<td>${nomorUrut}</td>`;
+                    }
 
-            row.forEach((cell, colIndex) => {
-                // Abaikan kolom ID (indeks 1) dan Foto (indeks 7)
-                if (colIndex === 1 || colIndex === 7) return; 
-                let cellText = cell !== null ? String(cell) : '';
-                let tag = rowIndex === 0 ? 'th' : 'td';
-                // Tambahkan kelas khusus untuk sel tanggal agar rata kiri
-                let cellClass = colIndex === 2 ? ' style="text-align:left;"' : ''; 
-                html += `<${tag}${cellClass}>${cellText}</${tag}>`;
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 1 || colIndex === 7) return; 
+                        let cellText = cell !== null ? String(cell) : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+                        let cellClass = colIndex === 2 ? ' style="text-align:left;"' : ''; 
+                        html += `<${tag}${cellClass}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => { 
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
+                console.error(err);
             });
-            html += '</tr>';
-        });
-        html += '</table>';
-        container.innerHTML = html;
-    })
-    .catch(err => { 
-        container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
-        console.error(err);
-    });
-}
+        }
 
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
@@ -502,7 +541,7 @@ table.log-table td { text-align: center; }
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[0];
+                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom 1 adalah Nama Staff
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
