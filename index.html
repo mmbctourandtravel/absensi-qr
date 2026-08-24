@@ -104,33 +104,6 @@
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-        /* --- STYLING LOADING MODERN & PROFESIONAL --- */
-        .loading-rekap { 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            font-weight: 600; 
-            color: #64748b; 
-            font-size: 13px;
-            gap: 12px;
-            background: #ffffff;
-            min-height: 250px;
-        }
-        .spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid #2563eb;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         /* --- STYLING TABEL JADWAL BULANAN (RAPAT & KUNCI PRESISI TANPA CELAH PUTIH) --- */
         .rekap-wrapper { 
             overflow: auto; 
@@ -274,10 +247,7 @@
             <span style="font-size: 11px; color: #64748b; font-weight: normal;">Geser tabel ke samping 👉</span>
         </div>
         <div class="rekap-wrapper">
-            <div id="rekapContent" class="loading-rekap">
-                <div class="spinner"></div>
-                <span>Memuat jadwal dari Google Sheet...</span>
-            </div>
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
         </div>
     </div>
 
@@ -292,10 +262,7 @@
             <input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari nama staff yang sudah scan..." onkeyup="filterTabelLog()">
         </div>
         <div class="rekap-wrapper">
-            <div id="logContent" class="loading-rekap">
-                <div class="spinner"></div>
-                <span>Memuat log absensi hari ini...</span>
-            </div>
+            <div id="logContent" class="loading-rekap">Memuat log absensi hari ini...</div>
         </div>
     </div>
 
@@ -445,7 +412,7 @@
 
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
-            container.innerHTML = '<div class="spinner"></div><span>Memuat jadwal dari Google Sheet...</span>';
+            container.innerHTML = "Memuat jadwal dari Google Sheet...";
 
             fetch(API, {
                 method: "POST",
@@ -544,7 +511,7 @@
 
         function loadLogHariIni() {
             const container = document.getElementById('logContent');
-            container.innerHTML = '<div class="spinner"></div><span>Memuat log absensi hari ini...</span>';
+            container.innerHTML = "Memuat log absensi hari ini...";
 
             fetch(API, {
                 method: "POST",
