@@ -516,7 +516,7 @@
 
                         if (rowIndex === 0 && colIndex === 1) cellText = "1";
 
-                        // Deteksi kolom pembatas vertikal (kolom kosong antar minggu, misal kolom E, I, N, S, dll yang kosong di header)
+                        // Deteksi kolom pembatas vertikal (kolom kosong antar minggu / setelah total telat yang header & isinya kosong)
                         let isKolomPembatas = false;
                         if (colIndex > 4) {
                             let headerVal1 = rows[0] && rows[0][colIndex] !== null ? String(rows[0][colIndex]).trim() : "";
