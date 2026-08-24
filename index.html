@@ -127,12 +127,12 @@
         table.rekap-table th, table.rekap-table td { 
             border-bottom: 1px solid #f1f5f9; 
             border-right: 1px solid #f1f5f9; 
-            padding: 7px 7px; /* Diperkecil agar sangat kompak dan rapi */
+            padding: 7px 7px; 
             text-align: center; 
             background: #ffffff; 
         }
 
-        /* STICKY HEADER HANYA BARIS 1 & 2 (HARI & TANGGAL) */
+        /* STICKY HEADER HANYA BARIS 1 & 2 */
         table.rekap-table th { 
             background: #0f172a !important; 
             color: #ffffff !important; 
@@ -145,7 +145,7 @@
         table.rekap-table tr:nth-child(1) th { top: 0; z-index: 20; }
         table.rekap-table tr:nth-child(2) th { top: 31px; z-index: 19; }
 
-        /* PENGATURAN LEBAR & STICKY KOLOM KIRI (NO & NAMA STAFF SAJA) */
+        /* PENGATURAN LEBAR & STICKY HANYA UNTUK KOLOM 1 (NO) DAN KOLOM 2 (NAMA) */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
             width: 35px !important; min-width: 35px !important; max-width: 35px !important;
             position: sticky !important; left: 0 !important; z-index: 4; background: #f8fafc !important; color: #475569; font-weight: 600;
@@ -156,24 +156,24 @@
             border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
         }
 
-        /* Kolom Sisa Cuti & Total Telat (TIDAK STICKY, MENGIKUTI SCROLL) */
-        table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3) { 
-            width: 42px !important; min-width: 42px !important; max-width: 42px !important;
+        /* KOLOM 3 (SISA CUTI) DAN KOLOM 4 (TOTAL TELAT) IKUT SCROLL BIASA (TIDAK STICKY) */
+        table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3),
+        table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
+            width: 45px !important; min-width: 45px !important; max-width: 45px !important;
             position: static !important; background: #ffffff !important; font-weight: 600; color: #475569;
         }
-        table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
-            width: 42px !important; min-width: 42px !important; max-width: 42px !important;
-            position: static !important; background: #ffffff !important; font-weight: 600; color: #475569; border-right: 2px solid #e2e8f0 !important;
+        table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) {
+            border-right: 2px solid #e2e8f0 !important;
         }
 
-        /* Kolom Tanggal (Kompak & Rapi) */
+        /* KOLOM TANGGAL (MULAI KOLOM KE-5 DAN SETERUSNYA) */
         table.rekap-table th:nth-child(n+5), table.rekap-table td:nth-child(n+5) {
             width: 40px !important; min-width: 40px !important; max-width: 40px !important;
         }
 
-        /* KHUSUS BARIS PEMBATAS/KOSONG DI BAWAH (Dibuat sangat tipis & rapat) */
+        /* KHUSUS BARIS PEMBATAS/KOSONG DI BAWAH (SANGAT RAPAT & TIPIS) */
         table.rekap-table tr.row-pembatas td {
-            padding: 4px 6px !important;
+            padding: 3px 6px !important;
             background: #f8fafc !important;
             font-size: 11px;
             color: #64748b;
@@ -459,14 +459,13 @@
                     let namaStaffCell = (row[1] !== null && row[1] !== undefined) ? String(row[1]).trim() : '';
                     let isBarisKosong = (namaStaffCell === "" && rowIndex >= 2);
 
-                    // Tambahkan kelas khusus 'row-pembatas' jika baris kosong di bawah
                     if (isBarisKosong) {
                         html += '<tr class="row-pembatas">';
                     } else {
                         html += '<tr>';
                     }
                     
-                    // Kolom No Urut (Hanya untuk baris staff aktif, dikosongkan untuk baris pembatas)
+                    // Kolom No Urut (Hanya untuk baris staff aktif)
                     if (rowIndex >= 2) {
                         if (isBarisKosong) {
                             html += `<td></td>`;
