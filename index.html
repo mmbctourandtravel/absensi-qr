@@ -44,8 +44,35 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
-        .container.active { display: block; }
+        /* --- PERBAIKAN TRANSISI TAB LEBIH ELEGAN & PROFESIONAL --- */
+        .container { 
+            width: 100%; 
+            max-width: 600px; 
+            background: #ffffff; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); 
+            overflow: hidden; 
+            display: none; 
+            opacity: 0;
+            transform: translateY(10px);
+            transition: max-width 0.3s; 
+            position: relative; 
+        }
+        .container.active { 
+            display: block; 
+            animation: fadeInContainer 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInContainer {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
         @media screen and (min-width: 900px) {
             #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 96% !important; }
@@ -144,7 +171,7 @@
         table.rekap-table tr:nth-child(1) th { top: 0px; z-index: 30; }
         table.rekap-table tr:nth-child(2) th { top: 31px; z-index: 29; }
 
-        /* KOLOM KIRI (NO & NAMA) YANG DIKUNCI DI KIRI (LEFT: 0px & 35px) */
+        /* --- PERBAIKAN GARIS & HEADER KOLOM NO & NAMA AGAR SELARAS --- */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
             width: 35px !important; min-width: 35px !important; max-width: 35px !important;
             position: sticky !important; left: 0px !important; z-index: 20; 
@@ -154,7 +181,15 @@
             width: 155px !important; min-width: 155px !important; max-width: 155px !important;
             position: sticky !important; left: 35px !important; z-index: 20; 
             background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
-            border-right: 2px solid #94a3b8 !important; 
+            border-right: 2px solid #cbd5e1 !important; /* Disesuaikan agar konsisten dengan warna border tabel lainnya */
+        }
+
+        /* MEMASTIKAN HEADER BARIS 1 & 2 PADA KOLOM NO & NAMA MEMILIKI GARIS BAWAH YANG JELAS & ELEGAN */
+        table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(1) th:nth-child(2) {
+            border-bottom: 1px solid #334155 !important;
+        }
+        table.rekap-table tr:nth-child(2) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(2) {
+            border-bottom: 2px solid #334155 !important;
         }
 
         /* TITIK PERTEMUAN SUDUT KIRI ATAS (DIKUNCI GANDA TOP & LEFT PRESISI) */
