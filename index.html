@@ -355,8 +355,6 @@
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => {
                 el.classList.remove('active');
-                // Reset animasi dengan teknik reflow
-                void el.offsetWidth; 
             });
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
@@ -376,11 +374,10 @@
 
             if(targetId) {
                 let targetEl = document.getElementById(targetId);
-                targetEl.style.display = 'block';
-                // Trigger ulang animasi transisi
+                // Pakai setTimeout singkat agar browser sempat membaca penghapusan class sebelumnya (reflow)
                 setTimeout(() => {
                     targetEl.classList.add('active');
-                }, 10);
+                }, 20);
             }
             
             btn.classList.add('active');
