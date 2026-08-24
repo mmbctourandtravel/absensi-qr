@@ -112,6 +112,22 @@
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 3; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal th:nth-child(1) { z-index: 4; background: #f1f5f9; }
 
+        /* CSS BADGE WARNA SHIFT JADWAL */
+        .badge-shift {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 38px;
+            border: 1px solid transparent;
+        }
+        .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+        .shift-off { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
+        .shift-cuti, .shift-tlt { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
+        .shift-wfh, .shift-l { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; }
+
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
     </style>
@@ -354,10 +370,28 @@
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
+                        
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
+
+                        // Ubah teks shift menjadi badge berwarna untuk baris data (mulai baris ke-3 / index >= 2)
+                        if (tag === 'td' && colIndex > 1 && cellText !== '') {
+                            let upperVal = cellText.toUpperCase();
+                            let badgeClass = 'badge-shift ';
+                            if (upperVal.includes('S1') || upperVal.includes('S2') || upperVal.includes('S3')) {
+                                badgeClass += 'shift-s1';
+                            } else if (upperVal.includes('OFF')) {
+                                badgeClass += 'shift-off';
+                            } else if (upperVal.includes('CUTI') || upperVal.includes('TLT') || upperVal.includes('T')) {
+                                badgeClass += 'shift-cuti';
+                            } else {
+                                badgeClass += 'shift-wfh';
+                            }
+                            cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                        }
+
                         html += `<${tag}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
@@ -401,7 +435,7 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; // Skip ID Staff (1) & Foto Selfie (7)
+                        if (colIndex === 1 || colIndex === 7) return; 
                         let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
                         html += `<${tag}>${cellText}</${tag}>`;
@@ -436,7 +470,6 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                // Kolom Nama Staff berada di index td ke-2 pada tabel Log yang dirender (No=0, Tanggal=1, Nama=2)
                 let tdNama = tr[i].getElementsByTagName('td')[2];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
