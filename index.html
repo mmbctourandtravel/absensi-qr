@@ -104,11 +104,12 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        .rekap-wrapper { padding: 0; overflow-x: auto; max-height: 72vh; position: relative; }
+        /* KITA PERLUAS MAX-HEIGHT SUPAYA BARIS BAWAH BISA TERLIHAT DENGAN NYAMAN */
+        .rekap-wrapper { padding: 0; overflow: auto; max-height: 80vh; position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
-        /* STICKY HEADER GANDA SUPAYA TIDAK IKUT TERTUTUP SAAT DIGESER */
+        /* STICKY HEADER GANDA */
         table.rekap-table tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
         table.rekap-table tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
 
@@ -379,7 +380,7 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
 
-                    // Kolom No: Hanya isi angka 1 sampai 35 khusus baris nama staff yang terisi. Baris bawahnya dikosongkan.
+                    // Kolom No: Hanya isi angka 1 sampai 35 khusus baris nama staff. Baris bawah dikosongkan.
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
                         let noHeader = rowIndex === 0 ? 'No' : '';
@@ -389,7 +390,6 @@
                         let namaStaffCell = row[1] !== null ? String(row[1]).trim() : '';
                         let nomorUrut = '';
                         
-                        // Batasi penomoran hanya sampai maksimal 35 dan pastikan baris bawahnya kosong
                         if (namaStaffCell !== '' && counterNo <= 35) {
                             nomorUrut = counterNo;
                             counterNo++;
