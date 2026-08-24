@@ -156,7 +156,7 @@
             border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
         }
 
-        /* KOLOM 3 (SISA CUTI) DAN KOLOM 4 (TOTAL TELAT) IKUT STICKY KE ATAS (SEJAJAR DENGAN HEADER) TETAPI TIDAK STICKY KIRI */
+        /* KOLOM 3 (SISA CUTI) DAN KOLOM 4 (TOTAL TELAT) IKUT STICKY KE ATAS TETAPI TIDAK STICKY KIRI */
         table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3),
         table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
             width: 45px !important; min-width: 45px !important; max-width: 45px !important;
@@ -177,9 +177,11 @@
             width: 40px !important; min-width: 40px !important; max-width: 40px !important;
         }
 
-        /* KHUSUS BARIS PEMBATAS/KOSONG DI BAWAH (SANGAT RAPAT, TIPIS, DAN SERAGAM) */
+        /* KHUSUS BARIS PEMBATAS/KOSONG DI BAWAH (SANGAT KECIL, TIPIS, DAN PADAT SEPERTI GARIS MENYAMPING) */
         table.rekap-table tr.row-pembatas td {
-            padding: 3px 6px !important;
+            padding: 2px 4px !important;
+            height: 18px !important;
+            line-height: 14px !important;
             background: #f8fafc !important;
             font-size: 11px;
             color: #64748b;
@@ -464,6 +466,13 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     
                     let namaStaffCell = (row[1] !== null && row[1] !== undefined) ? String(row[1]).trim() : '';
+
+                    // Override otomatis typo nama staff di sheet (rahim sildea -> Sildea Rahmi)
+                    if (namaStaffCell.toLowerCase() === "rahim sildea") {
+                        row[1] = "Sildea Rahmi";
+                        namaStaffCell = "Sildea Rahmi";
+                    }
+
                     let isBarisKosong = (namaStaffCell === "" && rowIndex >= 2);
 
                     if (isBarisKosong) {
@@ -472,7 +481,7 @@
                         html += '<tr>';
                     }
                     
-                    // Kolom No Urut (Hanya sampai nomor 35 untuk staff aktif, setelah itu dikosongkan)
+                    // Kolom No Urut (Hanya sampai nomor 35, override teks "Tidak" jadi "No")
                     if (rowIndex >= 2) {
                         if (isBarisKosong || counterNomor > 35) {
                             html += `<td></td>`;
@@ -483,13 +492,16 @@
                     } else if (rowIndex === 0) {
                         html += `<th>1</th>`;
                     } else if (rowIndex === 1) {
-                        html += `<th>No</th>`;
+                        html += `<th>No</th>`; // Override teks "Tidak" menjadi "No" secara presisi
                     }
 
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return; // Abaikan kolom ID
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell).trim() : '';
+
+                        // Jika baris pertama / header, pastikan bersih
+                        if (rowIndex === 0 && colIndex === 1) cellText = "1";
 
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
