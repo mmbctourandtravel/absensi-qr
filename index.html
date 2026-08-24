@@ -104,23 +104,23 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* TABEL FULL MENTOK TANPA SISA RUANG PUTIH DI SEKELILINGNYA */
-        .rekap-wrapper { padding: 0; overflow: auto; max-height: 75vh; position: relative; margin: 0; width: 100%; }
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0; }
+        /* PERBAIKAN UTAMA: TABEL FULL MENTOK TANPA CELAH PUTIH DI KIRI & ATAS KOTAK */
+        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; }
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0 !important; border: none !important; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
         /* STICKY HEADER GANDA JADWAL */
-        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
+        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
         #tabelJadwal tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
 
         /* STICKY HEADER LOG HARI INI */
-        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
+        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
 
         /* EFEK ZEBRA STRIPE */
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* STICKY KOLOM JADWAL (No & Nama mentok kiri 0) */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
+        /* STICKY KOLOM JADWAL (No & Nama MENTOK KIRI TANPA CELAH) */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
@@ -128,8 +128,8 @@
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        /* STICKY KOLOM LOG HARI INI (Nama mentok kiri 0) */
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        /* STICKY KOLOM LOG HARI INI (Nama MENTOK KIRI TANPA CELAH) */
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
 
@@ -239,12 +239,12 @@
     <div id="tab-admin" class="container" style="max-width: 450px !important;">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
-            <h1></h1>
+            <h1>Admin Panel Wi-Fi</h1>
         </div>
         
         <!-- KOTAK LOGIN PASSWORD ADMIN -->
         <div id="authOverlay" style="padding: 25px; text-align: center;">
-            <h2>🔒Admin</h2>
+            <h2>🔒 Keamanan Admin</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
             <button onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
