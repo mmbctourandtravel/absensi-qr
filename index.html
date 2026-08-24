@@ -145,29 +145,34 @@
         table.rekap-table tr:nth-child(1) th { top: 0; z-index: 20; }
         table.rekap-table tr:nth-child(2) th { top: 35px; z-index: 19; }
 
-        /* PENGATURAN LEBAR & STICKY KOLOM KIRI (NO, NAMA, SISA, CUTI, TOTAL, TELAT) */
+        /* PENGATURAN LEBAR & STICKY KOLOM KIRI YANG PRESISI */
+        /* Kolom 1: No */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
-            width: 40px !important; min-width: 40px !important; max-width: 40px !important;
+            width: 35px !important; min-width: 35px !important; max-width: 35px !important;
             position: sticky !important; left: 0 !important; z-index: 4; background: #f8fafc !important; color: #475569; font-weight: 600;
         }
+        /* Kolom 2: Nama Staff (Dilebarkan agar nama tidak terpotong) */
         table.rekap-table th:nth-child(2), table.rekap-table td:nth-child(2) { 
-            width: 165px !important; min-width: 165px !important; max-width: 165px !important;
-            position: sticky !important; left: 40px !important; z-index: 4; background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
+            width: 150px !important; min-width: 150px !important; max-width: 150px !important;
+            position: sticky !important; left: 35px !important; z-index: 4; background: #f8fafc !important; text-align: left !important; font-weight: 600; color: #1e293b;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
+        /* Kolom 3: Sisa Cuti */
         table.rekap-table th:nth-child(3), table.rekap-table td:nth-child(3) { 
-            width: 55px !important; min-width: 55px !important; max-width: 55px !important;
-            position: sticky !important; left: 205px !important; z-index: 4; background: #f8fafc !important; font-weight: 600; color: #475569;
+            width: 50px !important; min-width: 50px !important; max-width: 50px !important;
+            position: sticky !important; left: 185px !important; z-index: 4; background: #f8fafc !important; font-weight: 600; color: #475569;
         }
+        /* Kolom 4: Total Telat (Diberi border pembatas tegas di sebelah kanan) */
         table.rekap-table th:nth-child(4), table.rekap-table td:nth-child(4) { 
-            width: 55px !important; min-width: 55px !important; max-width: 55px !important;
-            position: sticky !important; left: 260px !important; z-index: 4; background: #f8fafc !important; font-weight: 600; color: #475569; border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
+            width: 50px !important; min-width: 50px !important; max-width: 50px !important;
+            position: sticky !important; left: 235px !important; z-index: 4; background: #f8fafc !important; font-weight: 600; color: #475569; border-right: 2px solid #cbd5e1 !important; box-shadow: 4px 0 8px rgba(0,0,0,0.03);
         }
 
-        /* PERTEMUAN TITIK UTAMA STICKY (KIRI ATAS - HEADER HEADER) */
+        /* PERTEMUAN TITIK UTAMA STICKY (KIRI ATAS - HEADER GANDA) */
         table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 25 !important; background: #0f172a !important; left: 0 !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 25 !important; background: #0f172a !important; left: 40px !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(3), table.rekap-table tr:nth-child(2) th:nth-child(3) { z-index: 25 !important; background: #0f172a !important; left: 205px !important; }
-        table.rekap-table tr:nth-child(1) th:nth-child(4), table.rekap-table tr:nth-child(2) th:nth-child(4) { z-index: 25 !important; background: #0f172a !important; left: 260px !important; border-right: 2px solid #334155 !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 25 !important; background: #0f172a !important; left: 35px !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(3), table.rekap-table tr:nth-child(2) th:nth-child(3) { z-index: 25 !important; background: #0f172a !important; left: 185px !important; }
+        table.rekap-table tr:nth-child(1) th:nth-child(4), table.rekap-table tr:nth-child(2) th:nth-child(4) { z-index: 25 !important; background: #0f172a !important; left: 235px !important; border-right: 2px solid #334155 !important; }
 
         /* EFEK HOVER & ZEBRA STRIPE PADA BARIS TABEL */
         table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
@@ -530,7 +535,8 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 2; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom indeks ke-1 adalah Nama Staff
+                // Di tabel jadwal, Kolom indeks ke-1 adalah Nama Staff
+                let tdNama = tr[i].getElementsByTagName('td')[1]; 
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -544,8 +550,8 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                // Di tabel log: Kolom ke-0 (No), Kolom ke-1 (Nama Staff)
-                let tdNama = tr[i].getElementsByTagName('td')[1];
+                // Di tabel log setelah penomoran, Kolom indeks ke-2 adalah Nama Staff
+                let tdNama = tr[i].getElementsByTagName('td')[2];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
