@@ -177,15 +177,14 @@
             width: 40px !important; min-width: 40px !important; max-width: 40px !important;
         }
 
-        /* KHUSUS BARIS PEMBATAS/KOSONG DI BAWAH (SANGAT KECIL, TIPIS, DAN PADAT SEPERTI GARIS MENYAMPING) */
+        /* --- BARIS PEMBATAS/KOSONG DI BAWAH (DIJADIKAN SUPER TIPIS SEPERTI GARIS) --- */
         table.rekap-table tr.row-pembatas td {
-            padding: 2px 4px !important;
-            height: 18px !important;
-            line-height: 14px !important;
-            background: #f8fafc !important;
-            font-size: 11px;
-            color: #64748b;
-            font-weight: 600;
+            padding: 1px 4px !important;
+            height: 10px !important;
+            line-height: 8px !important;
+            font-size: 9px !important;
+            background: #f1f5f9 !important;
+            color: #94a3b8 !important;
             border-bottom: 1px solid #e2e8f0 !important;
         }
 
@@ -196,7 +195,7 @@
         /* EFEK HOVER PADA BARIS TABEL */
         table.rekap-table tbody tr:hover td { background: #f8fafc !important; }
         table.rekap-table tbody tr:hover td:nth-child(-n+2) { background: #f1f5f9 !important; }
-        table.rekap-table tbody tr.row-pembatas:hover td { background: #f1f5f9 !important; }
+        table.rekap-table tbody tr.row-pembatas:hover td { background: #e2e8f0 !important; }
 
         /* --- CSS KHUSUS TABEL LOG (HEADER TUNGGAL NORMAL) --- */
         table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
@@ -467,7 +466,6 @@
                     
                     let namaStaffCell = (row[1] !== null && row[1] !== undefined) ? String(row[1]).trim() : '';
 
-                    // Override otomatis typo nama staff di sheet (rahim sildea -> Sildea Rahmi)
                     if (namaStaffCell.toLowerCase() === "rahim sildea") {
                         row[1] = "Sildea Rahmi";
                         namaStaffCell = "Sildea Rahmi";
@@ -481,7 +479,6 @@
                         html += '<tr>';
                     }
                     
-                    // Kolom No Urut (Hanya sampai nomor 35, override teks "Tidak" jadi "No")
                     if (rowIndex >= 2) {
                         if (isBarisKosong || counterNomor > 35) {
                             html += `<td></td>`;
@@ -492,15 +489,14 @@
                     } else if (rowIndex === 0) {
                         html += `<th>1</th>`;
                     } else if (rowIndex === 1) {
-                        html += `<th>No</th>`; // Override teks "Tidak" menjadi "No" secara presisi
+                        html += `<th>No</th>`;
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 0) return; // Abaikan kolom ID
+                        if (colIndex === 0) return; 
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell).trim() : '';
 
-                        // Jika baris pertama / header, pastikan bersih
                         if (rowIndex === 0 && colIndex === 1) cellText = "1";
 
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
@@ -508,7 +504,6 @@
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
-                        // Berikan badge warna otomatis untuk baris data staff (indeks >= 2) mulai dari kolom tanggal (indeks > 4)
                         if (rowIndex >= 2 && !isBarisKosong && colIndex > 4 && cellText !== '') {
                             let upperVal = cellText.toUpperCase();
                             let badgeClass = "";
