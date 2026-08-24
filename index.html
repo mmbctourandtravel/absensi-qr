@@ -401,7 +401,7 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; 
+                        if (colIndex === 1 || colIndex === 7) return; // Skip ID Staff (1) & Foto Selfie (7)
                         let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
                         html += `<${tag}>${cellText}</${tag}>`;
@@ -436,7 +436,8 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1];
+                // Kolom Nama Staff berada di index td ke-2 pada tabel Log yang dirender (No=0, Tanggal=1, Nama=2)
+                let tdNama = tr[i].getElementsByTagName('td')[2];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -733,7 +734,7 @@
                     qr.stop().then(() => {
                         jalankanProsesAbsen(decodedText);
                     }).catch(err => {
-                        jalankanProsesAbsen(decodedTest);
+                        jalankanProsesAbsen(decodedText);
                     });
                 },
                 (err) => {}
