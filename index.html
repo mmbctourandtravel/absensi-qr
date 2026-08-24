@@ -224,10 +224,10 @@
 
         /* --- CSS KHUSUS TABEL LOG --- */
         table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; }
-        table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; background: #ffffff; }
-        table.log-table th { background: #1e293b !important; color: #ffffff !important; position: sticky; top: 0; z-index: 5; }
+        table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 8px 10px; background: #ffffff; }
+        table.log-table th { background: #1e293b !important; color: #ffffff !important; position: sticky; top: 0; z-index: 5; text-align: center !important; } /* <--- Tambahkan text-align center agar header di tengah */
         table.log-table td { text-align: center; }
-
+        
         /* DESAIN BADGE STATUS JADWAL */
         .badge-shift { display: inline-block; padding: 2px 5px; border-radius: 4px; font-weight: 600; font-size: 11px; text-align: center; min-width: 28px; }
         .badge-s1, .badge-s2 { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
@@ -478,7 +478,7 @@
             });
         }
 
-        function loadRekapBulanan() {
+function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             container.innerHTML = "Memuat jadwal dari Google Sheet...";
 
@@ -499,8 +499,7 @@
                 let counterNomor = 1;
 
                 rows.forEach((row, rowIndex) => {
-                    if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
-                    
+                    // Jangan skip baris pertama jika itu bagian dari header/data asli spreadsheet
                     let namaStaffCell = (row[1] !== null && row[1] !== undefined) ? String(row[1]).trim() : '';
 
                     if (namaStaffCell.toLowerCase() === "rahim sildea") {
@@ -516,25 +515,24 @@
                         html += '<tr>';
                     }
                     
+                    // Kolom No (Kolom 0 di HTML)
                     if (rowIndex >= 2) {
-                        if (isBarisKosong || counterNomor > 35) {
+                        if (isBarisKosong) {
                             html += `<td></td>`;
                         } else {
                             html += `<td>${counterNomor}</td>`;
                             counterNomor++;
                         }
                     } else if (rowIndex === 0) {
-                        html += `<th>1</th>`;
+                        html += `<th>No</th>`; // Diperbaiki agar header baris 1 kolom No sesuai
                     } else if (rowIndex === 1) {
-                        html += `<th>No</th>`;
+                        html += `<th></th>`; // Baris 2 kolom No dikosongkan untuk estetika sticky header
                     }
 
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return; 
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell).trim() : '';
-
-                        if (rowIndex === 0 && colIndex === 1) cellText = "1";
 
                         let isKolomPembatas = false;
                         if (colIndex > 4) {
