@@ -161,7 +161,6 @@
             background: #ffffff; 
         }
 
-        /* HEADER TABEL JADWAL (2 BARIS DIKUNCI KE ATAS DENGAN BENAR) */
         table.rekap-table th { 
             background: #0f172a !important; 
             color: #ffffff !important; 
@@ -174,7 +173,6 @@
         table.rekap-table tr:nth-child(1) th { top: 0px; z-index: 30; }
         table.rekap-table tr:nth-child(2) th { top: 31px; z-index: 29; }
 
-        /* TAB JADWAL: KOLOM NO & NAMA STICKY DI KIRI */
         table.rekap-table th:nth-child(1), table.rekap-table td:nth-child(1) { 
             width: 35px !important; min-width: 35px !important; max-width: 35px !important;
             position: sticky !important; left: 0px !important; z-index: 20; 
@@ -193,7 +191,6 @@
             width: 65px !important; min-width: 65px !important;
         }
 
-        /* TITIK PERTEMUAN SUDUT KIRI ATAS TABEL JADWAL */
         table.rekap-table tr:nth-child(1) th:nth-child(1), table.rekap-table tr:nth-child(2) th:nth-child(1) { z-index: 40 !important; background: #0f172a !important; left: 0px !important; top: 0px !important; }
         table.rekap-table tr:nth-child(1) th:nth-child(2), table.rekap-table tr:nth-child(2) th:nth-child(2) { z-index: 40 !important; background: #0f172a !important; left: 35px !important; top: 0px !important; border-right: 2px solid #334155 !important; }
 
@@ -201,27 +198,26 @@
         table.rekap-table tbody tr:hover td:nth-child(-n+2) { background: #f1f5f9 !important; }
         table.rekap-table tbody tr.row-pembatas:hover td { background: #f1f5f9 !important; }
 
-        /* --- STYLING TABEL LOG HARI INI (KOLOM NAMA YANG STICKY DI KIRI) --- */
+        /* --- STYLING TABEL LOG HARI INI --- */
         table.log-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; white-space: nowrap; }
         table.log-table th, table.log-table td { border: 1px solid #e2e8f0; padding: 10px 12px; background: #ffffff; text-align: center; }
         table.log-table th { background: #1e293b !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; } 
         
-        /* Kolom No di Log (Tidak Sticky) */
         table.log-table th:nth-child(1), table.log-table td:nth-child(1) {
             width: 45px !important; min-width: 45px !important; text-align: center; color: #64748b; font-weight: 600;
             position: static !important; background: #ffffff !important;
         }
         table.log-table tr:hover td:nth-child(1) { background: #ffffff !important; }
 
-        /* Kolom Nama di Log (STICKY DI KIRI DENGAN PRESISI) */
-        table.log-table th:nth-child(2), table.log-table td:nth-child(2) {
+        /* Kolom Nama di Log (Kolom ke-3 di HTML karena Kolom No adalah ke-1, Nama Staff di indeks array 2 / Kolom C sheet) */
+        table.log-table th:nth-child(3), table.log-table td:nth-child(3) {
             width: 160px !important; min-width: 160px !important; max-width: 160px !important;
-            position: sticky !important; left: 0px !important; z-index: 5;
+            position: sticky !important; left: 45px !important; z-index: 5;
             background: #f8fafc !important; color: #1e293b; font-weight: 600; text-align: left !important;
             border-right: 2px solid #cbd5e1 !important;
         }
-        table.log-table th:nth-child(2) { z-index: 20 !important; background: #1e293b !important; color: #ffffff !important; }
-        table.log-table tbody tr:hover td:nth-child(2) { background: #f1f5f9 !important; }
+        table.log-table th:nth-child(3) { z-index: 20 !important; background: #1e293b !important; color: #ffffff !important; }
+        table.log-table tbody tr:hover td:nth-child(3) { background: #f1f5f9 !important; }
 
         .badge-shift { display: inline-block; padding: 2px 5px; border-radius: 4px; font-weight: 600; font-size: 11px; text-align: center; min-width: 28px; }
         .badge-s1, .badge-s2 { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
@@ -507,7 +503,6 @@
                         html += '<tr>';
                     }
                     
-                    // Kolom No (Kolom 0 di HTML)
                     if (rowIndex >= 2) {
                         if (isBarisKosong) {
                             html += `<td></td>`;
@@ -601,7 +596,7 @@
                 rows.forEach((row, rowIndex) => {
                     html += '<tr>';
                     
-                    // Kolom No (Tidak sticky)
+                    // Kolom No (Kolom 1 di HTML)
                     if (rowIndex === 0) {
                         html += `<th>No</th>`;
                     } else {
@@ -609,12 +604,12 @@
                         html += `<td>${nomorUrut}</td>`;
                     }
 
-                    // Kolom Data Lainnya (Kolom index 2 adalah Nama Staff -> Dijadikan Sticky)
+                    // Render kolom dari data Sheet Absensi QR (Col A sampai I)
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; 
                         let cellText = cell !== null ? String(cell) : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
-                        let cellClass = colIndex === 2 ? ' style="text-align:left;"' : ''; 
+                        // Kolom index 2 adalah Nama Staff (Kolom C di sheet), dibuat rata kiri secara presisi
+                        let cellClass = (colIndex === 2) ? ' style="text-align:left;"' : ''; 
                         html += `<${tag}${cellClass}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
@@ -648,7 +643,8 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[2];
+                // Kolom Nama Staff berada di index td ke-3 (karena td ke-1 adalah No, td ke-2 adalah Tanggal, td ke-3 adalah ID/Nama tergantung render)
+                let tdNama = tr[i].getElementsByTagName('td')[3]; 
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
