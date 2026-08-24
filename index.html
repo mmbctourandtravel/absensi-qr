@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px; }
         
         .nav-tabs { 
             display: flex; 
@@ -19,7 +19,7 @@
             border: 1px solid #334155;
             border-radius: 14px; 
             padding: 6px; 
-            margin-bottom: 15px; 
+            margin-bottom: 12px; 
             gap: 6px; 
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             transition: max-width 0.3s;
@@ -44,7 +44,7 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; margin-bottom: 15px; }
         .container.active { display: block; }
 
         @media screen and (min-width: 900px) {
@@ -104,8 +104,8 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* KITA PERLUAS MAX-HEIGHT SUPAYA BARIS BAWAH BISA TERLIHAT DENGAN NYAMAN */
-        .rekap-wrapper { padding: 0; overflow: auto; max-height: 80vh; position: relative; }
+        /* MEMBUAT REKAP WRAPPER MENJADI FULL TANPA CELAH KOSONG */
+        .rekap-wrapper { padding: 0; overflow: auto; height: calc(100vh - 180px); position: relative; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
@@ -117,13 +117,19 @@
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
         /* STICKY KOLOM NO & NAMA */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
-        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
-        #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1),
+        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); }
+        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1),
+        #tabelLog tr:nth-child(1) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(1),
+        #tabelLog tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 45px; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
-        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
-        #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2),
+        #tabelLog th:nth-child(2), #tabelLog td:nth-child(2) { position: sticky; left: 45px; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2),
+        #tabelLog tr:nth-child(1) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(2),
+        #tabelLog tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
         /* BADGE WARNA SHIFT JADWAL */
         .badge-shift {
@@ -380,7 +386,7 @@
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
 
-                    // Kolom No: Hanya isi angka 1 sampai 35 khusus baris nama staff. Baris bawah dikosongkan.
+                    // Kolom No: Hanya isi angka 1 sampai 35 khusus baris nama staff
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
                         let noHeader = rowIndex === 0 ? 'No' : '';
