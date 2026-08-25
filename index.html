@@ -9,6 +9,7 @@
     <meta name="theme-color" content="#0f172a">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
+<style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
@@ -46,7 +47,7 @@
         }
 
     .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
-    .container.active { display: block; overflow: hidden; } /* Pastikan overflow hidden ada agar rapi */
+    .container.active { display: block; overflow: hidden; }
 
     @media screen and (min-width: 900px) {
         #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
@@ -104,52 +105,62 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
+        /* ========================================================== */
+        /* BAGIAN TABEL YANG DIOPTIMALKAN (DARI SISA CUTI S.D TANGGAL 31) */
+        /* ========================================================== */
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 10px; white-space: nowrap; margin: 0 !important; border: none !important; }
+        
+        /* Memperkecil padding dan menetapkan lebar minimum kotak agar ramping */
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 4px 2px; text-align: center; background: #ffffff; min-width: 26px; }
         
         #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
-        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
+        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 25px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
         #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
+        /* Kolom No (Tetap Dipertahankan) */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 35px; max-width: 35px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 45px; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        /* Kolom Nama (Tetap Dipertahankan) */
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 35px; z-index: 8; background: #f8fafc; text-align: left; min-width: 125px; max-width: 125px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 140px; max-width: 140px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
 
+        /* Memperkecil Badge Shift & Kotak Angka Sisa Cuti/Total */
         .badge-shift {
             display: inline-block;
-            padding: 3px 8px;
-            font-size: 11px;
+            padding: 2px 3px;
+            font-size: 10px;
             font-weight: 600;
-            border-radius: 6px;
+            border-radius: 4px;
             text-align: center;
-            min-width: 38px;
+            min-width: 22px;
             border: 1px solid transparent;
         }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
         .shift-off { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
         .shift-cuti, .shift-tlt { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
         .shift-wfh, .shift-l { background-color: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+        /* ========================================================== */
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
-        /* Menghilangkan sela putih di sekeliling tabel agar mentok ke tepi kartu */
-    #tab-rekap, #tab-log {
-        padding: 0 !important;
-    }
-    #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper {
-        border-radius: 0 0 20px 20px;
-    }
+        
+        #tab-rekap, #tab-log {
+            padding: 0 !important;
+        }
+        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper {
+            border-radius: 0 0 20px 20px;
+        }
+    </style>
     </style>
 </head>
 <body>
