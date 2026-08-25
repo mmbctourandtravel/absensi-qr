@@ -450,11 +450,11 @@
                         if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
                             cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
                         } 
-                        // 2. Beri kotak biru untuk semua baris rekap di bawah Total Online (mulai baris rekap jam 18.30 ke bawah) jika angkanya > 0
-                        else if (rowIndex >= 45 && colIndex > 2 && cellText !== '') {
-                        let angka = parseInt(cellText, 10);
-                        if (!isNaN(angka) && angka > 0) {
-                            cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
+                        // 2. Beri kotak biru otomatis HANYA untuk baris rekap di bawah (jam operasional, tabung libur, cuti, dll.) jika angkanya > 0
+                            else if (!isBarisKhusus && rowIndex > 5 && colIndex > 2 && cellText !== '') {
+                            let angka = parseInt(cellText, 10);
+                            if (!isNaN(angka) && angka > 0) {
+                                cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
                             }
                         }
                         html += `<${tag} ${styleBg}>${cellText}</${tag}>`;
