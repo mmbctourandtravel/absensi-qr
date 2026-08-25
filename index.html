@@ -214,7 +214,7 @@
             <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
         </div>
         <div class="rekap-wrapper">
-            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal...</div>
         </div>
     </div>
 
@@ -449,8 +449,8 @@
                         if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
                             cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
                         } 
-                        // 2. Untuk baris rekap khusus lainnya (di bawah Total Online), beri kotak biru HANYA jika angkanya > 0
-                        else if (isBarisKhusus && colIndex > 2 && cellText !== '') {
+                        // 2. Untuk semua baris rekap di bawah Total Online (yang ada di tabel bawah), beri kotak biru jika angkanya > 0
+                        else if (!textKolomB.includes("Daftar absen harian") && !textKolomB.includes("Total Staff yang Online") && rowIndex > 3 && colIndex > 2 && cellText !== '') {
                             let angka = parseInt(cellText, 10);
                             if (!isNaN(angka) && angka > 0) {
                                 cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
