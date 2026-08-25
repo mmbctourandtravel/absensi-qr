@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi - MMBC Tour & Travel</title>
-    <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -45,13 +44,13 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
-        .container.active { display: block; overflow: hidden; }
+    .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+    .container.active { display: block; overflow: hidden; } /* Pastikan overflow hidden ada agar rapi */
 
-        @media screen and (min-width: 900px) {
-            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
-            .nav-tabs { max-width: 1180px !important; }
-        }
+    @media screen and (min-width: 900px) {
+        #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
+        .nav-tabs { max-width: 1180px !important; }
+    }
         .header-brand { background: #f8fafc; padding: 10px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
         .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
@@ -106,8 +105,7 @@
 
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 5px 4px; text-align: center; background: #ffffff; min-width: 30px; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
         #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
         #tabelJadwal tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
@@ -115,29 +113,26 @@
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* Kolom No (Tab Jadwal) */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 38px; max-width: 38px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 45px; max-width: 45px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
-        /* Kolom Nama (Tab Jadwal - Nyaman & Tidak Terlalu Kecil) */
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 38px; z-index: 8; background: #f8fafc; text-align: left; min-width: 155px; max-width: 155px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); font-size: 12px; font-weight: 600; padding-left: 10px; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 45px; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        /* Kolom Nama di Tab Log (Normal, Tidak Melar Berlebihan) */
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 75px; z-index: 8; background: #f8fafc; text-align: left; min-width: 160px; max-width: 160px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); font-size: 12px; font-weight: 500; padding-left: 10px; }
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
 
         .badge-shift {
             display: inline-block;
-            padding: 3px 5px;
+            padding: 3px 8px;
             font-size: 11px;
             font-weight: 600;
-            border-radius: 5px;
+            border-radius: 6px;
             text-align: center;
-            min-width: 26px;
+            min-width: 38px;
             border: 1px solid transparent;
         }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
@@ -147,9 +142,13 @@
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
-        
-        #tab-rekap, #tab-log { padding: 0 !important; }
-        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
+        /* Menghilangkan sela putih di sekeliling tabel agar mentok ke tepi kartu */
+    #tab-rekap, #tab-log {
+        padding: 0 !important;
+    }
+    #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper {
+        border-radius: 0 0 20px 20px;
+    }
     </style>
 </head>
 <body>
@@ -161,7 +160,7 @@
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE -->
+    <!-- MODAL KAMERA SELFIE (HANYA UNTUK ABSEN MASUK) -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
@@ -234,13 +233,14 @@
         </div>
     </div>
 
-    <!-- TAB 4: ADMIN -->
+    <!-- TAB 4: ADMIN UPDATE IP -->
     <div id="tab-admin" class="container" style="max-width: 450px !important;">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>admin</h1>
         </div>
         
+        <!-- KOTAK LOGIN PASSWORD ADMIN -->
         <div id="authOverlay" style="padding: 25px; text-align: center;">
             <h2>🔒</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
@@ -249,6 +249,7 @@
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
 
+        <!-- ISI KONTROL ADMIN -->
         <div id="adminContentBody" style="display: none; padding: 25px; text-align: center;">
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #475569; text-align: left;">
                 🌐 Jaringan Anda saat ini:<br>
@@ -364,7 +365,7 @@
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
-            container.innerHTML = "Memuat jadwal ...";
+            container.innerHTML = "Memuat jadwal dari Google Sheet...";
 
             fetch(API, {
                 method: "POST",
@@ -410,21 +411,22 @@
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
                         
+                        // Header baris 0 kolom Nama
                         if (rowIndex === 0 && colIndex === 1) {
                             cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
                         }
+                        // Header baris 1 kolom Nama
                         if (rowIndex === 1 && colIndex === 1) {
                             cellText = "";
                         }
                             
+                        // Ekstrak tanggal ISO string
                         if (cellText.includes && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
-                        // DETEKSI KOLOM KOSONG (PEMBATAS MINGGU) SECARA OTOMATIS BERDASARKAN ISI SEL KOSONG
-                        let isKolomKosongPembatas = (rowIndex <= 1 && cellText.trim() === "");
-
+                        // Badge shift HANYA untuk tag 'td' dan di luar baris khusus
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus) {
                             let upperVal = String(cellText).toUpperCase();
                             let badgeClass = 'badge-shift ';
@@ -440,20 +442,9 @@
                             cellText = `<span class="${badgeClass}">${cellText}</span>`;
                         }
 
-                        if (tag === 'td' && colIndex > 0 && cellText !== '' && !cellText.includes('<span')) {
-                            let angka = Number(cellText);
-                            if (!isNaN(angka) && angka > 0) {
-                                cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${angka}</span>`;
-                            }
-                        }
-
                         let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
                         let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
                         
-                        if (isKolomKosongPembatas) {
-                            styleBg = 'style="min-width: 8px !important; max-width: 10px !important; width: 8px !important; padding: 4px 0px !important; background: #f1f5f9 !important;"';
-                        }
-
                         if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
                             cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
                         }
@@ -593,7 +584,7 @@
             (err) => {}
         ).catch(err => console.log(err));
 
-        function jalankanProsesAbsen(decodedText) {
+function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
 
             const overlay = document.getElementById("fullScreenOverlay");
@@ -613,6 +604,7 @@
             msgEl.innerHTML = "Memeriksa data absensi...";
             overlay.style.display = "flex";
 
+            // Lakukan cek status kilat ke server untuk menentukan Masuk atau Pulang
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
@@ -627,9 +619,11 @@
                 }
 
                 if (res.status === "masuk") {
+                    // JIKA MASUK: Buka kamera selfie (Wajib Selfie)
                     window.activeStaffNama = res.nama;
                     bukaKameraSelfie(res.nama); 
                 } else if (res.status === "pulang") {
+                    // JIKA PULANG: Langsung tembak absen pulang secara instan (TANPA SELFIE)
                     const overlayPulang = document.getElementById("fullScreenOverlay");
                     document.getElementById("overlayIcon").innerText = "⏳";
                     document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
@@ -640,7 +634,7 @@
                     overlayPulang.className = "theme-loading";
                     overlayPulang.style.display = "flex";
 
-                    eksekusiAbsenFinal(""); 
+                    eksekusiAbsenFinal(""); // Kirim data pulang kosong tanpa foto
                 } else {
                     tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
                 }
@@ -649,7 +643,6 @@
                 tampilkanPesanError("Gangguan koneksi ke server.");
             });
         }
-
         function bukaKameraSelfie(namaStaff) {
             document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
             const modal = document.getElementById("selfieModal");
@@ -685,6 +678,7 @@
                 return;
             }
 
+            // Kompres ukuran foto agar ringan dan tidak bikin lemot
             canvas.width = 480;
             canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
             const ctx = canvas.getContext("2d");
@@ -727,6 +721,7 @@
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
+            // Kirim foto dan absen masuk sekaligus dalam 1 request agar anti-lemot
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
@@ -736,6 +731,7 @@
                 handleHasilAbsen(res);
             })
             .catch(err => {
+                // Fallback ke metode lama jika Apps Script belum support action gabungan
                 uploadSelfieTerpisah(base64Image);
             });
         }
