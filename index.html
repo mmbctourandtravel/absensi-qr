@@ -44,15 +44,13 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
-    .container.active { display: block; }
+    .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+    .container.active { display: block; overflow: hidden; } /* Pastikan overflow hidden ada agar rapi */
 
     @media screen and (min-width: 900px) {
-        /* Lebarkan khusus untuk tab Jadwal, Log, dan Admin di layar laptop */
         #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
         .nav-tabs { max-width: 1180px !important; }
     }
-
         .header-brand { background: #f8fafc; padding: 10px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
         .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
@@ -105,7 +103,7 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; }
+        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0 !important; border: none !important; }
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center; background: #ffffff; }
         
@@ -144,6 +142,13 @@
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
+        /* Menghilangkan sela putih di sekeliling tabel agar mentok ke tepi kartu */
+    #tab-rekap, #tab-log {
+        padding: 0 !important;
+    }
+    #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper {
+        border-radius: 0 0 20px 20px;
+    }
     </style>
 </head>
 <body>
