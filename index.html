@@ -412,12 +412,10 @@ row.forEach((cell, colIndex) => {
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
                         
-                        // Jangan ekstrak tanggal jika ini adalah baris pertama (rowIndex 0)
-                        if (rowIndex > 0 && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
+                        // Ekstrak tanggal hanya jika formatnya ISO string agar rapi
+                        if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
-                        } else if (rowIndex === 0) {
-                            cellText = ''; // Kosongkan sel di baris pertama agar bersih dari tanggal mentah
                         }
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus) {
                             let upperVal = cellText.toUpperCase();
