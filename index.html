@@ -387,7 +387,8 @@
                     html += '<tr>';
 
                     let textKolomB = row[1] !== null ? String(row[1]).trim() : '';
-                    let isBarisKhusus = textKolomB.includes("Daftar absen harian") || textKolomB.includes("Total Staff yang Online");
+// Kita buat isBarisKhusus mendeteksi semua baris rekap dari "Daftar absen harian" ke bawah
+                    let isBarisKhusus = rowIndex >= 3 && textKolomB !== "";
 
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
