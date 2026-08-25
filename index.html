@@ -432,8 +432,15 @@ rows.forEach((row, rowIndex) => {
                             cellText = `<span class="${badgeClass}">${cellText}</span>`;
                         }
 
-                        // Jika baris 47 atau 48, tambahkan styling background abu-abu muda langsung
+// Cek apakah ini baris Total Staff yang Online dan berada di kolom tanggal
+                        let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
                         let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
+                        
+                        // Jika baris Total Online dan berada di kolom tanggal (colIndex > 2), bungkus dengan kotak badge biru S1
+                        if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
+                            cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
+                        }
+
                         html += `<${tag} ${styleBg}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
