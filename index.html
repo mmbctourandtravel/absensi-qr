@@ -108,10 +108,13 @@
         /* ========================================================== */
         /* BAGIAN TABEL YANG DIOPTIMALKAN (DARI SISA CUTI S.D TANGGAL 31) */
         /* ========================================================== */
+        <style>
+        /* ... (biarkan bagian atas tetap sama) ... */
+
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
         table.rekap-table { width: 100%; border-collapse: collapse; font-size: 10px; white-space: nowrap; margin: 0 !important; border: none !important; }
         
-        /* Memperkecil padding dan menetapkan lebar minimum kotak agar ramping */
+        /* Mengatur padding kotak tanggal */
         table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 4px 2px; text-align: center; background: #ffffff; min-width: 26px; }
         
         #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
@@ -120,21 +123,33 @@
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* Kolom No (Tetap Dipertahankan) */
+        /* Kolom No */
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 35px; max-width: 35px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
-        /* Kolom Nama (Tetap Dipertahankan) */
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 35px; z-index: 8; background: #f8fafc; text-align: left; min-width: 125px; max-width: 125px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        /* Kolom Nama DIPERBESAR SEDIKIT (min/max-width dinaikkan ke 145px) */
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 35px; z-index: 8; background: #f8fafc; text-align: left; min-width: 145px; max-width: 145px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); font-size: 11px; font-weight: 600; padding-left: 8px; }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 140px; max-width: 140px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
 
-        /* Memperkecil Badge Shift & Kotak Angka Sisa Cuti/Total */
+        /* KHUSUS KOLOM PEMBATAS KOSONG (DIBUAT SANGAT KECIL/SEMPIT) */
+        #tabelJadwal th:nth-child(5), #tabelJadwal td:nth-child(5),
+        #tabelJadwal th:nth-child(13), #tabelJadwal td:nth-child(13),
+        #tabelJadwal th:nth-child(20), #tabelJadwal td:nth-child(20),
+        #tabelJadwal th:nth-child(27), #tabelJadwal td:nth-child(27),
+        #tabelJadwal th:nth-child(34), #tabelJadwal td:nth-child(34) {
+            min-width: 10px !important;
+            max-width: 12px !important;
+            width: 10px !important;
+            padding: 4px 0px !important;
+            background: #f8fafc !important;
+        }
+
         .badge-shift {
             display: inline-block;
             padding: 2px 3px;
@@ -149,17 +164,13 @@
         .shift-off { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
         .shift-cuti, .shift-tlt { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
         .shift-wfh, .shift-l { background-color: #f1f5f9; color: #475569; border-color: #cbd5e1; }
-        /* ========================================================== */
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
         
-        #tab-rekap, #tab-log {
-            padding: 0 !important;
-        }
-        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper {
-            border-radius: 0 0 20px 20px;
-        }
+        #tab-rekap, #tab-log { padding: 0 !important; }
+        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
+    </style>
     </style>
     </style>
 </head>
