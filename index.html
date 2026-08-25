@@ -407,16 +407,18 @@ rows.forEach((row, rowIndex) => {
                         html += `<${tag}><b>${noUrutFinal}</b></${tag}>`;
                     }
 
-                    row.forEach((cell, colIndex) => {
+row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
                         
-                        if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
+                        // Jangan ekstrak tanggal jika ini adalah baris pertama (rowIndex 0)
+                        if (rowIndex > 0 && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
+                        } else if (rowIndex === 0) {
+                            cellText = ''; // Kosongkan sel di baris pertama agar bersih dari tanggal mentah
                         }
-
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus) {
                             let upperVal = cellText.toUpperCase();
                             let badgeClass = 'badge-shift ';
