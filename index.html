@@ -407,12 +407,17 @@ rows.forEach((row, rowIndex) => {
                         html += `<${tag}><b>${noUrutFinal}</b></${tag}>`;
                     }
 
-row.forEach((cell, colIndex) => {
+                        row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
-                        
-                        // Ekstrak tanggal hanya jika formatnya ISO string agar rapi
+                            
+// Jika baris 0 kolom Nama (colIndex 1), paksa tulis "Nama"
+                        if (rowIndex === 0 && colIndex === 1) cellText = "Nama";
+                        // Jika baris 1 kolom Nama (colIndex 1), kosongkan
+                        if (rowIndex === 1 && colIndex === 1) cellText = "";
+                            
+// Ekstrak tanggal hanya jika formatnya ISO string agar rapi
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
