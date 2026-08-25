@@ -412,10 +412,12 @@ rows.forEach((row, rowIndex) => {
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
                             
-// Jika baris 0 kolom Nama (colIndex 1), paksa tulis "Nama"
-                        if (rowIndex === 0 && colIndex === 1) cellText = "Nama";
-                        // Jika baris 1 kolom Nama (colIndex 1), kosongkan
-                        if (rowIndex === 1 && colIndex === 1) cellText = "";
+// Jika baris 0 kolom Nama, tulis "Nama" dengan posisi tengah secara vertikal
+                    if (rowIndex === 0 && colIndex === 1) {
+                    cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
+                    }
+// Jika baris 1 kolom Nama (colIndex 1), kosongkan
+                    if (rowIndex === 1 && colIndex === 1) cellText = "";
                             
 // Ekstrak tanggal hanya jika formatnya ISO string agar rapi
                         if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
