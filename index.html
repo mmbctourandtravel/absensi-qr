@@ -441,13 +441,14 @@
                             }
                             cellText = `<span class="${badgeClass}">${cellText}</span>`;
                         }
-// Beri kotak biru untuk semua angka di tabel (termasuk Sisa Cuti, Telat, dan rekap bawah) jika nilainya > 0
-                        if (tag === 'td' && colIndex > 0 && cellText !== '') {
-                            let angka = parseInt(cellText, 10);
-                            if (!isNaN(angka) && angka > 0) {
-                                cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
-                            }
-                        }
+
+                        // Beri kotak biru otomatis untuk angka murni > 0, pastikan bukan badge shift yang sudah ada
+    if (tag === 'td' && colIndex > 0 && cellText !== '' && !cellText.includes('<span')) {
+    let angka = Number(cellText);
+    if (!isNaN(angka) && angka > 0) {
+        cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${angka}</span>`;
+    }
+}
                         let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
                         let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
                         
