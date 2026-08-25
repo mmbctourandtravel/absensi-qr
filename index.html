@@ -445,10 +445,17 @@
                         let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
                         let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
                         
+                        // 1. Jika baris Total Online, selalu bungkus kotak biru
                         if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
                             cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
+                        } 
+                        // 2. Untuk baris rekap khusus lainnya (di bawah Total Online), beri kotak biru HANYA jika angkanya > 0
+                        else if (isBarisKhusus && colIndex > 2 && cellText !== '') {
+                            let angka = parseInt(cellText, 10);
+                            if (!isNaN(angka) && angka > 0) {
+                                cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
+                            }
                         }
-
                         html += `<${tag} ${styleBg}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
