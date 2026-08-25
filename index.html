@@ -364,6 +364,7 @@
 
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
+            if (!container) return;
             container.innerHTML = "Memuat jadwal dari Google Sheet...";
 
             fetch(API, {
@@ -381,11 +382,10 @@
                 let html = '<table class="rekap-table" id="tabelJadwal">';
                 
                 let counterNo = 1;
-rows.forEach((row, rowIndex) => {
+                rows.forEach((row, rowIndex) => {
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
 
-                    // Cek apakah baris ini adalah baris 47 atau 48 (Daftar absen harian / Total Staff)
                     let textKolomB = row[1] !== null ? String(row[1]).trim() : '';
                     let isBarisKhusus = textKolomB.includes("Daftar absen harian") || textKolomB.includes("Total Staff yang Online");
 
@@ -402,30 +402,33 @@ rows.forEach((row, rowIndex) => {
                             nomorUrut = counterNo;
                             counterNo++;
                         }
-                        // Jika baris khusus (47 & 48), kosongkan nomor urutnya
                         let noUrutFinal = isBarisKhusus ? '' : nomorUrut;
                         html += `<${tag}><b>${noUrutFinal}</b></${tag}>`;
                     }
 
-                        row.forEach((cell, colIndex) => {
+                    row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
+                        
+                        // Header baris 0 kolom Nama
+                        if (rowIndex === 0 && colIndex === 1) {
+                            cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
+                        }
+                        // Header baris 1 kolom Nama
+                        if (rowIndex === 1 && colIndex === 1) {
+                            cellText = "";
+                        }
                             
-// Jika baris 0 kolom Nama, tulis "Nama" dengan posisi tengah secara vertikal
-                    if (rowIndex === 0 && colIndex === 1) {
-                    cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
-                    }
-// Jika baris 1 kolom Nama (colIndex 1), kosongkan
-                    if (rowIndex === 1 && colIndex === 1) cellText = "";
-                            
-// Ekstrak tanggal hanya jika formatnya ISO string agar rapi
-                        if (cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
+                        // Ekstrak tanggal ISO string
+                        if (cellText.includes && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
+
+                        // Badge shift HANYA untuk tag 'td' dan di luar baris khusus
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus) {
-                            let upperVal = cellText.toUpperCase();
+                            let upperVal = String(cellText).toUpperCase();
                             let badgeClass = 'badge-shift ';
                             if (upperVal.includes('S1') || upperVal.includes('S2') || upperVal.includes('S3')) {
                                 badgeClass += 'shift-s1';
@@ -439,11 +442,9 @@ rows.forEach((row, rowIndex) => {
                             cellText = `<span class="${badgeClass}">${cellText}</span>`;
                         }
 
-// Cek apakah ini baris Total Staff yang Online dan berada di kolom tanggal
                         let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
                         let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
                         
-                        // Jika baris Total Online dan berada di kolom tanggal (colIndex > 2), bungkus dengan kotak badge biru S1
                         if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
                             cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
                         }
@@ -455,7 +456,10 @@ rows.forEach((row, rowIndex) => {
                 html += '</table>';
                 container.innerHTML = html;
             })
-            .catch(err => { container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; });
+            .catch(err => { 
+                console.error(err);
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
+            });
         }
 
         function loadLogHariIni() {
