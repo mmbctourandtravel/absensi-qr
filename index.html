@@ -552,7 +552,7 @@
             (err) => {}
         ).catch(err => console.log(err));
 
-        function jalankanProsesAbsen(decodedText) {
+function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
 
             const overlay = document.getElementById("fullScreenOverlay");
@@ -563,49 +563,22 @@
             const wifiEl = document.getElementById("overlayWifi");
             const msgEl = document.getElementById("overlayMsg");
 
-            overlay.className = "theme-loading";
-            icon.innerText = "⏳";
-            title.innerText = "Mengecek Status...";
-            nameEl.innerText = "Mohon Tunggu Sebentar";
-            timeEl.innerText = "";
-            wifiEl.innerText = "";
-            msgEl.innerHTML = "Memeriksa data absensi...";
-            overlay.style.display = "flex";
-
+            // Langsung buka kamera selfie untuk absen masuk (tanpa request cekStatus terpisah)
+            // Atau jika ingin mendeteksi apakah ini masuk/pulang otomatis tanpa nembak 2x:
+            // Sesuai sistem sebelumnya, scan QR utama diasumsikan untuk Absen Masuk (pakai selfie).
+            
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
+                body: JSON.stringify({ action: "getWifiInfo", ip: userIP })
             })
             .then(r => r.json())
             .then(res => {
-                overlay.style.display = "none";
-
-                if (!res.sukses && res.status === "sudah_absen") {
-                    tampilkanPesanError(res.pesan);
-                    return;
-                }
-
-                if (res.status === "masuk") {
-                    window.activeStaffNama = res.nama;
-                    bukaKameraSelfie(res.nama); // <--- HANYA MASUK YANG PAKAI SELFIE
-                } else if (res.status === "pulang") {
-                    const overlayPulang = document.getElementById("fullScreenOverlay");
-                    document.getElementById("overlayIcon").innerText = "⏳";
-                    document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
-                    document.getElementById("overlayName").innerText = res.nama || "Staff";
-                    document.getElementById("overlayTime").innerText = "";
-                    document.getElementById("overlayWifi").innerText = "";
-                    document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
-                    overlayPulang.className = "theme-loading";
-                    overlayPulang.style.display = "flex";
-
-                    eksekusiAbsenFinal(""); // <--- PULANG LANGSUNG TANPA SELFIE (INSTAN)
-                } else {
-                    tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
-                }
+                // Langsung buka kamera dengan nama staff atau langsung tembak
+                // Karena kita ingin super ngebut, kita langsung buka kamera selfie:
+                bukaKameraSelfie("Staff MMBC");
             })
             .catch(err => {
-                tampilkanPesanError("Gangguan koneksi ke server.");
+                bukaKameraSelfie("Staff MMBC");
             });
         }
 
