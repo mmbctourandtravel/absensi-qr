@@ -9,7 +9,6 @@
     <meta name="theme-color" content="#0f172a">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-<style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
@@ -46,13 +45,13 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-    .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
-    .container.active { display: block; overflow: hidden; }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container.active { display: block; overflow: hidden; }
 
-    @media screen and (min-width: 900px) {
-        #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
-        .nav-tabs { max-width: 1180px !important; }
-    }
+        @media screen and (min-width: 900px) {
+            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
+            .nav-tabs { max-width: 1180px !important; }
+        }
         .header-brand { background: #f8fafc; padding: 10px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
         .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
@@ -105,59 +104,40 @@
         .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
 
-        /* ========================================================== */
-        /* BAGIAN TABEL YANG DIOPTIMALKAN (DARI SISA CUTI S.D TANGGAL 31) */
-        /* ========================================================== */
-        <style>
-        /* ... (biarkan bagian atas tetap sama) ... */
-
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 10px; white-space: nowrap; margin: 0 !important; border: none !important; }
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; margin: 0 !important; border: none !important; }
         
-        /* Mengatur padding kotak tanggal */
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 4px 2px; text-align: center; background: #ffffff; min-width: 26px; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 5px 4px; text-align: center; background: #ffffff; min-width: 30px; }
         
         #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
-        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 25px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
+        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 27px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
         #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* Kolom No */
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 35px; max-width: 35px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
+        /* Kolom No (Tab Jadwal) */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 38px; max-width: 38px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
 
-        /* Kolom Nama DIPERBESAR SEDIKIT (min/max-width dinaikkan ke 145px) */
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 35px; z-index: 8; background: #f8fafc; text-align: left; min-width: 145px; max-width: 145px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); font-size: 11px; font-weight: 600; padding-left: 8px; }
+        /* Kolom Nama (Tab Jadwal - Nyaman & Tidak Terlalu Kecil) */
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 38px; z-index: 8; background: #f8fafc; text-align: left; min-width: 155px; max-width: 155px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); font-size: 12px; font-weight: 600; padding-left: 10px; }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
 
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 150px; max-width: 150px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
+        /* Kolom Nama di Tab Log (Normal, Tidak Melar Berlebihan) */
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 75px; z-index: 8; background: #f8fafc; text-align: left; min-width: 160px; max-width: 160px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); font-size: 12px; font-weight: 500; padding-left: 10px; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
         #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
 
-        /* KHUSUS KOLOM PEMBATAS KOSONG (DIBUAT SANGAT KECIL/SEMPIT) */
-        #tabelJadwal th:nth-child(5), #tabelJadwal td:nth-child(5),
-        #tabelJadwal th:nth-child(13), #tabelJadwal td:nth-child(13),
-        #tabelJadwal th:nth-child(20), #tabelJadwal td:nth-child(20),
-        #tabelJadwal th:nth-child(27), #tabelJadwal td:nth-child(27),
-        #tabelJadwal th:nth-child(34), #tabelJadwal td:nth-child(34) {
-            min-width: 10px !important;
-            max-width: 12px !important;
-            width: 10px !important;
-            padding: 4px 0px !important;
-            background: #f8fafc !important;
-        }
-
         .badge-shift {
             display: inline-block;
-            padding: 2px 3px;
-            font-size: 10px;
+            padding: 3px 5px;
+            font-size: 11px;
             font-weight: 600;
-            border-radius: 4px;
+            border-radius: 5px;
             text-align: center;
-            min-width: 22px;
+            min-width: 26px;
             border: 1px solid transparent;
         }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
@@ -171,8 +151,6 @@
         #tab-rekap, #tab-log { padding: 0 !important; }
         #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
     </style>
-    </style>
-    </style>
 </head>
 <body>
 
@@ -183,7 +161,7 @@
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE (HANYA UNTUK ABSEN MASUK) -->
+    <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
@@ -256,14 +234,13 @@
         </div>
     </div>
 
-    <!-- TAB 4: ADMIN UPDATE IP -->
+    <!-- TAB 4: ADMIN -->
     <div id="tab-admin" class="container" style="max-width: 450px !important;">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>admin</h1>
         </div>
         
-        <!-- KOTAK LOGIN PASSWORD ADMIN -->
         <div id="authOverlay" style="padding: 25px; text-align: center;">
             <h2>🔒</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
@@ -272,7 +249,6 @@
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
 
-        <!-- ISI KONTROL ADMIN -->
         <div id="adminContentBody" style="display: none; padding: 25px; text-align: center;">
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #475569; text-align: left;">
                 🌐 Jaringan Anda saat ini:<br>
@@ -434,22 +410,21 @@
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell) : '';
                         
-                        // Header baris 0 kolom Nama
                         if (rowIndex === 0 && colIndex === 1) {
                             cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
                         }
-                        // Header baris 1 kolom Nama
                         if (rowIndex === 1 && colIndex === 1) {
                             cellText = "";
                         }
                             
-                        // Ekstrak tanggal ISO string
                         if (cellText.includes && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
-                        // Badge shift HANYA untuk tag 'td' dan di luar baris khusus
+                        // DETEKSI KOLOM KOSONG (PEMBATAS MINGGU) SECARA OTOMATIS BERDASARKAN ISI SEL KOSONG
+                        let isKolomKosongPembatas = (rowIndex <= 1 && cellText.trim() === "");
+
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus) {
                             let upperVal = String(cellText).toUpperCase();
                             let badgeClass = 'badge-shift ';
@@ -465,16 +440,20 @@
                             cellText = `<span class="${badgeClass}">${cellText}</span>`;
                         }
 
-                        // Beri kotak biru otomatis untuk angka murni > 0, pastikan bukan badge shift yang sudah ada
-    if (tag === 'td' && colIndex > 0 && cellText !== '' && !cellText.includes('<span')) {
-    let angka = Number(cellText);
-    if (!isNaN(angka) && angka > 0) {
-        cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${angka}</span>`;
-    }
-}
+                        if (tag === 'td' && colIndex > 0 && cellText !== '' && !cellText.includes('<span')) {
+                            let angka = Number(cellText);
+                            if (!isNaN(angka) && angka > 0) {
+                                cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${angka}</span>`;
+                            }
+                        }
+
                         let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
                         let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
                         
+                        if (isKolomKosongPembatas) {
+                            styleBg = 'style="min-width: 8px !important; max-width: 10px !important; width: 8px !important; padding: 4px 0px !important; background: #f1f5f9 !important;"';
+                        }
+
                         if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
                             cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
                         }
@@ -614,7 +593,7 @@
             (err) => {}
         ).catch(err => console.log(err));
 
-function jalankanProsesAbsen(decodedText) {
+        function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
 
             const overlay = document.getElementById("fullScreenOverlay");
@@ -634,7 +613,6 @@ function jalankanProsesAbsen(decodedText) {
             msgEl.innerHTML = "Memeriksa data absensi...";
             overlay.style.display = "flex";
 
-            // Lakukan cek status kilat ke server untuk menentukan Masuk atau Pulang
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
@@ -649,11 +627,9 @@ function jalankanProsesAbsen(decodedText) {
                 }
 
                 if (res.status === "masuk") {
-                    // JIKA MASUK: Buka kamera selfie (Wajib Selfie)
                     window.activeStaffNama = res.nama;
                     bukaKameraSelfie(res.nama); 
                 } else if (res.status === "pulang") {
-                    // JIKA PULANG: Langsung tembak absen pulang secara instan (TANPA SELFIE)
                     const overlayPulang = document.getElementById("fullScreenOverlay");
                     document.getElementById("overlayIcon").innerText = "⏳";
                     document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
@@ -664,7 +640,7 @@ function jalankanProsesAbsen(decodedText) {
                     overlayPulang.className = "theme-loading";
                     overlayPulang.style.display = "flex";
 
-                    eksekusiAbsenFinal(""); // Kirim data pulang kosong tanpa foto
+                    eksekusiAbsenFinal(""); 
                 } else {
                     tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
                 }
@@ -673,6 +649,7 @@ function jalankanProsesAbsen(decodedText) {
                 tampilkanPesanError("Gangguan koneksi ke server.");
             });
         }
+
         function bukaKameraSelfie(namaStaff) {
             document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
             const modal = document.getElementById("selfieModal");
@@ -708,7 +685,6 @@ function jalankanProsesAbsen(decodedText) {
                 return;
             }
 
-            // Kompres ukuran foto agar ringan dan tidak bikin lemot
             canvas.width = 480;
             canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
             const ctx = canvas.getContext("2d");
@@ -751,7 +727,6 @@ function jalankanProsesAbsen(decodedText) {
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
-            // Kirim foto dan absen masuk sekaligus dalam 1 request agar anti-lemot
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
@@ -761,7 +736,6 @@ function jalankanProsesAbsen(decodedText) {
                 handleHasilAbsen(res);
             })
             .catch(err => {
-                // Fallback ke metode lama jika Apps Script belum support action gabungan
                 uploadSelfieTerpisah(base64Image);
             });
         }
