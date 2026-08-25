@@ -381,9 +381,13 @@
                 let html = '<table class="rekap-table" id="tabelJadwal">';
                 
                 let counterNo = 1;
-                rows.forEach((row, rowIndex) => {
+rows.forEach((row, rowIndex) => {
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
                     html += '<tr>';
+
+                    // Cek apakah baris ini adalah baris 47 atau 48 (Daftar absen harian / Total Staff)
+                    let textKolomB = row[1] !== null ? String(row[1]).trim() : '';
+                    let isBarisKhusus = textKolomB.includes("Daftar absen harian") || textKolomB.includes("Total Staff yang Online");
 
                     if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
@@ -398,7 +402,9 @@
                             nomorUrut = counterNo;
                             counterNo++;
                         }
-                        html += `<${tag}><b>${nomorUrut}</b></${tag}>`;
+                        // Jika baris khusus (47 & 48), kosongkan nomor urutnya
+                        let noUrutFinal = isBarisKhusus ? '' : nomorUrut;
+                        html += `<${tag}><b>${noUrutFinal}</b></${tag}>`;
                     }
 
                     row.forEach((cell, colIndex) => {
@@ -411,7 +417,7 @@
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
-                        if (tag === 'td' && colIndex > 1 && cellText !== '') {
+                        if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus) {
                             let upperVal = cellText.toUpperCase();
                             let badgeClass = 'badge-shift ';
                             if (upperVal.includes('S1') || upperVal.includes('S2') || upperVal.includes('S3')) {
@@ -426,10 +432,12 @@
                             cellText = `<span class="${badgeClass}">${cellText}</span>`;
                         }
 
-                        html += `<${tag}>${cellText}</${tag}>`;
+                        // Jika baris 47 atau 48, tambahkan styling background abu-abu muda langsung
+                        let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : '';
+                        html += `<${tag} ${styleBg}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
-                });
+                });                
                 html += '</table>';
                 container.innerHTML = html;
             })
