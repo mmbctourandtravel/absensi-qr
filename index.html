@@ -214,7 +214,7 @@
             <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
         </div>
         <div class="rekap-wrapper">
-            <div id="rekapContent" class="loading-rekap">Memuat jadwal...</div>
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari google sheet...</div>
         </div>
     </div>
 
@@ -365,7 +365,7 @@
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
-            container.innerHTML = "Memuat jadwal dari Google Sheet...";
+            container.innerHTML = "Memuat jadwal...";
 
             fetch(API, {
                 method: "POST",
