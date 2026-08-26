@@ -105,7 +105,6 @@
 
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #1e293b !important; }
         
-        /* CSS TABEL SUPREMASI RAPI TANPA GARIS PUTIH SILANG */
         table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
         table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 7px 9px; text-align: center; background: #ffffff; vertical-align: middle; }
         
@@ -117,7 +116,6 @@
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* KONTRAK KOLOM STICKY NO & NAMA */
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: center; min-width: 42px; max-width: 42px; font-weight: bold; border-right: 1px solid #cbd5e1; }
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
@@ -130,7 +128,6 @@
         #tabelLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        /* BADGE SHIFT DENGAN FONT LEBIH TEBAL & ELEGAN */
         .badge-shift {
             display: inline-block;
             padding: 3px 8px;
@@ -367,7 +364,7 @@
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
-            container.innerHTML = "Memuat jadwal...";
+            container.innerHTML = "Memuat jadwal dari Google Sheet...";
 
             fetch(API, {
                 method: "POST",
@@ -420,22 +417,18 @@
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell).trim() : '';
                         
-                        // Header baris 0 kolom Nama
                         if (rowIndex === 0 && colIndex === 1) {
                             cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
                         }
-                        // Header baris 1 kolom Nama
                         if (rowIndex === 1 && colIndex === 1) {
                             cellText = "";
                         }
                             
-                        // Ekstrak tanggal ISO string
                         if (cellText.includes && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
                             let d = new Date(cellText);
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
-                        // Badge shift & Format Otomatis Jml On + Uang Makan
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
                             let upperVal = String(cellText).toUpperCase();
                             let badgeClass = 'badge-shift ';
