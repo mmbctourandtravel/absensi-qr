@@ -481,6 +481,7 @@
             });
         }
 
+        // FUNGSI LOAD LOG HARI INI YANG SUDAH DISINKRONKAN DENGAN 10 KOLOM BACKEND
         function loadLogHariIni() {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -514,7 +515,7 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // Kolom 1 (ID Staff) dan Kolom 7 (Foto Selfie) disembunyikan dari tampilan tabel
+                        // Lewati ID Staff (indeks 1) dan Link Foto Selfie (indeks 7)
                         if (colIndex === 1 || colIndex === 7) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
@@ -543,6 +544,7 @@
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
                             else if (colIndex === 9) {
+                                // Menangkap data Uang Makan dari Kolom J (Indeks 9)
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -560,6 +562,7 @@
                 container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
             });
         }
+
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
