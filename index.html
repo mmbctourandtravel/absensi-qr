@@ -99,54 +99,6 @@
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* WIDGET SUMMARY CARD KEHADIRAN (CENTERED) */
-        .summary-cards-container {
-            display: flex;
-            gap: 12px;
-            padding: 12px 15px 0 15px;
-            background: #ffffff;
-        }
-        .stat-card {
-            flex: 1;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            text-align: center;
-        }
-        .stat-card-icon {
-            font-size: 22px;
-            background: #ffffff;
-            padding: 8px;
-            border-radius: 10px;
-            border: 1px solid #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .stat-card-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .stat-card-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-card-value {
-            font-size: 18px;
-            font-weight: 800;
-            color: #1e293b;
-        }
-
         .search-box-wrapper { padding: 12px 15px; background: #ffffff; border-bottom: none !important; }
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
@@ -154,7 +106,7 @@
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #1e293b !important; }
         
         table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 7px 9px; text-align: center; background: #ffffff; vertical-align: middle; }
+        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 8px 12px; text-align: center; background: #ffffff; vertical-align: middle; }
         
         table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; border-right: 1px solid #334155 !important; border-bottom: 1px solid #334155 !important; }
 
@@ -179,20 +131,21 @@
         /* BADGE STYLING PREMIUM */
         .badge-shift {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 4px 10px;
             font-size: 11px;
             font-weight: 700;
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
             min-width: 32px;
             border: 1px solid transparent;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .shift-s1, .shift-s2, .shift-s3 { background-color: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
-        .shift-off { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
-        .shift-cuti, .shift-tlt { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
-        .shift-wfh { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; }
-        .badge-jmlon { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 800; }
-        .badge-uangmakan { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 800; }
+        .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+        .shift-off { background-color: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+        .shift-cuti, .shift-tlt { background-color: #fffbeb; color: #b45309; border-color: #fde68a; }
+        .shift-wfh { background-color: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+        .badge-jmlon { background-color: #f0f9ff; color: #0369a1; border-color: #bae6fd; font-weight: 800; }
+        .badge-uangmakan { background-color: #dcfce7; color: #166534; border-color: #86efac; font-weight: 800; font-size: 12px; }
         .badge-wifi { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
         .badge-hadir { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 700; }
         .time-text { font-family: 'Consolas', 'Courier New', monospace; font-weight: 700; color: #334155; letter-spacing: 0.5px; }
@@ -278,25 +231,6 @@
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>LOG ABSEN HARI INI</h1>
         </div>
-
-        <!-- 📊 CARD STATISTIK RINGKASAN KEHADIRAN (CENTERED) -->
-        <div class="summary-cards-container">
-            <div class="stat-card">
-                <div class="stat-card-icon">👥</div>
-                <div class="stat-card-info">
-                    <span class="stat-card-title">Total Masuk</span>
-                    <span class="stat-card-value" id="statTotalMasuk">0 Staff</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-card-icon">🟢</div>
-                <div class="stat-card-info">
-                    <span class="stat-card-title">Sedang Bekerja</span>
-                    <span class="stat-card-value" id="statSedangBekerja">0 Staff</span>
-                </div>
-            </div>
-        </div>
-
         <div class="search-box-wrapper">
             <input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari nama staff yang sudah scan..." onkeyup="filterTabelLog()">
         </div>
@@ -559,22 +493,15 @@
             .then(res => {
                 if(!res.sukses) {
                     container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
-                    if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = "0 Staff";
-                    if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = "0 Staff";
                     return;
                 }
                 let rows = res.data;
                 if(!rows || rows.length <= 1) {
                     container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
-                    if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = "0 Staff";
-                    if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = "0 Staff";
                     return;
                 }
 
                 let totalData = rows.length - 1;
-                let countMasuk = totalData;
-                let countSedangBekerja = 0;
-
                 let html = '<table class="rekap-table" id="tabelLog">';
                 
                 rows.forEach((row, rowIndex) => {
@@ -584,12 +511,6 @@
                     } else {
                         let nomorUrut = totalData - (rowIndex - 1);
                         html += `<td><b>${nomorUrut}</b></td>`;
-
-                        // Hitung staff yang belum absen pulang (Jam Pulang di Indeks 4 Kosong)
-                        let jamPulangVal = row[4] !== null ? String(row[4]).trim() : '';
-                        if (jamPulangVal === "") {
-                            countSedangBekerja++;
-                        }
                     }
 
                     row.forEach((cell, colIndex) => {
@@ -598,7 +519,7 @@
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
-                        // 🌟 POLESAN VISUAL UNTUK TABEL LOG
+                        // 🌟 POLESAN VISUAL ELEGAN UNTUK TABEL LOG
                         if (tag === 'td') {
                             // Jam Masuk / Jam Pulang (Monospace font rapi)
                             if (colIndex === 3 || colIndex === 4) {
@@ -639,10 +560,6 @@
                 });
                 html += '</table>';
                 container.innerHTML = html;
-
-                // Update Angka Widget Statistik Ringkasan Kehadiran
-                if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = countMasuk + " Staff";
-                if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = countSedangBekerja + " Staff";
             })
             .catch(err => { 
                 container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
