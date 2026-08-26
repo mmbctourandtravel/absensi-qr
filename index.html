@@ -399,7 +399,7 @@
                         html += '<tr>';
                     }
 
-                    if (rowIndex === 0 || rowIndex === 1) {
+               if (rowIndex === 0 || rowIndex === 1) {
                         let tag = 'th';
                         let noHeader = rowIndex === 0 ? 'No' : '';
                         html += `<${tag}>${noHeader}</${tag}>`;
@@ -408,7 +408,8 @@
                         let namaStaffCell = textKolomB;
                         let nomorUrut = '';
                         
-                        if (namaStaffCell !== '' && counterNo <= 50 && !isBarisKhusus) {
+                        // Dibatasi maksimal hanya sampai 35 untuk staff
+                        if (namaStaffCell !== '' && counterNo <= 35 && !isBarisKhusus) {
                             nomorUrut = counterNo;
                             counterNo++;
                         }
