@@ -99,7 +99,7 @@
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* WIDGET SUMMARY CARD KEHADIRAN */
+        /* WIDGET SUMMARY CARD KEHADIRAN (CENTERED) */
         .summary-cards-container {
             display: flex;
             gap: 12px;
@@ -111,11 +111,13 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            padding: 10px 14px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            text-align: center;
         }
         .stat-card-icon {
             font-size: 22px;
@@ -130,6 +132,7 @@
         .stat-card-info {
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
         .stat-card-title {
             font-size: 11px;
@@ -276,7 +279,7 @@
             <h1>LOG ABSEN HARI INI</h1>
         </div>
 
-        <!-- 📊 CARD STATISTIK RINGKASAN KEHADIRAN -->
+        <!-- 📊 CARD STATISTIK RINGKASAN KEHADIRAN (CENTERED) -->
         <div class="summary-cards-container">
             <div class="stat-card">
                 <div class="stat-card-icon">👥</div>
@@ -988,6 +991,7 @@
                 (err) => {}
             ).catch(err => console.log("Restart scanner error:", err));
         }
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
