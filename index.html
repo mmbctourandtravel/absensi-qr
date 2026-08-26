@@ -514,7 +514,8 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; // Skip ID & Link Foto Selfie sesuai request
+                        // Kolom 1 (ID Staff) dan Kolom 7 (Foto Selfie) disembunyikan dari tampilan tabel
+                        if (colIndex === 1 || colIndex === 7) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
@@ -559,7 +560,6 @@
                 container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
             });
         }
-
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
