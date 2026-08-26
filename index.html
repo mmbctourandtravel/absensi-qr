@@ -432,6 +432,7 @@
             });
         }
 
+        // 🌟 LOAD JADWAL BULANAN (Dibatasi maksimal 70 baris aman & satset)
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
@@ -448,7 +449,7 @@
                     return;
                 }
                 window.loadedJadwal = true;
-                let rows = res.data;
+                let rows = res.data.slice(0, 70); // Batasi maksimal 70 baris sesuai permintaan
                 let html = '<table class="rekap-table" id="tabelJadwal">';
                 
                 let counterNo = 1;
@@ -474,7 +475,7 @@
                         let namaStaffCell = textKolomB;
                         let nomorUrut = '';
                         
-                        if (namaStaffCell !== '' && counterNo <= 35 && !isBarisKhusus) {
+                        if (namaStaffCell !== '' && counterNo <= 50 && !isBarisKhusus) {
                             nomorUrut = counterNo;
                             counterNo++;
                         }
@@ -547,6 +548,7 @@
             });
         }
 
+        // 🌟 LOAD LOG HARI INI (Sat-set maksimal kapasitas data aman)
         function loadLogHariIni() {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -571,66 +573,69 @@
                     return;
                 }
 
-                let totalData = rows.length - 1;
+                // Ambil data header + batasan data log harian agar sat-set
+                let headerRow = rows[0];
+                let dataRows = rows.slice(1);
+                
+                let totalData = dataRows.length;
                 let countMasuk = totalData;
                 let countSedangBekerja = 0;
 
                 let html = '<table class="rekap-table" id="tabelLog">';
                 
-                rows.forEach((row, rowIndex) => {
-                    html += '<tr>';
-                    if (rowIndex === 0) {
-                        html += `<th>No</th>`;
-                    } else {
-                        let nomorUrut = totalData - (rowIndex - 1);
-                        html += `<td><b>${nomorUrut}</b></td>`;
+                // Render Header
+                html += '<tr>';
+                html += `<th>No</th>`;
+                headerRow.forEach((hCell, hIdx) => {
+                    if (hIdx === 1 || hIdx === 7) return; // Skip ID & Link Foto
+                    html += `<th>${hCell !== null ? hCell : ''}</th>`;
+                });
+                html += '</tr>';
 
-                        // Hitung staff yang belum absen pulang (Jam Pulang di Indeks 4 Kosong)
-                        let jamPulangVal = row[4] !== null ? String(row[4]).trim() : '';
-                        if (jamPulangVal === "") {
-                            countSedangBekerja++;
-                        }
+                // Render Baris Data
+                dataRows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    let nomorUrut = totalData - rowIndex;
+                    html += `<td><b>${nomorUrut}</b></td>`;
+
+                    // Hitung staff yang belum absen pulang (Jam Pulang di Indeks 4 Kosong)
+                    let jamPulangVal = row[4] !== null ? String(row[4]).trim() : '';
+                    if (jamPulangVal === "") {
+                        countSedangBekerja++;
                     }
 
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 1 || colIndex === 7) return; // Skip ID & Link Foto Selfie
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
-                        let tag = rowIndex === 0 ? 'th' : 'td';
+                        let tag = 'td';
 
                         // 🌟 POLESAN VISUAL UNTUK TABEL LOG
-                        if (tag === 'td') {
-                            // Jam Masuk / Jam Pulang (Monospace font rapi)
-                            if (colIndex === 3 || colIndex === 4) {
-                                if (cellText !== "") {
-                                    cellText = `<span class="time-text">${cellText}</span>`;
-                                }
+                        if (colIndex === 3 || colIndex === 4) {
+                            if (cellText !== "") {
+                                cellText = `<span class="time-text">${cellText}</span>`;
                             }
-                            // Status Hadir
-                            else if (colIndex === 5) {
-                                if (cellText.toLowerCase().includes("hadir")) {
-                                    cellText = `<span class="badge-shift badge-hadir">Hadir</span>`;
-                                }
+                        }
+                        else if (colIndex === 5) {
+                            if (cellText.toLowerCase().includes("hadir")) {
+                                cellText = `<span class="badge-shift badge-hadir">Hadir</span>`;
                             }
-                            // Jaringan WiFi
-                            else if (colIndex === 6) {
-                                if (cellText !== "") {
-                                    cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
-                                }
+                        }
+                        else if (colIndex === 6) {
+                            if (cellText !== "") {
+                                cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                             }
-                            // Shift / Keterangan
-                            else if (colIndex === 8) {
-                                let upperVal = cellText.toUpperCase();
-                                let bClass = "shift-s1";
-                                if (upperVal.includes("MALAM")) bClass = "shift-s3";
-                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-                            }
-                            // Format Badge Rupiah Uang Makan Akumulasi (Kolom ke-10 / Indeks 9)
-                            else if (colIndex === 9) {
-                                let num = Number(cellText.replace(/[^0-9]/g, ''));
-                                let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
-                                cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
-                            }
+                        }
+                        else if (colIndex === 8) {
+                            let upperVal = cellText.toUpperCase();
+                            let bClass = "shift-s1";
+                            if (upperVal.includes("MALAM")) bClass = "shift-s3";
+                            cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                        }
+                        else if (colIndex === 9) {
+                            let num = Number(cellText.replace(/[^0-9]/g, ''));
+                            let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                            cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
                         }
 
                         html += `<${tag}>${cellText}</${tag}>`;
