@@ -371,16 +371,35 @@
             btn.classList.add('active');
         }
 
-        function cekPasswordAdmin() {
-            const PASSWORD_BENAR = "mmbc1305"; 
+        async function cekPasswordAdmin() {
             let inputVal = document.getElementById("adminPassInput").value;
+            let errEl = document.getElementById("authError");
+            errEl.style.display = "none";
 
-            if (inputVal === PASSWORD_BENAR) {
-                document.getElementById("authOverlay").style.display = "none";
-                document.getElementById("adminContentBody").style.display = "block";
-                muatIpAdmin();
-            } else {
-                document.getElementById("authError").style.display = "block";
+            if (!inputVal) {
+                errEl.innerText = "❌ Masukkan password terlebih dahulu!";
+                errEl.style.display = "block";
+                return;
+            }
+
+            try {
+                let response = await fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "cekPasswordAdmin", password: inputVal })
+                });
+                let res = await response.json();
+
+                if (res.sukses) {
+                    document.getElementById("authOverlay").style.display = "none";
+                    document.getElementById("adminContentBody").style.display = "block";
+                    muatIpAdmin();
+                } else {
+                    errEl.innerText = "❌ Password salah!";
+                    errEl.style.display = "block";
+                }
+            } catch (err) {
+                errEl.innerText = "❌ Gangguan koneksi ke server.";
+                errEl.style.display = "block";
             }
         }
 
@@ -432,7 +451,7 @@
             });
         }
 
-        // 🌟 LOAD JADWAL BULANAN (Dibatasi maksimal 70 baris aman & satset)
+        // 🌟 LOAD JADWAL BULANAN (Maksimal 70 baris aman & satset)
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
@@ -449,7 +468,7 @@
                     return;
                 }
                 window.loadedJadwal = true;
-                let rows = res.data.slice(0, 70); // Batasi maksimal 70 baris sesuai permintaan
+                let rows = res.data.slice(0, 70);
                 let html = '<table class="rekap-table" id="tabelJadwal">';
                 
                 let counterNo = 1;
@@ -573,7 +592,6 @@
                     return;
                 }
 
-                // Ambil data header + batasan data log harian agar sat-set
                 let headerRow = rows[0];
                 let dataRows = rows.slice(1);
                 
@@ -583,34 +601,30 @@
 
                 let html = '<table class="rekap-table" id="tabelLog">';
                 
-                // Render Header
                 html += '<tr>';
                 html += `<th>No</th>`;
                 headerRow.forEach((hCell, hIdx) => {
-                    if (hIdx === 1 || hIdx === 7) return; // Skip ID & Link Foto
+                    if (hIdx === 1 || hIdx === 7) return;
                     html += `<th>${hCell !== null ? hCell : ''}</th>`;
                 });
                 html += '</tr>';
 
-                // Render Baris Data
                 dataRows.forEach((row, rowIndex) => {
                     html += '<tr>';
                     let nomorUrut = totalData - rowIndex;
                     html += `<td><b>${nomorUrut}</b></td>`;
 
-                    // Hitung staff yang belum absen pulang (Jam Pulang di Indeks 4 Kosong)
                     let jamPulangVal = row[4] !== null ? String(row[4]).trim() : '';
                     if (jamPulangVal === "") {
                         countSedangBekerja++;
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; // Skip ID & Link Foto Selfie
+                        if (colIndex === 1 || colIndex === 7) return;
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = 'td';
 
-                        // 🌟 POLESAN VISUAL UNTUK TABEL LOG
                         if (colIndex === 3 || colIndex === 4) {
                             if (cellText !== "") {
                                 cellText = `<span class="time-text">${cellText}</span>`;
@@ -645,7 +659,6 @@
                 html += '</table>';
                 container.innerHTML = html;
 
-                // Update Angka Widget Statistik Ringkasan Kehadiran
                 if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = countMasuk + " Staff";
                 if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = countSedangBekerja + " Staff";
             })
