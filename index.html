@@ -35,7 +35,7 @@
             border-radius: 10px; 
             cursor: pointer; 
             transition: all 0.3s ease; 
-            font-size: 12px; 
+            font-size: 13px; 
         }
         .tab-btn.active { 
             background: #2563eb; 
@@ -44,21 +44,21 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-    .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
-    .container.active { display: block; overflow: hidden; } /* Pastikan overflow hidden ada agar rapi */
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container.active { display: block; overflow: hidden; }
 
-    @media screen and (min-width: 900px) {
-        #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1180px !important; }
-        .nav-tabs { max-width: 1180px !important; }
-    }
-        .header-brand { background: #f8fafc; padding: 10px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
-        .logo-text { font-size: 11px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
-        h1 { font-size: 16px; color: #1e293b; font-weight: 700; text-transform: uppercase; }
+        @media screen and (min-width: 900px) {
+            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1200px !important; }
+            .nav-tabs { max-width: 1200px !important; }
+        }
+        .header-brand { background: #f8fafc; padding: 12px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
+        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
+        h1 { font-size: 17px; color: #1e293b; font-weight: 800; text-transform: uppercase; }
 
-        .clock-box { background: #eff6ff; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
-        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
-        .instruction-sub { font-size: 12px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .clock-box { background: #eff6ff; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
+        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .instruction-sub { font-size: 13px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
@@ -99,58 +99,56 @@
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .search-box-wrapper { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; }
-        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
+        .search-box-wrapper { padding: 12px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
+        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
         .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
         
-        /* CSS TABEL YANG TELAH DIOPTIMALKAN */
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 10px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 4px 5px; text-align: center; background: #ffffff; }
+        /* CSS TABEL DENGAN UKURAN FONT JAUH LEBIH BESAR DAN NYAMAN */
+        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
+        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 7px 9px; text-align: center; background: #ffffff; vertical-align: middle; }
         
-        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
-        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 25px; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; }
-        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #f1f5f9; color: #1e293b; font-weight: bold; border-top: none; }
+        table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+
+        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; border-top: none; }
+        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 31px; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
+        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; border-top: none; }
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 38px; max-width: 38px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; }
-        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #f1f5f9; }
-        #tabelJadwal tr:nth-child(even) td:nth-child(1) { background-color: #f1f5f9; }
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 42px; max-width: 42px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; font-weight: bold; }
+        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; }
 
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 38px; z-index: 8; background: #f8fafc; text-align: left; min-width: 130px; max-width: 130px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); text-overflow: ellipsis; overflow: hidden; }
-        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #f1f5f9; }
-        #tabelJadwal tr:nth-child(even) td:nth-child(2) { background-color: #f1f5f9; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 42px; z-index: 8; background: #f8fafc; text-align: left; min-width: 145px; max-width: 145px; box-shadow: 2px 0 5px rgba(0,0,0,0.08); font-weight: 600; text-overflow: ellipsis; overflow: hidden; }
+        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; }
 
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 130px; max-width: 130px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-left: none; }
-        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #f1f5f9; }
-        #tabelLog tr:nth-child(even) td:nth-child(3) { background-color: #f1f5f9; }
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 145px; max-width: 145px; box-shadow: 2px 0 5px rgba(0,0,0,0.08); font-weight: 600; border-left: none; }
+        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; }
 
+        /* BADGE SHIFT DENGAN FONT LEBIH TEBAL & ELEGAN */
         .badge-shift {
             display: inline-block;
-            padding: 2px 4px;
-            font-size: 10px;
-            font-weight: 600;
-            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 6px;
             text-align: center;
-            min-width: 28px;
+            min-width: 32px;
             border: 1px solid transparent;
         }
-        .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
-        .shift-off { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
-        .shift-cuti, .shift-tlt { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
-        .shift-wfh, .shift-l { background-color: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+        .shift-s1, .shift-s2, .shift-s3 { background-color: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+        .shift-off { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        .shift-cuti, .shift-tlt { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
+        .shift-wfh { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+        .badge-jmlon { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 800; }
+        .badge-uangmakan { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 800; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
-        /* Menghilangkan sela putih di sekeliling tabel agar mentok ke tepi kartu */
-    #tab-rekap, #tab-log {
-        padding: 0 !important;
-    }
-    #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper {
-        border-radius: 0 0 20px 20px;
-    }
+
+        #tab-rekap, #tab-log { padding: 0 !important; }
+        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
     </style>
 </head>
 <body>
@@ -162,7 +160,7 @@
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
-    <!-- MODAL KAMERA SELFIE (HANYA UNTUK ABSEN MASUK) -->
+    <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
@@ -242,7 +240,6 @@
             <h1>admin</h1>
         </div>
         
-        <!-- KOTAK LOGIN PASSWORD ADMIN -->
         <div id="authOverlay" style="padding: 25px; text-align: center;">
             <h2>🔒</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password untuk mengakses menu pembaruan IP Wi-Fi.</p>
@@ -251,7 +248,6 @@
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
 
-        <!-- ISI KONTROL ADMIN -->
         <div id="adminContentBody" style="display: none; padding: 25px; text-align: center;">
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #475569; text-align: left;">
                 🌐 Jaringan Anda saat ini:<br>
@@ -418,7 +414,7 @@
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
-                        let cellText = cell !== null ? String(cell) : '';
+                        let cellText = cell !== null ? String(cell).trim() : '';
                         
                         // Header baris 0 kolom Nama
                         if (rowIndex === 0 && colIndex === 1) {
@@ -435,15 +431,27 @@
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
-                        // Badge shift HANYA untuk tag 'td' dan di luar baris khusus/kosong
+                        // Badge shift & Format Otomatis Jml On + Uang Makan
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
                             let upperVal = String(cellText).toUpperCase();
                             let badgeClass = 'badge-shift ';
-                            if (upperVal.includes('S1') || upperVal.includes('S2') || upperVal.includes('S3')) {
+                            
+                            const isJmlOn = colIndex === row.length - 2;
+                            const isUangMakan = colIndex === row.length - 1;
+
+                            if (isJmlOn) {
+                                badgeClass += 'badge-jmlon';
+                            } else if (isUangMakan) {
+                                badgeClass += 'badge-uangmakan';
+                                let num = Number(cellText.replace(/[^0-9]/g, ''));
+                                if (!isNaN(num) && num > 0) {
+                                    cellText = "Rp " + num.toLocaleString('id-ID');
+                                }
+                            } else if (upperVal.includes('S1') || upperVal.includes('S2') || upperVal.includes('S3')) {
                                 badgeClass += 'shift-s1';
-                            } else if (upperVal.includes('OFF')) {
+                            } else if (upperVal.includes('OFF') || upperVal.includes('LIBUR') || upperVal === 'L') {
                                 badgeClass += 'shift-off';
-                            } else if (upperVal.includes('CUTI') || upperVal.includes('TLT') || upperVal.includes('T')) {
+                            } else if (upperVal.includes('CUTI') || upperVal.includes('TLT') || upperVal === 'T' || upperVal.includes('CN')) {
                                 badgeClass += 'shift-cuti';
                             } else {
                                 badgeClass += 'shift-wfh';
@@ -505,7 +513,7 @@
 
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 1 || colIndex === 7) return; 
-                        let cellText = cell !== null ? String(cell) : '';
+                        let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
                         html += `<${tag}>${cellText}</${tag}>`;
                     });
@@ -593,7 +601,7 @@
             (err) => {}
         ).catch(err => console.log(err));
 
-function jalankanProsesAbsen(decodedText) {
+        function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
 
             const overlay = document.getElementById("fullScreenOverlay");
@@ -613,7 +621,6 @@ function jalankanProsesAbsen(decodedText) {
             msgEl.innerHTML = "Memeriksa data absensi...";
             overlay.style.display = "flex";
 
-            // Lakukan cek status kilat ke server untuk menentukan Masuk atau Pulang
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
@@ -628,11 +635,9 @@ function jalankanProsesAbsen(decodedText) {
                 }
 
                 if (res.status === "masuk") {
-                    // JIKA MASUK: Buka kamera selfie (Wajib Selfie)
                     window.activeStaffNama = res.nama;
                     bukaKameraSelfie(res.nama); 
                 } else if (res.status === "pulang") {
-                    // JIKA PULANG: Langsung tembak absen pulang secara instan (TANPA SELFIE)
                     const overlayPulang = document.getElementById("fullScreenOverlay");
                     document.getElementById("overlayIcon").innerText = "⏳";
                     document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
@@ -643,7 +648,7 @@ function jalankanProsesAbsen(decodedText) {
                     overlayPulang.className = "theme-loading";
                     overlayPulang.style.display = "flex";
 
-                    eksekusiAbsenFinal(""); // Kirim data pulang kosong tanpa foto
+                    eksekusiAbsenFinal("");
                 } else {
                     tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
                 }
@@ -652,6 +657,7 @@ function jalankanProsesAbsen(decodedText) {
                 tampilkanPesanError("Gangguan koneksi ke server.");
             });
         }
+
         function bukaKameraSelfie(namaStaff) {
             document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
             const modal = document.getElementById("selfieModal");
@@ -687,7 +693,6 @@ function jalankanProsesAbsen(decodedText) {
                 return;
             }
 
-            // Kompres ukuran foto agar ringan dan tidak bikin lemot
             canvas.width = 480;
             canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
             const ctx = canvas.getContext("2d");
@@ -730,7 +735,6 @@ function jalankanProsesAbsen(decodedText) {
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
-            // Kirim foto dan absen masuk sekaligus dalam 1 request agar anti-lemot
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
@@ -740,7 +744,6 @@ function jalankanProsesAbsen(decodedText) {
                 handleHasilAbsen(res);
             })
             .catch(err => {
-                // Fallback ke metode lama jika Apps Script belum support action gabungan
                 uploadSelfieTerpisah(base64Image);
             });
         }
