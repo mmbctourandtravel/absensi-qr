@@ -99,6 +99,51 @@
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
+        /* WIDGET SUMMARY CARD KEHADIRAN */
+        .summary-cards-container {
+            display: flex;
+            gap: 12px;
+            padding: 12px 15px 0 15px;
+            background: #ffffff;
+        }
+        .stat-card {
+            flex: 1;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .stat-card-icon {
+            font-size: 22px;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-card-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-card-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-card-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
         .search-box-wrapper { padding: 12px 15px; background: #ffffff; border-bottom: none !important; }
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
@@ -128,6 +173,7 @@
         #tabelLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
         #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
+        /* BADGE STYLING PREMIUM */
         .badge-shift {
             display: inline-block;
             padding: 3px 8px;
@@ -144,6 +190,9 @@
         .shift-wfh { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; }
         .badge-jmlon { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 800; }
         .badge-uangmakan { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 800; }
+        .badge-wifi { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
+        .badge-hadir { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 700; }
+        .time-text { font-family: 'Consolas', 'Courier New', monospace; font-weight: 700; color: #334155; letter-spacing: 0.5px; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
@@ -226,6 +275,25 @@
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>LOG ABSEN HARI INI</h1>
         </div>
+
+        <!-- 📊 CARD STATISTIK RINGKASAN KEHADIRAN -->
+        <div class="summary-cards-container">
+            <div class="stat-card">
+                <div class="stat-card-icon">👥</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">Total Masuk</span>
+                    <span class="stat-card-value" id="statTotalMasuk">0 Staff</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon">🟢</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-title">Sedang Bekerja</span>
+                    <span class="stat-card-value" id="statSedangBekerja">0 Staff</span>
+                </div>
+            </div>
+        </div>
+
         <div class="search-box-wrapper">
             <input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari nama staff yang sudah scan..." onkeyup="filterTabelLog()">
         </div>
@@ -488,15 +556,22 @@
             .then(res => {
                 if(!res.sukses) {
                     container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
+                    if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = "0 Staff";
+                    if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = "0 Staff";
                     return;
                 }
                 let rows = res.data;
                 if(!rows || rows.length <= 1) {
                     container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
+                    if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = "0 Staff";
+                    if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = "0 Staff";
                     return;
                 }
 
                 let totalData = rows.length - 1;
+                let countMasuk = totalData;
+                let countSedangBekerja = 0;
+
                 let html = '<table class="rekap-table" id="tabelLog">';
                 
                 rows.forEach((row, rowIndex) => {
@@ -505,7 +580,13 @@
                         html += `<th>No</th>`;
                     } else {
                         let nomorUrut = totalData - (rowIndex - 1);
-                        html += `<td>${nomorUrut}</td>`;
+                        html += `<td><b>${nomorUrut}</b></td>`;
+
+                        // Hitung staff yang belum absen pulang (Jam Pulang di Indeks 4 Kosong)
+                        let jamPulangVal = row[4] !== null ? String(row[4]).trim() : '';
+                        if (jamPulangVal === "") {
+                            countSedangBekerja++;
+                        }
                     }
 
                     row.forEach((cell, colIndex) => {
@@ -514,11 +595,39 @@
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
-                        // Format Badge Rupiah Uang Makan Akumulasi (Kolom ke-10 / Indeks 9)
-                        if (tag === 'td' && colIndex === 9) {
-                            let num = Number(cellText.replace(/[^0-9]/g, ''));
-                            let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
-                            cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                        // 🌟 POLESAN VISUAL UNTUK TABEL LOG
+                        if (tag === 'td') {
+                            // Jam Masuk / Jam Pulang (Monospace font rapi)
+                            if (colIndex === 3 || colIndex === 4) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="time-text">${cellText}</span>`;
+                                }
+                            }
+                            // Status Hadir
+                            else if (colIndex === 5) {
+                                if (cellText.toLowerCase().includes("hadir")) {
+                                    cellText = `<span class="badge-shift badge-hadir">Hadir</span>`;
+                                }
+                            }
+                            // Jaringan WiFi
+                            else if (colIndex === 6) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
+                                }
+                            }
+                            // Shift / Keterangan
+                            else if (colIndex === 8) {
+                                let upperVal = cellText.toUpperCase();
+                                let bClass = "shift-s1";
+                                if (upperVal.includes("MALAM")) bClass = "shift-s3";
+                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                            }
+                            // Format Badge Rupiah Uang Makan Akumulasi (Kolom ke-10 / Indeks 9)
+                            else if (colIndex === 9) {
+                                let num = Number(cellText.replace(/[^0-9]/g, ''));
+                                let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                                cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                            }
                         }
 
                         html += `<${tag}>${cellText}</${tag}>`;
@@ -527,6 +636,10 @@
                 });
                 html += '</table>';
                 container.innerHTML = html;
+
+                // Update Angka Widget Statistik Ringkasan Kehadiran
+                if(document.getElementById("statTotalMasuk")) document.getElementById("statTotalMasuk").innerText = countMasuk + " Staff";
+                if(document.getElementById("statSedangBekerja")) document.getElementById("statSedangBekerja").innerText = countSedangBekerja + " Staff";
             })
             .catch(err => { 
                 container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
@@ -875,7 +988,6 @@
                 (err) => {}
             ).catch(err => console.log("Restart scanner error:", err));
         }
-
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
