@@ -516,9 +516,18 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; 
+                        if (colIndex === 1 || colIndex === 7) return; // Skip ID & Link Foto Selfie
+                        
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
+
+                        // Format Badge Rupiah Uang Makan Akumulasi (Kolom ke-10 / Indeks 9)
+                        if (tag === 'td' && colIndex === 9) {
+                            let num = Number(cellText.replace(/[^0-9]/g, ''));
+                            let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                            cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                        }
+
                         html += `<${tag}>${cellText}</${tag}>`;
                     });
                     html += '</tr>';
