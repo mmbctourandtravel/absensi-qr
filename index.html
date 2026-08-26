@@ -103,29 +103,34 @@
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #ffffff; }
-        
-        /* CSS TABEL DENGAN UKURAN FONT JAUH LEBIH BESAR DAN NYAMAN */
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        table.rekap-table th, table.rekap-table td { border: 1px solid #cbd5e1; padding: 7px 9px; text-align: center; background: #ffffff; vertical-align: middle; }
-        
-        table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+        .search-box-wrapper { padding: 12px 15px; background: #ffffff; border-bottom: none !important; }
 
-        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; border-top: none; }
+        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #1e293b !important; }
+        
+        /* CSS TABEL SUPREMASI RAPI TANPA GARIS PUTIH SILANG */
+        table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
+        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 7px 9px; text-align: center; background: #ffffff; vertical-align: middle; }
+        
+        table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; border-right: 1px solid #334155 !important; border-bottom: 1px solid #334155 !important; }
+
+        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
         #tabelJadwal tr:nth-child(2) th { position: sticky; top: 31px; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
-        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; border-top: none; }
+        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: center; min-width: 42px; max-width: 42px; box-shadow: 1px 0 3px rgba(0,0,0,0.05); border-left: none; font-weight: bold; }
-        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; }
+        /* KONTRAK KOLOM STICKY NO & NAMA */
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: center; min-width: 42px; max-width: 42px; font-weight: bold; border-right: 1px solid #cbd5e1; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
+        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
 
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 42px; z-index: 8; background: #f8fafc; text-align: left; min-width: 145px; max-width: 145px; box-shadow: 2px 0 5px rgba(0,0,0,0.08); font-weight: 600; text-overflow: ellipsis; overflow: hidden; }
-        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; text-overflow: ellipsis; overflow: hidden; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
+        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #f8fafc; text-align: left; min-width: 145px; max-width: 145px; box-shadow: 2px 0 5px rgba(0,0,0,0.08); font-weight: 600; border-left: none; }
-        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; }
-
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
+        #tabelLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
+        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
         /* BADGE SHIFT DENGAN FONT LEBIH TEBAL & ELEGAN */
         .badge-shift {
             display: inline-block;
