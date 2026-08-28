@@ -162,8 +162,8 @@
 
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
-        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal</button>
-        <button class="tab-btn" onclick="switchTab('log', this)">📋 Log Hari Ini</button>
+        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal Bulanan</button>
+        <button class="tab-btn" onclick="switchTab('log', this)">📋 Absen Hari Ini</button>
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
@@ -393,7 +393,7 @@ async function cekPasswordAdmin() {
         function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
-            container.innerHTML = "Memuat jadwal dari Google Sheet...";
+            container.innerHTML = "Sedang Memuat jadwal...";
 
             fetch(API, {
                 method: "POST",
