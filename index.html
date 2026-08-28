@@ -306,19 +306,42 @@
             btn.classList.add('active');
         }
 
-        function cekPasswordAdmin() {
-            const PASSWORD_BENAR = "mmbc1305"; 
-            let inputVal = document.getElementById("adminPassInput").value;
+       // GANTI FUNGSI LAMA DENGAN KODE INI DI index.html:
+async function cekPasswordAdmin() {
+    let inputVal = document.getElementById("adminPassInput").value.trim();
+    let errorEl = document.getElementById("authError");
+    
+    if (!inputVal) {
+        errorEl.style.display = "block";
+        errorEl.innerText = "Password tidak boleh kosong!";
+        return;
+    }
 
-            if (inputVal === PASSWORD_BENAR) {
-                document.getElementById("authOverlay").style.display = "none";
-                document.getElementById("adminContentBody").style.display = "block";
-                muatIpAdmin();
-            } else {
-                document.getElementById("authError").style.display = "block";
-            }
+    errorEl.style.display = "none";
+
+    try {
+        let response = await fetch(API, {
+            method: "POST",
+            body: JSON.stringify({ 
+                action: "cekPasswordAdmin", 
+                password: inputVal 
+            })
+        });
+        let res = await response.json();
+
+        if (res.sukses) {
+            document.getElementById("authOverlay").style.display = "none";
+            document.getElementById("adminContentBody").style.display = "block";
+            muatIpAdmin();
+        } else {
+            errorEl.style.display = "block";
+            errorEl.innerText = "❌ Password Admin Salah!";
         }
-
+    } catch (err) {
+        errorEl.style.display = "block";
+        errorEl.innerText = "❌ Gagal terhubung ke server.";
+    }
+}
         function muatIpAdmin() {
             fetch("https://api.ipify.org?format=json")
                 .then(r => r.json())
