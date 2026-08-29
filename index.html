@@ -705,10 +705,15 @@
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                             }
                             else if (colIndex === 8) {
-                                let upperVal = cellText.toUpperCase();
-                                let bClass = upperVal.includes("MALAM") ? "shift-s3" : "shift-s1";
-                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-                            }
+    let upperVal = cellText.toUpperCase();
+    let bClass = "shift-s1";
+    if (upperVal.includes("BELUM ABSEN")) {
+        bClass = "shift-off"; // Warna merah peringatan
+    } else if (upperVal.includes("SELESAI") || upperVal.includes("✅")) {
+        bClass = "badge-hadir"; // Warna hijau
+    }
+    cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+}
                             else if (colIndex === 9) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
