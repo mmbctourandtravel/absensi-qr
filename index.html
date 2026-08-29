@@ -475,6 +475,7 @@
 
                     row.forEach((cell, colIndex) => {
                         if (colIndex === 0) return;
+                        if (colIndex === row.length - 1) return;
                         let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
                         let cellText = cell !== null ? String(cell).trim() : '';
                         
