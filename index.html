@@ -254,7 +254,7 @@
         </div>
     </div>
 
-    <!-- TAB 4: ADMIN (DIPERLEBAR DI LAYAR PC/LAPTOP & LOG EKSKLUSIF BERFOTO) -->
+    <!-- TAB 4: ADMIN (PANEL IP & TEKS DI TENGAH) -->
     <div id="tab-admin" class="container">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
@@ -270,22 +270,22 @@
         </div>
 
         <div id="adminContentBody" style="display: none; padding: 20px;">
-            <!-- PENGATURAN IP WI-FI -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; max-width: 500px;">
+            <!-- PENGATURAN IP WI-FI (POSISI TENGAH / CENTERED) -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
-                <b id="adminCurrentIp" style="color: #2563eb; font-size: 14px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
+                <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
                 
-                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #cbd5e1; text-align: left;">
                     <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
                     <select id="targetWifi" class="search-input" style="margin-top: 5px;">
                         <option value="basecamp">Basecamp MMBC</option>
                         <option value="megavision">Megavision</option>
                     </select>
                 </div>
-                <button onclick="updateIpKantorDariTab()" style="width: 100%; margin-top: 12px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer;">
+                <button onclick="updateIpKantorDariTab()" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
                     🔄 Perbarui IP Wi-Fi Sekarang
                 </button>
-                <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600; text-align: center;"></div>
+                <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
             </div>
 
             <!-- LOG EKSKLUSIF ADMIN DENGAN FOTO SELFIE -->
@@ -620,7 +620,6 @@
         // FUNGSI KONVERSI LINK GDRIVE KE DIRECT THUMBNAIL/IMAGE
         function fixGoogleDriveUrl(url) {
             if (!url) return "";
-            // Jika link mengandung /file/d/ID/view atau open?id=ID
             let fileId = "";
             if (url.includes("/file/d/")) {
                 let parts = url.split("/file/d/");
@@ -631,7 +630,6 @@
             }
             
             if (fileId) {
-                // Menggunakan lh3 googleusercontent sebagai direct image viewer yang stabil
                 return "https://lh3.googleusercontent.com/d/" + fileId;
             }
             return url;
@@ -673,7 +671,6 @@
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            // Kolom Indeks 7 adalah Foto Selfie (Gaya Bulat + Klik Zoom)
                             if (colIndex === 7) {
                                 if (cellText !== "" && (cellText.startsWith("http") || cellText.includes("drive.google.com"))) {
                                     let directImg = fixGoogleDriveUrl(cellText);
