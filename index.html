@@ -583,10 +583,17 @@
                                 }
                             }
                             else if (colIndex === 5) {
-                                if (cellText.toLowerCase().includes("hadir")) {
-                                    cellText = `<span class="badge-shift badge-hadir">Hadir</span>`;
-                                }
-                            }
+    let upperVal = cellText.toUpperCase();
+    let badgeClass = "badge-shift ";
+    if (upperVal.includes("TERLAMBAT")) {
+        badgeClass += "shift-off"; // Warna merah menyala peringatan
+    } else if (upperVal.includes("MALAM")) {
+        badgeClass += "shift-s3"; // Warna nuansa malam/gelap
+    } else {
+        badgeClass += "badge-hadir"; // Warna hijau standar
+    }
+    cellText = `<span class="${badgeClass}">${cellText}</span>`;
+}
                             else if (colIndex === 6) {
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
@@ -683,8 +690,17 @@
                                 if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
                             }
                             else if (colIndex === 5) {
-                                if (cellText.toLowerCase().includes("hadir")) cellText = `<span class="badge-shift badge-hadir">Hadir</span>`;
-                            }
+    let upperVal = cellText.toUpperCase();
+    let badgeClass = "badge-shift ";
+    if (upperVal.includes("TERLAMBAT")) {
+        badgeClass += "shift-off";
+    } else if (upperVal.includes("MALAM")) {
+        badgeClass += "shift-s3";
+    } else {
+        badgeClass += "badge-hadir";
+    }
+    cellText = `<span class="${badgeClass}">${cellText}</span>`;
+}
                             else if (colIndex === 6) {
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                             }
