@@ -709,7 +709,7 @@
     let bClass = "shift-s1";
     if (upperVal.includes("BELUM ABSEN")) {
         bClass = "shift-off"; // Warna merah peringatan
-    } else if (upperVal.includes("TEPAT WAKTU") || upperVal.includes("✅")) {
+    } else if (upperVal.includes("SELESAI") || upperVal.includes("✅")) {
         bClass = "badge-hadir"; // Warna hijau
     }
     cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
