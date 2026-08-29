@@ -793,6 +793,7 @@
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
+        let lastScanTime = 0; // Proteksi cooldown anti dobel scan
         let activeStaffId = "";
         let streamSelfie = null;
 
@@ -800,8 +801,11 @@
             { facingMode: "environment" },
             { fps: 10, qrbox: 230 },
             (decodedText) => {
-                if (sedangProses) return;
+                let currentTime = new Date().getTime();
+                if (sedangProses || (currentTime - lastScanTime < 10000)) return;
+                
                 sedangProses = true;
+                lastScanTime = currentTime;
                 
                 qr.stop().then(() => {
                     jalankanProsesAbsen(decodedText);
@@ -1062,23 +1066,28 @@
         }
 
         function resetScannerKamera() {
-            sedangProses = false;
-            try { qr.clear(); } catch(e) {}
-            qr.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: 230 },
-                (decodedText) => {
-                    if (sedangProses) return;
-                    sedangProses = true;
-                    
-                    qr.stop().then(() => {
-                        jalankanProsesAbsen(decodedText);
-                    }).catch(err => {
-                        jalankanProsesAbsen(decodedText);
-                    });
-                },
-                (err) => {}
-            ).catch(err => console.log("Restart scanner error:", err));
+            setTimeout(() => {
+                sedangProses = false;
+                try { qr.clear(); } catch(e) {}
+                qr.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: 230 },
+                    (decodedText) => {
+                        let currentTime = new Date().getTime();
+                        if (sedangProses || (currentTime - lastScanTime < 10000)) return;
+                        
+                        sedangProses = true;
+                        lastScanTime = currentTime;
+                        
+                        qr.stop().then(() => {
+                            jalankanProsesAbsen(decodedText);
+                        }).catch(err => {
+                            jalankanProsesAbsen(decodedText);
+                        });
+                    },
+                    (err) => {}
+                ).catch(err => console.log("Restart scanner error:", err));
+            }, 1500);
         }
 
         if ('serviceWorker' in navigator) {
