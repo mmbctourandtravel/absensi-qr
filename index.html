@@ -254,14 +254,14 @@
         </div>
     </div>
 
-    <!-- TAB 4: ADMIN (DENGAN PEMBARUAN IP & LOG EKSKLUSIF BERFOTO) -->
-    <div id="tab-admin" class="container" style="max-width: 450px !important;">
+    <!-- TAB 4: ADMIN (DIPERLEBAR DI LAYAR PC/LAPTOP & LOG EKSKLUSIF BERFOTO) -->
+    <div id="tab-admin" class="container">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>ADMIN DASHBOARD</h1>
         </div>
         
-        <div id="authOverlay" style="padding: 25px; text-align: center;">
+        <div id="authOverlay" style="padding: 25px; text-align: center; max-width: 450px; margin: 0 auto;">
             <h2>🔒</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password admin untuk mengakses Dashboard & Pembaruan IP Wi-Fi.</p>
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
@@ -271,7 +271,7 @@
 
         <div id="adminContentBody" style="display: none; padding: 20px;">
             <!-- PENGATURAN IP WI-FI -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #475569; max-width: 500px;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 14px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
                 
@@ -294,7 +294,7 @@
                 <div class="search-box-wrapper" style="padding: 0 0 10px 0;">
                     <input type="text" id="searchAdminLog" class="search-input" placeholder="🔍 Cari nama staff..." onkeyup="filterTabelAdminLog()">
                 </div>
-                <div class="rekap-wrapper" style="max-height: 400px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                <div class="rekap-wrapper" style="max-height: 450px; border-radius: 10px; border: 1px solid #cbd5e1;">
                     <div id="adminLogContent" class="loading-rekap">Memuat log dengan foto...</div>
                 </div>
             </div>
@@ -360,7 +360,7 @@
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
-                    loadAdminLogHariIni(); // Muat log berfoto khusus admin
+                    loadAdminLogHariIni();
                 } else {
                     errorEl.style.display = "block";
                     errorEl.innerText = "❌ Password Admin Salah!";
@@ -571,7 +571,6 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // Sembunyikan ID (1) dan Foto (7) untuk publik
                         if (colIndex === 1 || colIndex === 7) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
@@ -618,6 +617,26 @@
             });
         }
 
+        // FUNGSI KONVERSI LINK GDRIVE KE DIRECT THUMBNAIL/IMAGE
+        function fixGoogleDriveUrl(url) {
+            if (!url) return "";
+            // Jika link mengandung /file/d/ID/view atau open?id=ID
+            let fileId = "";
+            if (url.includes("/file/d/")) {
+                let parts = url.split("/file/d/");
+                if (parts[1]) fileId = parts[1].split("/")[0];
+            } else if (url.includes("id=")) {
+                let urlParams = new URLSearchParams(url.split("?")[1]);
+                fileId = urlParams.get("id");
+            }
+            
+            if (fileId) {
+                // Menggunakan lh3 googleusercontent sebagai direct image viewer yang stabil
+                return "https://lh3.googleusercontent.com/d/" + fileId;
+            }
+            return url;
+        }
+
         // LOG ADMIN EKSKLUSIF (DENGAN FOTO SELFIE BULAT & ZOOM)
         function loadAdminLogHariIni() {
             const container = document.getElementById('adminLogContent');
@@ -656,10 +675,9 @@
                         if (tag === 'td') {
                             // Kolom Indeks 7 adalah Foto Selfie (Gaya Bulat + Klik Zoom)
                             if (colIndex === 7) {
-                                if (cellText !== "" && cellText.startsWith("http")) {
-                                    // Mengubah link view Google Drive menjadi direct view atau thumbnail
-                                    let directImg = cellText;
-                                    cellText = `<img src="${directImg}" class="selfie-thumb" onclick="openImageModal('${directImg}')" title="Klik untuk memperbesar">`;
+                                if (cellText !== "" && (cellText.startsWith("http") || cellText.includes("drive.google.com"))) {
+                                    let directImg = fixGoogleDriveUrl(cellText);
+                                    cellText = `<img src="${directImg}" class="selfie-thumb" onclick="openImageModal('${directImg}')" title="Klik untuk memperbesar" onerror="this.onerror=null; this.src='https://via.placeholder.com/42?text=Foto';">`;
                                 } else {
                                     cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
                                 }
@@ -1059,7 +1077,7 @@
                     qr.stop().then(() => {
                         jalankanProsesAbsen(decodedText);
                     }).catch(err => {
-                        jalankanProsesAbsen(decodedTest);
+                        jalankanProsesAbsen(decodedText);
                     });
                 },
                 (err) => {}
