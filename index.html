@@ -814,29 +814,30 @@
             }).catch(e => console.log(e));
 
         const qr = new Html5Qrcode("reader");
-        let sedangProses = false;
-        let lastScanTime = 0; // Proteksi cooldown anti dobel scan
-        let activeStaffId = "";
-        let streamSelfie = null;
+let sedangProses = false;
+let lastScanTime = 0; // Proteksi cooldown anti dobel scan
+let activeStaffId = "";
+let streamSelfie = null;
 
-        qr.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: 230 },
-            (decodedText) => {
-                let currentTime = new Date().getTime();
-                if (sedangProses || (currentTime - lastScanTime < 10000)) return;
-                
-                sedangProses = true;
-                lastScanTime = currentTime;
-                
-                qr.stop().then(() => {
-                    jalankanProsesAbsen(decodedText);
-                }).catch(err => {
-                    jalankanProsesAbsen(decodedText);
-                });
-            },
-            (err) => {}
-        ).catch(err => console.log(err));
+qr.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 230 },
+    (decodedText) => {
+        let currentTime = new Date().getTime();
+        // Diperpanjang ke 20 detik (20000 ms) agar staff punya waktu cukup untuk menjauh
+        if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
+        
+        sedangProses = true;
+        lastScanTime = currentTime;
+        
+        qr.stop().then(() => {
+            jalankanProsesAbsen(decodedText);
+        }).catch(err => {
+            jalankanProsesAbsen(decodedText);
+        });
+    },
+    (err) => {}
+).catch(err => console.log(err));
 
         function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
