@@ -289,7 +289,6 @@
                 <li><b>j.</b> Menabung libur maksimal <b>1 hari</b> dalam satu bulan (kondisi normal).</li>
                 <li><b>k.</b> Waktu cuti berlaku dan harus dihabiskan sampai <b>30 September</b> di tahun berjalan.</li>
                 <li><b>i.</b> Jika tidak konsisten, manajemen berhak meninjau ulang kebijakan cuti berikutnya.</li>
-                <li></li>
             </ul>
         </div>
     </div>
@@ -310,6 +309,22 @@
         </div>
 
         <div id="adminContentBody" style="display: none; padding: 20px;">
+            
+            <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin) -->
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 12px; margin: 0 auto 20px auto; max-width: 500px; text-align: center;">
+                <h4 style="color: #1e40af; font-size: 14px; margin-bottom: 10px;">📊 Statistik Kunjungan Website</h4>
+                <div style="display: flex; justify-content: space-around; gap: 10px;">
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 11px; color: #64748b; display: block;">Hari Ini</span>
+                        <b id="statHariIni" style="font-size: 18px; color: #2563eb;">0</b>
+                    </div>
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 11px; color: #64748b; display: block;">Total Keseluruhan</span>
+                        <b id="statTotal" style="font-size: 18px; color: #1d4ed8;">0</b>
+                    </div>
+                </div>
+            </div>
+
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -397,6 +412,7 @@
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
                     loadAdminLogHariIni();
+                    muatStatistikKunjungan();
                 } else {
                     errorEl.style.display = "block";
                     errorEl.innerText = "❌ Password Admin Salah!";
@@ -408,6 +424,20 @@
                 btnLogin.innerText = "Masuk";
                 btnLogin.disabled = false;
             }
+        }
+
+        function muatStatistikKunjungan() {
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "catatKunjungan", info: "Cek Admin" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.sukses) {
+                    document.getElementById("statHariIni").innerText = res.hariIni;
+                    document.getElementById("statTotal").innerText = res.total;
+                }
+            }).catch(e => console.log(e));
         }
 
         function muatIpAdmin() {
@@ -839,6 +869,12 @@
                 let res = JSON.parse(text);
                 if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
             }).catch(e => console.log(e));
+
+        // Catat kunjungan otomatis saat web/app dibuka
+        fetch(API, {
+            method: "POST",
+            body: JSON.stringify({ action: "catatKunjungan", ip: userIP, info: "Akses Web/App" })
+        }).catch(e => {});
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
