@@ -21,13 +21,14 @@
             border-radius: 14px; 
             padding: 6px; 
             margin-bottom: 15px; 
-            gap: 6px; 
+            gap: 4px; 
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             transition: max-width 0.3s;
+            overflow-x: auto;
         }
         .tab-btn { 
             flex: 1; 
-            padding: 10px 6px; 
+            padding: 10px 4px; 
             text-align: center; 
             background: transparent; 
             border: none; 
@@ -36,7 +37,8 @@
             border-radius: 10px; 
             cursor: pointer; 
             transition: all 0.3s ease; 
-            font-size: 13px; 
+            font-size: 12px; 
+            white-space: nowrap;
         }
         .tab-btn.active { 
             background: #2563eb; 
@@ -49,7 +51,7 @@
         .container.active { display: block; overflow: hidden; }
 
         @media screen and (min-width: 900px) {
-            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active { max-width: 1200px !important; }
+            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active, #tab-peraturan.container.active { max-width: 1200px !important; }
             .nav-tabs { max-width: 1200px !important; }
         }
         .header-brand { background: #f8fafc; padding: 12px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
@@ -60,6 +62,9 @@
         .clock-box { background: #eff6ff; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
         .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
         .instruction-sub { font-size: 13px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+
+        /* MARQUEE PENGINGAT CUTI */
+        .marquee-box { background: #fffbeb; color: #b45309; padding: 8px 12px; font-size: 12px; font-weight: 700; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
 
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
@@ -87,7 +92,6 @@
         .overlay-msg-box { background: #f1f5f9; padding: 10px 14px; border-radius: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; }
         .waving-hand { display: inline-block; animation: wave 1.2s infinite; transform-origin: 70% 70%; font-size: 18px; }
 
-        /* FOTO BULAT DI TAB ADMIN & MODAL ZOOM */
         .selfie-thumb {
             width: 42px; height: 42px; border-radius: 50%; object-fit: cover; cursor: pointer;
             border: 2px solid #2563eb; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
@@ -147,9 +151,7 @@
         #tabelAdminLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
         #tabelAdminLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        .badge-shift {
-            display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; min-width: 32px; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .badge-shift { display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; min-width: 32px; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
         .shift-off { background-color: #fef2f2; color: #b91c1c; border-color: #fecaca; }
         .shift-cuti, .shift-tlt { background-color: #fffbeb; color: #b45309; border-color: #fde68a; }
@@ -174,10 +176,12 @@
         <img id="modalImg" src="" alt="Foto Selfie Full">
     </div>
 
+    <!-- NAVIGASI TAB -->
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Absensi</button>
         <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal</button>
+        <button class="tab-btn" onclick="switchTab('peraturan', this)">📜 Peraturan</button>
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
@@ -218,6 +222,14 @@
         </div>
         <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
         <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
+        
+        <!-- TEKS BERJALAN (MARQUEE) PENGINGAT CUTI -->
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" scrollamount="5">
+                ⚠️ PERHATIAN: Pengajuan cuti wajib konfirmasi H-1 sebelum jam 06:30 WIB via WhatsApp! Cek tab "Peraturan" untuk info lengkap.
+            </marquee>
+        </div>
+
         <div class="instruction-sub">💡 Silakan scan QR Code untuk absensi</div>
         <div class="scanner-wrapper">
             <div id="reader"></div>
@@ -239,7 +251,7 @@
         </div>
     </div>
 
-    <!-- TAB 3: LOG (PUBLIK - TANPA FOTO) -->
+    <!-- TAB 3: LOG (PUBLIK) -->
     <div id="tab-log" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -254,11 +266,37 @@
         </div>
     </div>
 
-    <!-- TAB 4: ADMIN (PANEL IP & TEKS DI TENGAH) -->
+    <!-- TAB 4: PERATURAN CUTI & PERusahaan -->
+    <div id="tab-peraturan" class="container">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>PERATURAN CUTI & KETENTUAN</h1>
+        </div>
+        <div style="padding: 20px; font-size: 13px; color: #334155; line-height: 1.6; max-height: 75vh; overflow-y: auto;">
+            <h3 style="color: #2563eb; margin-bottom: 12px; font-size: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">📋 Peraturan Cuti MMBC Tour and Travel</h3>
+            
+            <ul style="list-style-type: none; display: flex; flex-direction: column; gap: 10px;">
+                <li><b>a.</b> Konfirmasi Cuti <b>H-1</b> sebelum hari pelaksanaan.</li>
+                <li><b>b.</b> Jika ambil cuti tanpa konfirmasi dianggap tidak masuk kerja (<b>Potong gaji</b>). Batas konfirmasi sebelum jam masuk kerja (<b>06:30 WIB</b>).</li>
+                <li><b>c.</b> Jika Cuti minus di akhir bulan, akan dikenakan pemotongan gaji.</li>
+                <li><b>d.</b> Tidak boleh cuti bersamaan dalam divisi/tim yang sama.</li>
+                <li><b>e.</b> Waktu cuti berlaku dan harus dihabiskan sampai <b>30 September</b> di tahun berjalan.</li>
+                <li><b>f.</b> Cuti tidak dapat diberikan ke staf lain (<b>tidak dapat diperjualbelikan</b>).</li>
+                <li><b>g.</b> Satu hari maksimal jumlah cuti/libur hanya bisa <b>5 staff</b> dalam satu kantor (berlaku Senin s/d Jumat).</li>
+                <li><b>h.</b> Cuti urgent/mendesak dapat dikondisikan dengan manajemen.</li>
+                <li><b>i.</b> Telat lebih dari <b>5 kali</b> tidak mendapatkan bonus tahunan.</li>
+                <li><b>j.</b> Menabung libur maksimal <b>1 hari</b> dalam satu bulan (kondisi normal).</li>
+                <li><b>k.</b> Jika tidak konsisten, manajemen berhak meninjau ulang kebijakan cuti berikutnya.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- TAB 5: ADMIN -->
     <div id="tab-admin" class="container">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
-            <h1>DASHBOARD</h1>
+            <h1>DASHBOARD ADMIN</h1>
         </div>
         
         <div id="authOverlay" style="padding: 25px; text-align: center; max-width: 450px; margin: 0 auto;">
@@ -270,7 +308,6 @@
         </div>
 
         <div id="adminContentBody" style="display: none; padding: 20px;">
-            <!-- PENGATURAN IP WI-FI (POSISI TENGAH / CENTERED) -->
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -288,7 +325,6 @@
                 <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
             </div>
 
-            <!-- LOG EKSKLUSIF ADMIN DENGAN FOTO SELFIE -->
             <div style="border-top: 2px solid #e2e8f0; padding-top: 15px;">
                 <h3 style="font-size: 14px; color: #1e293b; margin-bottom: 10px; text-align: center;">📸 Log Absen Hari Ini (Eksklusif Admin)</h3>
                 <div class="search-box-wrapper" style="padding: 0 0 10px 0;">
@@ -324,13 +360,14 @@
             } else if(tabName === 'log') {
                 document.getElementById('tab-log').classList.add('active');
                 loadLogHariIni();
+            } else if(tabName === 'peraturan') {
+                document.getElementById('tab-peraturan').classList.add('active');
             } else if(tabName === 'admin') {
                 document.getElementById('tab-admin').classList.add('active');
             }
             btn.classList.add('active');
         }
 
-        // LOGIN ADMIN DENGAN INDIKATOR LOADING
         async function cekPasswordAdmin() {
             let inputVal = document.getElementById("adminPassInput").value.trim();
             let errorEl = document.getElementById("authError");
@@ -349,10 +386,7 @@
             try {
                 let response = await fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ 
-                        action: "cekPasswordAdmin", 
-                        password: inputVal 
-                    })
+                    body: JSON.stringify({ action: "cekPasswordAdmin", password: inputVal })
                 });
                 let res = await response.json();
 
@@ -400,11 +434,7 @@
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({
-                    action: "updateWifi",
-                    ip: window.adminMyIp,
-                    target: targetTerpilih
-                })
+                body: JSON.stringify({ action: "updateWifi", ip: window.adminMyIp, target: targetTerpilih })
             })
             .then(r => r.json())
             .then(res => {
@@ -538,7 +568,6 @@
             });
         }
 
-        // LOG HARI INI (PUBLIK - TANPA FOTO)
         function loadLogHariIni() {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -584,17 +613,17 @@
                                 }
                             }
                             else if (colIndex === 5) {
-    let upperVal = cellText.toUpperCase();
-    let badgeClass = "badge-shift ";
-    if (upperVal.includes("TERLAMBAT")) {
-        badgeClass += "shift-off"; // Warna merah menyala peringatan
-    } else if (upperVal.includes("MALAM")) {
-        badgeClass += "shift-s3"; // Warna nuansa malam/gelap
-    } else {
-        badgeClass += "badge-hadir"; // Warna hijau standar
-    }
-    cellText = `<span class="${badgeClass}">${cellText}</span>`;
-}
+                                let upperVal = cellText.toUpperCase();
+                                let badgeClass = "badge-shift ";
+                                if (upperVal.includes("TERLAMBAT")) {
+                                    badgeClass += "shift-off";
+                                } else if (upperVal.includes("MALAM")) {
+                                    badgeClass += "shift-s3";
+                                } else {
+                                    badgeClass += "badge-hadir";
+                                }
+                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                            }
                             else if (colIndex === 6) {
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
@@ -625,7 +654,6 @@
             });
         }
 
-        // FUNGSI KONVERSI LINK GDRIVE KE DIRECT THUMBNAIL/IMAGE
         function fixGoogleDriveUrl(url) {
             if (!url) return "";
             let fileId = "";
@@ -636,14 +664,12 @@
                 let urlParams = new URLSearchParams(url.split("?")[1]);
                 fileId = urlParams.get("id");
             }
-            
             if (fileId) {
                 return "https://lh3.googleusercontent.com/d/" + fileId;
             }
             return url;
         }
 
-        // LOG ADMIN EKSKLUSIF (DENGAN FOTO SELFIE BULAT & ZOOM)
         function loadAdminLogHariIni() {
             const container = document.getElementById('adminLogContent');
             container.innerHTML = "Memuat log eksklusif...";
@@ -673,7 +699,7 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1) return; // Lewati ID Staff
+                        if (colIndex === 1) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
@@ -691,30 +717,30 @@
                                 if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
                             }
                             else if (colIndex === 5) {
-    let upperVal = cellText.toUpperCase();
-    let badgeClass = "badge-shift ";
-    if (upperVal.includes("TERLAMBAT")) {
-        badgeClass += "shift-off";
-    } else if (upperVal.includes("MALAM")) {
-        badgeClass += "shift-s3";
-    } else {
-        badgeClass += "badge-hadir";
-    }
-    cellText = `<span class="${badgeClass}">${cellText}</span>`;
-}
+                                let upperVal = cellText.toUpperCase();
+                                let badgeClass = "badge-shift ";
+                                if (upperVal.includes("TERLAMBAT")) {
+                                    badgeClass += "shift-off";
+                                } else if (upperVal.includes("MALAM")) {
+                                    badgeClass += "shift-s3";
+                                } else {
+                                    badgeClass += "badge-hadir";
+                                }
+                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                            }
                             else if (colIndex === 6) {
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                             }
                             else if (colIndex === 8) {
-    let upperVal = cellText.toUpperCase();
-    let bClass = "shift-s1";
-    if (upperVal.includes("BELUM ABSEN")) {
-        bClass = "shift-off"; // Warna merah peringatan
-    } else if (upperVal.includes("SELESAI") || upperVal.includes("✅")) {
-        bClass = "badge-hadir"; // Warna hijau
-    }
-    cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-}
+                                let upperVal = cellText.toUpperCase();
+                                let bClass = "shift-s1";
+                                if (upperVal.includes("BELUM ABSEN")) {
+                                    bClass = "shift-off";
+                                } else if (upperVal.includes("SELESAI") || upperVal.includes("✅")) {
+                                    bClass = "badge-hadir";
+                                }
+                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                            }
                             else if (colIndex === 9) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
@@ -734,7 +760,6 @@
             });
         }
 
-        // FUNGSI MODAL ZOOM FOTO
         function openImageModal(imgUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
@@ -814,30 +839,29 @@
             }).catch(e => console.log(e));
 
         const qr = new Html5Qrcode("reader");
-let sedangProses = false;
-let lastScanTime = 0; // Proteksi cooldown anti dobel scan
-let activeStaffId = "";
-let streamSelfie = null;
+        let sedangProses = false;
+        let lastScanTime = 0; 
+        let activeStaffId = "";
+        let streamSelfie = null;
 
-qr.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 230 },
-    (decodedText) => {
-        let currentTime = new Date().getTime();
-        // Diperpanjang ke 20 detik (20000 ms) agar staff punya waktu cukup untuk menjauh
-        if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
-        
-        sedangProses = true;
-        lastScanTime = currentTime;
-        
-        qr.stop().then(() => {
-            jalankanProsesAbsen(decodedText);
-        }).catch(err => {
-            jalankanProsesAbsen(decodedText);
-        });
-    },
-    (err) => {}
-).catch(err => console.log(err));
+        qr.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 230 },
+            (decodedText) => {
+                let currentTime = new Date().getTime();
+                if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
+                
+                sedangProses = true;
+                lastScanTime = currentTime;
+                
+                qr.stop().then(() => {
+                    jalankanProsesAbsen(decodedText);
+                }).catch(err => {
+                    jalankanProsesAbsen(decodedText);
+                });
+            },
+            (err) => {}
+        ).catch(err => console.log(err));
 
         function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
@@ -1087,7 +1111,8 @@ qr.start(
                 resetScannerKamera();
             }, 4000);
         }
-function resetScannerKamera() {
+
+        function resetScannerKamera() {
             setTimeout(() => {
                 sedangProses = false;
                 try { qr.clear(); } catch(e) {}
@@ -1096,7 +1121,6 @@ function resetScannerKamera() {
                     { fps: 10, qrbox: 230 },
                     (decodedText) => {
                         let currentTime = new Date().getTime();
-                        // DISAMAKAN JADI 20 DETIK (20000 ms) AGAR TIDAK DOBEL SCAN LAGI
                         if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
                         
                         sedangProses = true;
