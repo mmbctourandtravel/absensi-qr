@@ -1087,8 +1087,7 @@ qr.start(
                 resetScannerKamera();
             }, 4000);
         }
-
-        function resetScannerKamera() {
+function resetScannerKamera() {
             setTimeout(() => {
                 sedangProses = false;
                 try { qr.clear(); } catch(e) {}
@@ -1097,7 +1096,8 @@ qr.start(
                     { fps: 10, qrbox: 230 },
                     (decodedText) => {
                         let currentTime = new Date().getTime();
-                        if (sedangProses || (currentTime - lastScanTime < 10000)) return;
+                        // DISAMAKAN JADI 20 DETIK (20000 ms) AGAR TIDAK DOBEL SCAN LAGI
+                        if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
                         
                         sedangProses = true;
                         lastScanTime = currentTime;
@@ -1111,14 +1111,6 @@ qr.start(
                     (err) => {}
                 ).catch(err => console.log("Restart scanner error:", err));
             }, 1500);
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker Terdaftar!', reg))
-                    .catch(err => console.log('Service Worker Gagal:', err));
-            });
         }
     </script>
 </body>
