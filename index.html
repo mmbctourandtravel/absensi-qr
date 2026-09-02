@@ -161,10 +161,20 @@
         .badge-wifi { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
         .badge-hadir { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 700; }
         
-        /* Styling Kapsul Khusus Tanggal, Nama, Masuk, dan Pulang (Ukuran Font Jam Sama) */
-        .badge-tanggal { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
-        .badge-nama { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; font-weight: 700; font-size: 11px; }
-        .badge-waktu { background-color: #f8fafc; color: #334155; border-color: #cbd5e1; font-weight: 700; font-size: 11px; font-family: 'Consolas', 'Courier New', monospace; }
+        /* Kapsul Elegan Jam Masuk & Pulang */
+        .time-text { 
+            display: inline-block;
+            background-color: #eff6ff; 
+            color: #1d4ed8; 
+            border: 1px solid #bfdbfe; 
+            padding: 4px 10px; 
+            border-radius: 8px; 
+            font-family: 'Consolas', 'Courier New', monospace; 
+            font-weight: 700; 
+            font-size: 11px;
+            letter-spacing: 0.5px; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
@@ -270,7 +280,7 @@
         </div>
     </div>
 
-    <!-- TAB 4: PERATURAN CUTI & PERusahaan -->
+    <!-- TAB 4: PERATURAN CUTI & PERUSAHAAN -->
     <div id="tab-peraturan" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -643,28 +653,12 @@
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            // Tanggal (Kapsul)
-                            if (colIndex === 2) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-tanggal">${cellText}</span>`;
-                            }
-                            // Nama (Kapsul)
-                            else if (colIndex === 3) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
-                            }
-                            // Jam Masuk (Kapsul dengan font seragam)
-                            else if (colIndex === 4) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
-                            }
-                            // Jam Pulang (Kapsul dengan font seragam)
-                            else if (colIndex === 5) {
+                            if (colIndex === 3 || colIndex === 4) {
                                 if (cellText !== "") {
-                                    cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
-                                } else {
-                                    cellText = `<span style="color:#cbd5e1;">-</span>`;
+                                    cellText = `<span class="time-text">${cellText}</span>`;
                                 }
                             }
-                            // Status (Gaya asli versi awal)
-                            else if (colIndex === 6) {
+                            else if (colIndex === 5) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -676,21 +670,18 @@
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
-                            // WiFi (Gaya asli versi awal)
-                            else if (colIndex === 8) {
+                            else if (colIndex === 6) {
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                                 }
                             }
-                            // Keterangan (Gaya asli versi awal)
-                            else if (colIndex === 9) {
+                            else if (colIndex === 8) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("MALAM")) bClass = "shift-s3";
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
-                            // Uang Makan (Gaya asli versi awal)
-                            else if (colIndex === 10) {
+                            else if (colIndex === 9) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -760,20 +751,7 @@
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            if (colIndex === 2) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-tanggal">${cellText}</span>`;
-                            }
-                            else if (colIndex === 3) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
-                            }
-                            else if (colIndex === 4) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
-                            }
-                            else if (colIndex === 5) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
-                                else cellText = `<span style="color:#cbd5e1;">-</span>`;
-                            }
-                            else if (colIndex === 7) {
+                            if (colIndex === 7) {
                                 if (cellText !== "" && (cellText.startsWith("http") || cellText.includes("drive.google.com"))) {
                                     let directImg = fixGoogleDriveUrl(cellText);
                                     cellText = `<img src="${directImg}" class="selfie-thumb" onclick="openImageModal('${directImg}')" title="Klik untuk memperbesar" onerror="this.onerror=null; this.src='https://via.placeholder.com/42?text=Foto';">`;
@@ -781,7 +759,10 @@
                                     cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
                                 }
                             }
-                            else if (colIndex === 6) {
+                            else if (colIndex === 3 || colIndex === 4) {
+                                if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
+                            }
+                            else if (colIndex === 5) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -793,10 +774,10 @@
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
-                            else if (colIndex === 8) {
+                            else if (colIndex === 6) {
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                             }
-                            else if (colIndex === 9) {
+                            else if (colIndex === 8) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("BELUM ABSEN")) {
@@ -806,7 +787,7 @@
                                 }
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
-                            else if (colIndex === 10) {
+                            else if (colIndex === 9) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
