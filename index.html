@@ -47,14 +47,14 @@
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
         }
 
-        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; padding-bottom: 20px; }
-        .container.active { display: block; }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container.active { display: block; overflow: hidden; }
 
         @media screen and (min-width: 900px) {
             #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active, #tab-peraturan.container.active { max-width: 1200px !important; }
             .nav-tabs { max-width: 1200px !important; }
         }
-        .header-brand { background: #f8fafc; padding: 12px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 15px; }
+        .header-brand { background: #f8fafc; padding: 12px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .logo-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
         .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
         h1 { font-size: 17px; color: #1e293b; font-weight: 800; text-transform: uppercase; }
@@ -117,17 +117,14 @@
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* KOTAK PENCARIAN DI LUAR REKAP WRAPPER */
-        .search-box-wrapper { padding: 0 15px 15px 15px; background: transparent; width: 100%; }
+        .search-box-wrapper { padding: 12px 15px; background: #ffffff; border-bottom: none !important; }
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-        /* PEMBUNGKUS TABEL RAPI */
-        #tab-rekap, #tab-log { padding: 0 !important; }
-        .rekap-wrapper { margin: 0 15px !important; width: calc(100% - 30px) !important; overflow: auto; max-height: 70vh; position: relative; border: 1px solid #cbd5e1 !important; border-radius: 12px !important; background: #ffffff !important; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #1e293b !important; }
         
         table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 9px 14px; text-align: center; background: #ffffff; vertical-align: middle; }
+        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 8px 12px; text-align: center; background: #ffffff; vertical-align: middle; }
         
         table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; border-right: 1px solid #334155 !important; border-bottom: 1px solid #334155 !important; }
 
@@ -163,10 +160,20 @@
         .badge-uangmakan { background-color: #dcfce7; color: #166534; border-color: #86efac; font-weight: 800; font-size: 12px; }
         .badge-wifi { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
         .badge-hadir { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 700; }
+        
+        /* Kapsul Tambahan untuk Tanggal, Nama, Masuk, Pulang */
+        .badge-tanggal { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
+        .badge-nama { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; font-weight: 700; }
+        .badge-masuk { background-color: #f0fdf4; color: #15803d; border-color: #bbf7d0; font-weight: 700; font-family: 'Consolas', 'Courier New', monospace; }
+        .badge-pulang { background-color: #fffbeb; color: #b45309; border-color: #fde68a; font-weight: 700; font-family: 'Consolas', 'Courier New', monospace; }
+
         .time-text { font-family: 'Consolas', 'Courier New', monospace; font-weight: 700; color: #334155; letter-spacing: 0.5px; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
+
+        #tab-rekap, #tab-log { padding: 0 !important; }
+        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
     </style>
 </head>
 <body>
@@ -311,19 +318,20 @@
         <div id="adminContentBody" style="display: none; padding: 20px;">
             
             <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
-<div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
-    <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
-    <div style="display: flex; justify-content: space-around; gap: 8px;">
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
-            <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
-        </div>
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
-            <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
-        </div>
-    </div>
-</div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
+                <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
+                <div style="display: flex; justify-content: space-around; gap: 8px;">
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
+                        <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
+                        <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
+                    </div>
+                </div>
+            </div>
+
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -638,12 +646,34 @@
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            if (colIndex === 3 || colIndex === 4) {
+                            // Tanggal (Kolom 2)
+                            if (colIndex === 2) {
                                 if (cellText !== "") {
-                                    cellText = `<span class="time-text">${cellText}</span>`;
+                                    cellText = `<span class="badge-shift badge-tanggal">${cellText}</span>`;
                                 }
                             }
+                            // Nama Staff (Kolom 3)
+                            else if (colIndex === 3) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
+                                }
+                            }
+                            // Jam Masuk (Kolom 4)
+                            else if (colIndex === 4) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="badge-shift badge-masuk">${cellText}</span>`;
+                                }
+                            }
+                            // Jam Pulang (Kolom 5)
                             else if (colIndex === 5) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="badge-shift badge-pulang">${cellText}</span>`;
+                                } else {
+                                    cellText = `<span style="color:#cbd5e1;">-</span>`;
+                                }
+                            }
+                            // Status (Kolom 6)
+                            else if (colIndex === 6) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -655,18 +685,22 @@
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
-                            else if (colIndex === 6) {
+                            // WiFi (Kolom 7 -> bergeser karena indeks array API)
+                            else if (colIndex === 8) {
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                                 }
                             }
-                            else if (colIndex === 8) {
+                            // Keterangan (Kolom 9)
+                            else if (colIndex === 9) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
-                                if (upperVal.includes("MALAM")) bClass = "shift-s3";
+                                if (upperVal.includes("MALAM") || upperVal.includes("BELUM")) bClass = "shift-off";
+                                if (upperVal.includes("SELESAI") || upperVal.includes("✅")) bClass = "badge-hadir";
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
-                            else if (colIndex === 9) {
+                            // Uang Makan (Kolom 10)
+                            else if (colIndex === 10) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -736,7 +770,20 @@
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            if (colIndex === 7) {
+                            if (colIndex === 2) {
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-tanggal">${cellText}</span>`;
+                            }
+                            else if (colIndex === 3) {
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
+                            }
+                            else if (colIndex === 4) {
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-masuk">${cellText}</span>`;
+                            }
+                            else if (colIndex === 5) {
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-pulang">${cellText}</span>`;
+                                else cellText = `<span style="color:#cbd5e1;">-</span>`;
+                            }
+                            else if (colIndex === 7) {
                                 if (cellText !== "" && (cellText.startsWith("http") || cellText.includes("drive.google.com"))) {
                                     let directImg = fixGoogleDriveUrl(cellText);
                                     cellText = `<img src="${directImg}" class="selfie-thumb" onclick="openImageModal('${directImg}')" title="Klik untuk memperbesar" onerror="this.onerror=null; this.src='https://via.placeholder.com/42?text=Foto';">`;
@@ -744,10 +791,7 @@
                                     cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
                                 }
                             }
-                            else if (colIndex === 3 || colIndex === 4) {
-                                if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
-                            }
-                            else if (colIndex === 5) {
+                            else if (colIndex === 6) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -759,10 +803,10 @@
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
-                            else if (colIndex === 6) {
+                            else if (colIndex === 8) {
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                             }
-                            else if (colIndex === 8) {
+                            else if (colIndex === 9) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("BELUM ABSEN")) {
@@ -772,7 +816,7 @@
                                 }
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
-                            else if (colIndex === 9) {
+                            else if (colIndex === 10) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
