@@ -315,19 +315,19 @@
         <div id="adminContentBody" style="display: none; padding: 20px;">
             
             <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
-<div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
-    <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
-    <div style="display: flex; justify-content: space-around; gap: 8px;">
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
-            <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
-        </div>
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
-            <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
-        </div>
-    </div>
-</div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
+                <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
+                <div style="display: flex; justify-content: space-around; gap: 8px;">
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
+                        <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
+                        <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
+                    </div>
+                </div>
+            </div>
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -614,7 +614,7 @@
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "getLogHariIni" })
+                body: JSON.stringify({ action: "getLog" })
             })
             .then(r => r.json())
             .then(res => {
@@ -729,7 +729,7 @@
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "getLogHariIni" })
+                body: JSON.stringify({ action: "getLog" })
             })
             .then(r => r.json())
             .then(res => {
