@@ -161,13 +161,10 @@
         .badge-wifi { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
         .badge-hadir { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 700; }
         
-        /* Kapsul Tambahan untuk Tanggal, Nama, Masuk, Pulang */
+        /* Styling Kapsul Khusus Tanggal, Nama, Masuk, dan Pulang (Ukuran Font Jam Sama) */
         .badge-tanggal { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
-        .badge-nama { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; font-weight: 700; }
-        .badge-masuk { background-color: #f0fdf4; color: #15803d; border-color: #bbf7d0; font-weight: 700; font-family: 'Consolas', 'Courier New', monospace; }
-        .badge-pulang { background-color: #fffbeb; color: #b45309; border-color: #fde68a; font-weight: 700; font-family: 'Consolas', 'Courier New', monospace; }
-
-        .time-text { font-family: 'Consolas', 'Courier New', monospace; font-weight: 700; color: #334155; letter-spacing: 0.5px; }
+        .badge-nama { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; font-weight: 700; font-size: 11px; }
+        .badge-waktu { background-color: #f8fafc; color: #334155; border-color: #cbd5e1; font-weight: 700; font-size: 11px; font-family: 'Consolas', 'Courier New', monospace; }
 
         .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
@@ -646,33 +643,27 @@
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            // Tanggal (Kolom 2)
+                            // Tanggal (Kapsul)
                             if (colIndex === 2) {
-                                if (cellText !== "") {
-                                    cellText = `<span class="badge-shift badge-tanggal">${cellText}</span>`;
-                                }
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-tanggal">${cellText}</span>`;
                             }
-                            // Nama Staff (Kolom 3)
+                            // Nama (Kapsul)
                             else if (colIndex === 3) {
-                                if (cellText !== "") {
-                                    cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
-                                }
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
                             }
-                            // Jam Masuk (Kolom 4)
+                            // Jam Masuk (Kapsul dengan font seragam)
                             else if (colIndex === 4) {
-                                if (cellText !== "") {
-                                    cellText = `<span class="badge-shift badge-masuk">${cellText}</span>`;
-                                }
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
                             }
-                            // Jam Pulang (Kolom 5)
+                            // Jam Pulang (Kapsul dengan font seragam)
                             else if (colIndex === 5) {
                                 if (cellText !== "") {
-                                    cellText = `<span class="badge-shift badge-pulang">${cellText}</span>`;
+                                    cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
                                 } else {
                                     cellText = `<span style="color:#cbd5e1;">-</span>`;
                                 }
                             }
-                            // Status (Kolom 6)
+                            // Status (Gaya asli versi awal)
                             else if (colIndex === 6) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
@@ -685,21 +676,20 @@
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
-                            // WiFi (Kolom 7 -> bergeser karena indeks array API)
+                            // WiFi (Gaya asli versi awal)
                             else if (colIndex === 8) {
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                                 }
                             }
-                            // Keterangan (Kolom 9)
+                            // Keterangan (Gaya asli versi awal)
                             else if (colIndex === 9) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
-                                if (upperVal.includes("MALAM") || upperVal.includes("BELUM")) bClass = "shift-off";
-                                if (upperVal.includes("SELESAI") || upperVal.includes("✅")) bClass = "badge-hadir";
+                                if (upperVal.includes("MALAM")) bClass = "shift-s3";
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
-                            // Uang Makan (Kolom 10)
+                            // Uang Makan (Gaya asli versi awal)
                             else if (colIndex === 10) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
@@ -777,10 +767,10 @@
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-nama">${cellText}</span>`;
                             }
                             else if (colIndex === 4) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-masuk">${cellText}</span>`;
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
                             }
                             else if (colIndex === 5) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-pulang">${cellText}</span>`;
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-waktu">${cellText}</span>`;
                                 else cellText = `<span style="color:#cbd5e1;">-</span>`;
                             }
                             else if (colIndex === 7) {
