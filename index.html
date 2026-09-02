@@ -121,10 +121,11 @@
         .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
         .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
-        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #1e293b !important; }
+        /* Pembungkus Tabel Dipercantik (Border, Radius, & Shadow Konsisten) */
+        .rekap-wrapper { padding: 0 !important; margin: 12px 15px 15px 15px !important; width: calc(100% - 30px) !important; overflow: auto; max-height: 75vh; position: relative; border: 1px solid #cbd5e1 !important; border-radius: 14px !important; background: #ffffff !important; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
         
         table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
-        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 8px 12px; text-align: center; background: #ffffff; vertical-align: middle; }
+        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 9px 14px; text-align: center; background: #ffffff; vertical-align: middle; }
         
         table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; border-right: 1px solid #334155 !important; border-bottom: 1px solid #334155 !important; }
 
@@ -166,7 +167,6 @@
         footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
 
         #tab-rekap, #tab-log { padding: 0 !important; }
-        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
     </style>
 </head>
 <body>
