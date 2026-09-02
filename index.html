@@ -568,6 +568,11 @@
                             if (!isNaN(d.getTime())) cellText = d.getDate();
                         }
 
+                        // Bungkus Kolom Nama (colIndex === 1) pada baris data dengan kapsul elegan
+                        if (tag === 'td' && colIndex === 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
+                            cellText = `<span class="name-text">${cellText}</span>`;
+                        }
+
                         if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
                             let upperVal = String(cellText).toUpperCase();
                             let badgeClass = 'badge-shift ';
