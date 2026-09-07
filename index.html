@@ -1110,8 +1110,7 @@ function loadAdminLogHariIni() {
                 tampilkanPesanError("Gangguan koneksi, namun sistem sedang memproses.");
             });
         }
-
-        function handleHasilAbsen(res) {
+function handleHasilAbsen(res) {
             const overlay = document.getElementById("fullScreenOverlay");
             const icon = document.getElementById("overlayIcon");
             const title = document.getElementById("overlayTitle");
@@ -1129,12 +1128,12 @@ function loadAdminLogHariIni() {
                 if (isPulang) {
                     overlay.className = "theme-pulang";
                     icon.innerText = "🏡";
-                    title.innerText = "Absen Pulang Berhasil";
+                    title.innerText = "Absensi Pulang Berhasil";
                     msgEl.innerHTML = `Hati-hati di jalan, selamat beristirahat! <span class="waving-hand">👋</span>`;
                 } else {
                     overlay.className = "theme-masuk";
                     icon.innerText = "🏢";
-                    title.innerText = "Absen Masuk Berhasil";
+                    title.innerText = "Absensi Masuk Berhasil";
                     msgEl.innerHTML = `Selamat bekerja, semoga harinya menyenangkan! <span class="waving-hand">👋</span>`;
                 }
 
@@ -1143,18 +1142,46 @@ function loadAdminLogHariIni() {
                 wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
                 overlay.style.display = "flex";
 
+                // --- AUDIO "TRING" & SUARA UCAPAN TANPA KATA "ANDA" ---
                 try {
                     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(659.25, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.18);
-                } catch(e) {}
+                    
+                    function playTone(freq, startTime, duration) {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+                        
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime + startTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+                        
+                        osc.start(ctx.currentTime + startTime);
+                        osc.stop(ctx.currentTime + startTime + duration);
+                    }
+
+                    // Nada Dering "Tring"
+                    playTone(1046.50, 0.0, 0.3);
+                    playTone(1318.51, 0.1, 0.4);
+
+                    // Suara Teks (Speech Synthesis) tanpa kata "Anda"
+                    if ('speechSynthesis' in window) {
+                        setTimeout(() => {
+                            let teksUcap = isPulang 
+                                ? "Absensi Pulang Berhasil" 
+                                : "Absensi Masuk Berhasil";
+                            
+                            const utterance = new SpeechSynthesisUtterance(teksUcap);
+                            utterance.lang = 'id-ID';
+                            utterance.rate = 1.0;
+                            utterance.pitch = 1.1;
+                            window.speechSynthesis.speak(utterance);
+                        }, 300);
+                    }
+                } catch(e) {
+                    console.log("Audio/Speech error:", e);
+                }
 
             } else {
                 tampilkanPesanError(res.pesan);
