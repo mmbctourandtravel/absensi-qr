@@ -482,6 +482,12 @@
             }
 
             let msg = document.getElementById("statusMsgAdmin");
+            let btnUpdate = event.target; // Mengambil tombol yang diklik
+            
+            // Disable tombol agar tidak bisa klik 2 kali
+            btnUpdate.disabled = true;
+            btnUpdate.style.opacity = "0.6";
+
             msg.style.color = "#1e293b";
             msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
 
@@ -494,7 +500,7 @@
                     action: "updateWifi", 
                     ip: window.adminMyIp, 
                     target: targetTerpilih,
-                    namaStaff: namaStaffAktif // <-- Mengirim nama staff admin yang sedang login
+                    namaStaff: namaStaffAktif 
                 })
             })
             .then(r => r.json())
@@ -510,6 +516,11 @@
             .catch(err => {
                 msg.style.color = "#dc2626";
                 msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
+            })
+            .finally(() => {
+                // Aktifkan kembali tombol setelah selesai
+                btnUpdate.disabled = false;
+                btnUpdate.style.opacity = "1";
             });
         }
 function loadRekapBulanan() {
