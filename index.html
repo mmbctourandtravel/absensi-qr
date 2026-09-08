@@ -429,6 +429,9 @@
                 let res = await response.json();
 
                 if (res.sukses) {
+                    // Menyimpan nama admin yang berhasil login dari respons Apps Script
+                    window.adminLoginNama = res.namaAdmin || "Web Admin";
+
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
@@ -446,7 +449,6 @@
                 btnLogin.disabled = false;
             }
         }
-
         function muatStatistikKunjungan() {
             fetch(API, {
                 method: "POST",
@@ -484,10 +486,16 @@
             msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
 
             let targetTerpilih = document.getElementById("targetWifi").value;
+            let namaStaffAktif = window.adminLoginNama || "Manual Staff";
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "updateWifi", ip: window.adminMyIp, target: targetTerpilih })
+                body: JSON.stringify({ 
+                    action: "updateWifi", 
+                    ip: window.adminMyIp, 
+                    target: targetTerpilih,
+                    namaStaff: namaStaffAktif // <-- Mengirim nama staff admin yang sedang login
+                })
             })
             .then(r => r.json())
             .then(res => {
