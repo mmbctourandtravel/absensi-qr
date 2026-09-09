@@ -3,912 +3,1275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABSENSI QR MMBC PADANG</title>
+    <title>Absensi - MMBC Tour & Travel</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1565ff">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <meta name="theme-color" content="#0f172a">
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #07090e; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
-
-        .container { width: 100%; max-width: 1200px; background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         
-        .welcomeCard { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 24px; text-align: center; border-bottom: 1px solid #334155; }
-        .welcomeLogo { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; box-shadow: 0 6px 20px rgba(37,99,235,0.5); border: 2px solid #38bdf8; }
-        .welcomeCard h2 { font-size: 20px; color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
+        .nav-tabs { 
+            display: flex; 
+            width: 100%; 
+            max-width: 600px; 
+            background: #1e293b; 
+            border: 1px solid #334155;
+            border-radius: 14px; 
+            padding: 6px; 
+            margin-bottom: 15px; 
+            gap: 4px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: max-width 0.3s;
+            overflow-x: auto;
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 10px 4px; 
+            text-align: center; 
+            background: transparent; 
+            border: none; 
+            color: #94a3b8; 
+            font-weight: 600; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 12px; 
+            white-space: nowrap;
+        }
+        .tab-btn.active { 
+            background: #2563eb; 
+            color: #ffffff; 
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
+        }
 
-        .tab-menu { display: flex; background: #1e293b; padding: 6px; gap: 6px; border-bottom: 1px solid #334155; }
-        .tab-button { flex: 1; padding: 12px 6px; text-align: center; background: transparent; border: none; color: #94a3b8; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-size: 13px; }
-        .tab-button.active { background: #2563eb; color: #ffffff; font-weight: bold; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5); }
+        .container { width: 100%; max-width: 600px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); overflow: hidden; display: none; transition: max-width 0.3s; position: relative; }
+        .container.active { display: block; overflow: hidden; }
 
-        .tab-page { padding: 25px; display: none; background: #f8fafc; min-height: 420px; }
-        .tab-page.active-page { display: block; }
+        @media screen and (min-width: 900px) {
+            #tab-rekap.container.active, #tab-log.container.active, #tab-admin.container.active, #tab-peraturan.container.active { max-width: 1200px !important; }
+            .nav-tabs { max-width: 1200px !important; }
+        }
+        .header-brand { background: #f8fafc; padding: 12px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .logo-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-bottom: 3px; }
+        .logo-text { font-size: 12px; font-weight: 700; color: #2563eb; letter-spacing: 1px; text-transform: uppercase; }
+        h1 { font-size: 17px; color: #1e293b; font-weight: 800; text-transform: uppercase; }
 
-        .tanggal, .jam { text-align: center; font-weight: 600; color: #1d4ed8; }
-        .tanggal { font-size: 13px; background: #eff6ff; padding: 10px; border-radius: 12px 12px 0 0; border: 1px solid #dbeafe; border-bottom: none; }
-        .jam { font-size: 24px; background: #eff6ff; padding: 0 10px 14px 10px; border-radius: 0 0 12px 12px; border: 1px solid #dbeafe; border-top: none; margin-bottom: 15px; font-family: monospace; letter-spacing: 1px; }
+        .clock-box { background: #eff6ff; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
+        .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .instruction-sub { font-size: 13px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        #pilihanLokasi { text-align: center; background: #ffffff; padding: 30px 20px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 15px; font-weight: 600; font-size: 14px; color: #475569; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
-        .btnLokasi { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; border: none; padding: 15px 24px; border-radius: 14px; font-weight: bold; font-size: 15px; cursor: pointer; margin: 10px 6px 0 6px; width: 45%; transition: all 0.25s; box-shadow: 0 6px 15px rgba(37,99,235,0.3); }
-        .btnLokasi:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(37,99,235,0.45); }
+        /* MARQUEE PENGINGAT CUTI */
+        .marquee-box { background: #fffbeb; color: #b45309; padding: 8px 12px; font-size: 12px; font-weight: 700; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
 
-        .scan-box { background: #000; border-radius: 14px; overflow: hidden; margin-top: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); max-width: 500px; margin-left: auto; margin-right: auto; }
-        #reader { width: 100% !important; border: none !important; }
-
-        .search-box { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 13px; margin-bottom: 15px; outline: none; background: #ffffff; transition: all 0.2s; }
-        .search-box:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
-
-        /* ========================================================
-            OVERLAY PROFESIONAL & ELEGAN
-            ======================================================== */
+        .scanner-wrapper { padding: 15px; text-align: center; }
+        #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
+        
         #fullScreenOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 99999; padding: 20px; text-align: center; opacity: 0; transition: opacity 0.3s ease;
+            background: #0f172a; display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 99999; padding: 25px; text-align: center; transition: background 0.4s ease;
         }
-        
+        #fullScreenOverlay.theme-masuk { background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 100%) !important; }
+        #fullScreenOverlay.theme-pulang { background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%) !important; }
+        #fullScreenOverlay.theme-loading { background: rgba(15, 23, 42, 0.9) !important; backdrop-filter: blur(10px); }
+        #fullScreenOverlay.error-bg { background: linear-gradient(135deg, #fecaca 0%, #f87171 100%) !important; }
+
         .overlay-card {
-            background: #ffffff; width: 100%; max-width: 440px; padding: 35px 25px 30px 25px; border-radius: 32px;
-            display: flex; flex-direction: column; align-items: center; position: relative;
-            transform: scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            background: #ffffff; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; align-items: center;
+            animation: scaleUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        #fullScreenOverlay.show { opacity: 1; }
-        #fullScreenOverlay.show .overlay-card { transform: scale(1) translateY(0); }
-
-        .overlay-badge-icon {
-            width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 40px; margin-bottom: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            animation: bounceGentle 2s infinite ease-in-out;
-        }
-
-        #fullScreenOverlay.theme-loading { background: rgba(15, 23, 42, 0.98); }
-        #fullScreenOverlay.theme-loading .overlay-card { background: #ffffff; border-top: 6px solid #2563eb; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); }
-        #fullScreenOverlay.theme-loading .overlay-subtitle { color: #64748b; }
-        #fullScreenOverlay.theme-loading .overlay-title { color: #0f172a; }
-        #fullScreenOverlay.theme-loading .overlay-name-badge { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
-        #fullScreenOverlay.theme-loading .overlay-msg-box { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
-        #fullScreenOverlay.theme-loading .spinner-ring { border: 5px solid rgba(37, 99, 235, 0.15); border-top: 5px solid #2563eb; }
-        
-        #fullScreenOverlay.theme-masuk { background: rgba(30, 58, 138, 0.7); }
-        #fullScreenOverlay.theme-masuk .overlay-card { background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%); border-top: 6px solid #2563eb; }
-        #fullScreenOverlay.theme-masuk .overlay-badge-icon { background: linear-gradient(135deg, #dbeafe 100%, #bfdbfe 0%); color: #2563eb; }
-        #fullScreenOverlay.theme-masuk .overlay-subtitle { color: #2563eb; }
-        #fullScreenOverlay.theme-masuk .overlay-title { color: #1e40af; }
-        #fullScreenOverlay.theme-masuk .overlay-name-badge { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
-        #fullScreenOverlay.theme-masuk .overlay-msg-box { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-
-        #fullScreenOverlay.theme-pulang { background: rgba(6, 78, 59, 0.7); }
-        #fullScreenOverlay.theme-pulang .overlay-card { background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); border-top: 6px solid #059669; }
-        #fullScreenOverlay.theme-pulang .overlay-badge-icon { background: linear-gradient(135deg, #d1fae5 100%, #a7f3d0 0%); color: #059669; }
-        #fullScreenOverlay.theme-pulang .overlay-subtitle { color: #059669; }
-        #fullScreenOverlay.theme-pulang .overlay-title { color: #065f46; }
-        #fullScreenOverlay.theme-pulang .overlay-name-badge { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
-        #fullScreenOverlay.theme-pulang .overlay-msg-box { background: #f0fdf4; color: #065f46; border: 1px solid #bbf7d0; }
-
-        #fullScreenOverlay.error-bg { background: rgba(127, 29, 29, 0.8); }
-        #fullScreenOverlay.error-bg .overlay-card { background: #fff5f5; border-top: 6px solid #dc2626; }
-        #fullScreenOverlay.error-bg .overlay-badge-icon { background: #fee2e2; color: #dc2626; }
-        #fullScreenOverlay.error-bg .overlay-subtitle { color: #dc2626; }
-        #fullScreenOverlay.error-bg .overlay-title { color: #991b1b; }
-        #fullScreenOverlay.error-bg .overlay-name-badge { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-        #fullScreenOverlay.error-bg .overlay-msg-box { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-
-        .overlay-subtitle { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
-        .overlay-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.3px; }
-        .overlay-name-badge { font-size: 20px; font-weight: 700; margin: 6px 0 14px 0; padding: 12px 20px; border-radius: 16px; width: 100%; word-break: break-word; }
-        
-        .overlay-info-grid { display: flex; flex-direction: column; width: 100%; gap: 8px; margin-bottom: 16px; }
-        .overlay-info-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.03); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); font-size: 13px; font-weight: 600; color: #334155; }
-        .overlay-info-item span:last-child { color: #0f172a; font-weight: 700; }
-
-        .overlay-msg-box { padding: 12px 16px; border-radius: 14px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .overlay-icon { font-size: 56px; margin-bottom: 10px; animation: bounceIcon 0.6s infinite alternate; }
+        .overlay-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-transform: uppercase; }
+        .overlay-name { font-size: 20px; font-weight: 700; color: #2563eb; margin: 6px 0; background: #f8fafc; padding: 6px 16px; border-radius: 30px; border: 1px solid #e2e8f0; width: 100%; }
+        .overlay-time { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px; }
+        .overlay-wifi { font-size: 12px; color: #64748b; margin-bottom: 15px; font-weight: 500; }
+        .overlay-msg-box { background: #f1f5f9; padding: 10px 14px; border-radius: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; }
         .waving-hand { display: inline-block; animation: wave 1.2s infinite; transform-origin: 70% 70%; font-size: 18px; }
 
-        .spinner-ring {
-            width: 60px; height: 60px; border: 5px solid rgba(56, 189, 248, 0.2); border-top: 5px solid #38bdf8;
-            border-radius: 50%; animation: spin 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; margin-bottom: 15px;
+        .selfie-thumb {
+            width: 42px; height: 42px; border-radius: 50%; object-fit: cover; cursor: pointer;
+            border: 2px solid #2563eb; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
+        .selfie-thumb:hover { transform: scale(1.15); }
+        
+        #imageModal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85);
+            display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px; backdrop-filter: blur(5px);
+        }
+        #modalImg { max-width: 90%; max-height: 85vh; border-radius: 16px; border: 3px solid #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
         #selfieModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000000;
-            display: none; flex-direction: column; align-items: center; justify-content: flex-end;
-            z-index: 9999; padding: 20px; color: white; text-align: center;
+            display: none; flex-direction: column; align-items: center; justify-content: space-between;
+            z-index: 9999; padding: 25px 20px; color: white; text-align: center;
         }
         #selfieVideo { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; background: #000; }
-        
-        .selfie-header { 
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 2; width: 90%; max-width: 420px; background: rgba(15, 23, 42, 0.85); 
-            padding: 12px 16px; border-radius: 16px; backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,0.25); 
-        }
+        .selfie-header, .selfie-footer { position: relative; z-index: 2; width: 100%; max-width: 420px; background: rgba(15, 23, 42, 0.7); padding: 14px; border-radius: 16px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); }
+        .btn-capture { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 14px 28px; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); }
 
-        .selfie-footer { 
-            position: relative; z-index: 2; width: 100%; max-width: 420px; 
-            background: rgba(15, 23, 42, 0.85); padding: 16px; border-radius: 18px; 
-            backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.25); 
-            margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .btn-capture { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 15px 30px; border-radius: 40px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 22px rgba(59, 130, 246, 0.6); }
-
-        .page-title { text-align: center; margin-bottom: 18px; }
-        .page-icon { font-size: 30px; margin-bottom: 6px; }
-        .page-title h2 { font-size: 17px; color: #1e293b; font-weight: 700; }
-        .page-title p { font-size: 12px; color: #64748b; }
-
-        .rekap-wrapper { overflow-x: auto; max-height: 75vh; border: 1px solid #cbd5e1; border-radius: 14px; background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.04); position: relative; }
-        .log-container-wrapper { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; padding: 18px; border-radius: 18px; box-shadow: 0 8px 20px rgba(21, 128, 61, 0.08); }
-        .jadwal-container-wrapper { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; padding: 18px; border-radius: 18px; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08); }
-
-        table.rekap-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; table-layout: auto; }
-        
-        /* Padding sel tabel diperkecil khusus untuk Jadwal Kerja supaya makin compact */
-        #jadwalContent table.rekap-table th, 
-        #jadwalContent table.rekap-table td { border: 1px solid #cbd5e1; padding: 5px 6px; text-align: center; background: #ffffff; vertical-align: middle; }
-
-        /* Padding normal untuk Log Harian */
-        #logContent table.rekap-table th, 
-        #logContent table.rekap-table td { border: 1px solid #cbd5e1; padding: 9px 12px; text-align: center; background: #ffffff; vertical-align: middle; }
-        
-        /* HEADER STICKY KE ATAS (VERTIKAL) KHUSUS JADWAL KERJA */
-        #jadwalContent table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 20; }
-        #jadwalContent table.rekap-table tr:nth-child(1) th { top: 0; z-index: 22; }
-        #jadwalContent table.rekap-table tr:nth-child(2) th { top: 26px; z-index: 21; }
-
-        /* HEADER STICKY LOG HARIAN */
-        #logContent table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-weight: 600; letter-spacing: 0.3px; position: sticky; z-index: 20; top: 0; }
-
-        /* ========================================================
-            KOLOM 1 (NO) BERGERAK NORMAL (TIDAK STICKY)
-            ======================================================== */
-        table.rekap-table th:first-child, 
-        table.rekap-table td:first-child { 
-            width: 40px !important; 
-            min-width: 40px !important; 
-            max-width: 40px !important; 
-            background: #f1f5f9; 
-            border-right: 1px solid #cbd5e1; 
-            text-align: center; 
-        }
-
-        /* ========================================================
-            HANYA KOLOM 2 (NAMA STAFF) YANG STICKY KE SAMPING (LEFT: 0)
-            ======================================================== */
-        table.rekap-table th:nth-child(2), 
-        table.rekap-table td:nth-child(2) { 
-            position: sticky !important;
-            left: 0 !important;
-            min-width: 130px;
-            max-width: 150px;
-            z-index: 10;
-        }
-
-        /* Warna Latar Belakang Khusus Kolom Nama Staff (Sticky) */
-        table.rekap-table tr th:nth-child(2) {
-            background: #1e293b !important;
-            color: #ffffff !important;
-            z-index: 30 !important; /* Paling tinggi agar tidak tertutup */
-        }
-
-        /* Sticky khusus baris di Jadwal Kerja */
-        #jadwalContent table.rekap-table tr:not(:first-child):not(:nth-child(2)) td:nth-child(2) { 
-            background: #f8fafc !important; 
-            color: #0f172a !important;
-            font-weight: 600; 
-            border-right: 2px solid #cbd5e1; 
-            z-index: 10;
-        }
-
-        /* Sticky khusus baris di Log Harian */
-        #logContent table.rekap-table tr:not(:first-child) td:nth-child(2) { 
-            background: #f8fafc !important; 
-            color: #0f172a !important;
-            border-right: 2px solid #cbd5e1; 
-            z-index: 10;
-        }
-
-        /* Pengaturan warna latar belakang baris genap/ganjil untuk tabel jadwal */
-        #jadwalContent table.rekap-table tr:not(:first-child):not(:nth-child(2)):nth-child(even) td:not(:nth-child(2)) { background-color: #f1f5f9 !important; }
-        #jadwalContent table.rekap-table tr:not(:first-child):not(:nth-child(2)):nth-child(odd) td:not(:nth-child(2)) { background-color: #ffffff !important; }
-
-        /* Pengaturan warna latar belakang baris genap/ganjil untuk tabel log */
-        #logContent table.rekap-table tr:not(:first-child):nth-child(even) td:not(:nth-child(2)) { background-color: #f1f5f9 !important; }
-        #logContent table.rekap-table tr:not(:first-child):nth-child(odd) td:not(:nth-child(2)) { background-color: #ffffff !important; }
-
-        /* Badge Shift (Kotak Keterangan S1, S2, Cuti, dll di Jadwal) diperkecil */
-        .badge-shift { 
-            display: inline-block; 
-            padding: 3px 6px; 
-            border-radius: 40px; 
-            font-weight: 600; 
-            font-size: 10.5px; 
-            text-align: center; 
-            min-width: 32px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-        
-        .badge-s1 { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }        
-        .badge-s2 { background: #f5f3ff; color: #6d28d9; border: 1px solid #ede9fe; }        
-        .badge-off { background: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; }       
-        .badge-cuti { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }      
-        .badge-tlt { background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }        
-        .badge-jmlon { background: #f0f9ff; color: #0284c7; border: 1px solid #e0f2fe; font-weight: 700; padding: 3px 6px; font-size: 10.5px; }
-        .badge-uangmakan { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; font-weight: 700; padding: 3px 6px; font-size: 10.5px; }
-
-        /* Kapsul standar ukuran normal untuk Log Harian (Nama Staff & Hasil) */
-        .badge-log-cell {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            text-align: center;
-            background: #f1f5f9; 
-            color: #0f172a; 
-            border: 1px solid #cbd5e1;
-            white-space: nowrap;
-        }
-
-        .badge-ket-sukses { background: #f0fdf4 !important; color: #15803d !important; border: 1px solid #bbf7d0 !important; font-weight: 700; } 
-        .badge-ket-terlambat { background: #fff7ed !important; color: #c2410c !important; border: 1px solid #fed7aa !important; font-weight: 700; } 
-        .badge-ket-absen { background: #fef2f2 !important; color: #991b1b !important; border: 1px solid #fecaca !important; font-weight: 700; }
-
-        .footer { text-align: center; padding: 15px; font-size: 12px; color: #64748b; background: #f8fafc; border-top: 1px solid #e2e8f0; }
-
-        @keyframes bounceGentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes bounceIcon { from { transform: translateY(0); } to { transform: translateY(-6px); } }
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+        @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .search-box-wrapper { padding: 12px 15px; background: #ffffff; border-bottom: none !important; }
+        .search-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; transition: 0.2s; background: #ffffff; }
+        .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+
+        .rekap-wrapper { padding: 0 !important; margin: 0 !important; overflow: auto; max-height: 75vh; position: relative; width: 100%; border: none !important; background: #1e293b !important; }
+        
+        table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; white-space: nowrap; margin: 0 !important; border: none !important; }
+        table.rekap-table th, table.rekap-table td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 8px 12px; text-align: center; background: #ffffff; vertical-align: middle; }
+        
+        table.rekap-table th { background: #1e293b !important; color: #ffffff !important; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; border-right: 1px solid #334155 !important; border-bottom: 1px solid #334155 !important; }
+
+        #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
+        #tabelJadwal tr:nth-child(2) th { position: sticky; top: 35px; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
+        #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
+        #tabelAdminLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
+
+        table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
+
+        #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: center; min-width: 42px; max-width: 42px; font-weight: bold; border-right: 1px solid #cbd5e1; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
+        #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
+
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; text-overflow: ellipsis; overflow: hidden; }
+        #tabelJadwal tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
+        #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
+
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
+        #tabelLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
+        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
+
+        #tabelAdminLog th:nth-child(3), #tabelAdminLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
+        #tabelAdminLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
+        #tabelAdminLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
+
+        .badge-shift { display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; min-width: 32px; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+        .shift-off { background-color: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+        .shift-cuti, .shift-tlt { background-color: #fffbeb; color: #b45309; border-color: #fde68a; }
+        .shift-wfh { background-color: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+        .badge-jmlon { background-color: #f0f9ff; color: #0369a1; border-color: #bae6fd; font-weight: 800; }
+        .badge-uangmakan { background-color: #dcfce7; color: #166534; border-color: #86efac; font-weight: 800; font-size: 12px; }
+        .badge-wifi { background-color: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; font-size: 11px; }
+        .badge-hadir { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 700; }
+        .time-text { font-family: 'Consolas', 'Courier New', monospace; font-weight: 700; color: #334155; letter-spacing: 0.5px; }
+
+        .loading-rekap { text-align: center; padding: 30px; font-weight: 600; color: #64748b; }
+        footer { color: #94a3b8; font-size: 12px; margin-top: 15px; text-align: center; }
+
+        #tab-rekap, #tab-log { padding: 0 !important; }
+        #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
+     /* === TAMBAHKAN KODE CSS KAPSUL DI SINI === */
+    .badge-kapsul {
+        display: inline-block;
+        padding: 4px 10px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        font-weight: 600;
+    }
+    .badge-nama-kapsul {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        font-weight: 600;
+        text-align: left;
+    }
+    /* ======================================= */
+
+</style>
 </head>
 <body>
 
+    <!-- MODAL ZOOM FOTO SELFIE -->
+    <div id="imageModal" onclick="closeImageModal()">
+        <img id="modalImg" src="" alt="Foto Selfie Full">
+    </div>
+
+    <!-- NAVIGASI TAB -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
+        <button class="tab-btn" onclick="switchTab('log', this)">📋 Absensi</button>
+        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal</button>
+        <button class="tab-btn" onclick="switchTab('peraturan', this)">📜 Peraturan</button>
+        <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
+    </div>
+
+    <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
-        <canvas id="canvas" style="display:none;"></canvas>
         <div class="selfie-header">
             <h3 style="font-size: 16px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 14px; font-weight: bold; color: #ffffff; margin-top: 4px;">Memuat nama...</p>
+            <p id="selfieStaffName" style="font-size: 13px; color: #e2e8f0; margin-top: 2px;"></p>
         </div>
         <div class="selfie-footer">
             <button class="btn-capture" onclick="ambilFotoDanKirim()">
-                <span>📸</span> Ambil Foto & Kirim Absen
+                <span>📸</span> Ambil & Kirim Absen Masuk
             </button>
         </div>
     </div>
 
+    <!-- FULL SCREEN OVERLAY -->
     <div id="fullScreenOverlay">
         <div class="overlay-card">
-            <div id="overlayLoaderContainer">
-                <div class="spinner-ring"></div>
+            <div class="overlay-icon" id="overlayIcon">✅</div>
+            <div class="overlay-title" id="overlayTitle">Absen Berhasil</div>
+            <div class="overlay-name" id="overlayName">Nama Staff</div>
+            <div class="overlay-time" id="overlayTime">📅 11 Agustus 2026</div>
+            <div class="overlay-wifi" id="overlayWifi">📡 Jaringan Wi-Fi: -</div>
+            <div class="overlay-msg-box">
+                <span id="overlayMsg">Pesan mutiara...</span>
             </div>
-            <div class="overlay-badge-icon" id="overlayIcon" style="display:none;">🏢</div>
-            <div class="overlay-subtitle" id="overlaySubtitle">MMBC PADANG</div>
-            <div class="overlay-title" id="overlayTitle">Memproses Absen</div>
-            <div class="overlay-name-badge" id="overlayName">Mohon Tunggu</div>
+        </div>
+    </div>
+
+    <!-- TAB 1: SCANNER -->
+    <div id="tab-scanner" class="container active">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>ABSENSI QR</h1>
+        </div>
+        <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
+        <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
+        
+        <!-- TEKS BERJALAN (MARQUEE) PENGINGAT CUTI -->
+        <div class="marquee-box">
+            <marquee behavior="scroll" direction="left" scrollamount="5">
+                ⚠️ Sebelum Lakukan Scan, Pastikan Jaringan di layar Scanner Absen sudah terhubung ke wifi Kantor & Jika Respon Error, Cukup lakukan Refresh ( Geser Layar absen kebawah ) dan Coba kembali.
+            </marquee>
+        </div>
+
+        <div class="instruction-sub">💡 Silakan scan QR Code untuk absensi</div>
+        <div class="scanner-wrapper">
+            <div id="reader"></div>
+        </div>
+    </div>
+
+    <!-- TAB 2: JADWAL -->
+    <div id="tab-rekap" class="container">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1 id="judulBulanHeader">JADWAL BULANAN</h1>
+        </div>
+        <div class="search-box-wrapper">
+            <input type="text" id="searchNamaJadwal" class="search-input" placeholder="🔍 Cari nama staff di jadwal..." onkeyup="filterTabelJadwal()">
+        </div>
+        <div class="rekap-wrapper">
+            <div id="rekapContent" class="loading-rekap">Memuat jadwal dari Google Sheet...</div>
+        </div>
+    </div>
+
+    <!-- TAB 3: LOG (PUBLIK) -->
+    <div id="tab-log" class="container">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>LOG ABSEN HARI INI</h1>
+        </div>
+        <div class="search-box-wrapper">
+            <input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari nama staff yang sudah scan..." onkeyup="filterTabelLog()">
+        </div>
+        <div class="rekap-wrapper">
+            <div id="logContent" class="loading-rekap">Memuat log absensi hari ini...</div>
+        </div>
+    </div>
+
+    <!-- TAB 4: PERATURAN CUTI & PERusahaan -->
+    <div id="tab-peraturan" class="container">
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo MMBC" class="logo-img">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>PERATURAN CUTI & KETENTUAN</h1>
+        </div>
+        <div style="padding: 20px; font-size: 13px; color: #334155; line-height: 1.6; max-height: 75vh; overflow-y: auto;">
+            <h3 style="color: #2563eb; margin-bottom: 12px; font-size: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">📋 Peraturan Cuti MMBC Tour and Travel</h3>
             
-            <div class="overlay-info-grid" id="overlayInfoGrid" style="display:none;">
-                <div class="overlay-info-item">
-                    <span>📍 Lokasi Absen</span>
-                    <span id="overlayInfoLokasi">-</span>
+            <ul style="list-style-type: none; display: flex; flex-direction: column; gap: 10px;">
+                <li><b>a.</b> Konfirmasi Cuti <b>H-1</b> sebelum hari pelaksanaan.</li>
+                <li><b>b.</b> Cuti <b>urgent/mendesak</b> dapat dikondisikan dengan manajemen.</li>
+                <li><b>c.</b> Cuti Libur tanpa komfirmasi , Tidak memotong Cuti (Potong gaji), Batas konfirmasi sebelum jam masuk kerja 06:30 WIB.</li>
+                <li><b>d.</b> Jumlah potong Gaji adalah Floret Perhari,Tidak ada kali 2 atau 3 lagi ( Jumlah gaji pokok di bagi Gaji Harian ).</li>
+                <li><b>e.</b> Jika Cuti minus di akhir bulan, akan dikenakan pemotongan gaji.</li>
+                <li><b>f.</b> Cuti tidak dapat diberikan ke staf lain tidak dapat diperjual belikan.</li>
+                <li><b>g.</b> Satu hari maksimal jumlah cuti/libur hanya bisa 5 staff dalam satu kantor (berlaku Senin s/d Jumat).</li>
+                <li><b>h.</b> Tidak boleh cuti bersamaan dalam divisi/tim yang sama.</li>
+                <li><b>i.</b> Telat lebih dari 5 kali tidak mendapatkan bonus tahunan.</li>
+                <li><b>j.</b> Menabung libur maksimal 1 hari dalam satu bulan (kondisi normal).</li>
+                <li><b>k.</b> Waktu cuti berlaku dan harus dihabiskan sampai 30 September di tahun berjalan.</li>
+                <li><b>i.</b> Jika tidak konsisten, manajemen berhak meninjau ulang kebijakan cuti berikutnya.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- TAB 5: ADMIN -->
+    <div id="tab-admin" class="container">
+        <div class="header-brand">
+            <div class="logo-text">MMBC Tour & Travel</div>
+            <h1>DASHBOARD ADMIN</h1>
+        </div>
+        
+        <div id="authOverlay" style="padding: 25px; text-align: center; max-width: 450px; margin: 0 auto;">
+            <h2>🔒</h2>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan Username dan Password Admin untuk mengakses Dashboard.</p>
+            
+            <!-- Tambahan Input Username -->
+            <input type="text" id="adminUsernameInput" class="search-input" placeholder="Masukkan Nama/Username Admin..." style="margin-bottom: 10px;">
+            
+            <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
+            <button id="btnLoginAdmin" onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
+            <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
+        </div>
+        <div id="adminContentBody" style="display: none; padding: 20px;">
+            
+            <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
+<div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
+    <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
+    <div style="display: flex; justify-content: space-around; gap: 8px;">
+        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+            <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
+            <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
+        </div>
+        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+            <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
+            <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
+        </div>
+    </div>
+</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
+                🌐 Jaringan Anda saat ini:<br>
+                <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
+                
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #cbd5e1; text-align: left;">
+                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
+                    <select id="targetWifi" class="search-input" style="margin-top: 5px;">
+                        <option value="basecamp">Basecamp MMBC</option>
+                        <option value="megavision">Megavision</option>
+                    </select>
                 </div>
-                <div class="overlay-info-item">
-                    <span>⏰ Waktu Server</span>
-                    <span id="overlayTime">-</span>
-                </div>
+                <button onclick="updateIpKantorDariTab()" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                    🔄 Perbarui IP Wi-Fi Sekarang
+                </button>
+                <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
             </div>
 
-            <div class="overlay-msg-box" id="overlayMsgBox">
-                <span id="overlayMsg">Menghubungkan ke server...</span>
+            <div style="border-top: 2px solid #e2e8f0; padding-top: 15px;">
+                <h3 style="font-size: 14px; color: #1e293b; margin-bottom: 10px; text-align: center;">📸 Log Absen Hari Ini (Eksklusif Admin)</h3>
+                <div class="search-box-wrapper" style="padding: 0 0 10px 0;">
+                    <input type="text" id="searchAdminLog" class="search-input" placeholder="🔍 Cari nama staff..." onkeyup="filterTabelAdminLog()">
+                </div>
+                <div class="rekap-wrapper" style="max-height: 450px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div id="adminLogContent" class="loading-rekap">Memuat log dengan foto...</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="welcomeCard">
-            <img src="Logo.jpeg" class="welcomeLogo" alt="Logo">
-            <h2>ABSENSI MMBC PADANG</h2>
-        </div>
-
-        <div id="tabMenu" class="tab-menu">
-            <button id="tabAbsensi" class="tab-button active" onclick="switchTab('absensi', this)">📷 ABSENSI QR</button>
-            <button id="tabJadwal" class="tab-button" onclick="switchTab('jadwal', this)">📅 JADWAL KERJA</button>
-            <button id="tabLog" class="tab-button" onclick="switchTab('log', this)">📋 LOG HARIAN</button>
-        </div>
-
-        <div id="absensiPage" class="tab-page active-page">
-            <div id="tanggal" class="tanggal">Memuat tanggal...</div>
-            <div id="jam" class="jam">00:00:00</div>
-
-            <div id="pilihanLokasi">
-                👇 Silakan pilih lokasi absensi<br>
-                <button id="btnKantor" class="btnLokasi" onclick="pilihLokasi('Kantor')">🏢 KANTOR</button>
-                <button id="btnLapangan" class="btnLokasi" onclick="pilihLokasi('Lapangan')">🚗 LAPANGAN</button>
-            </div>
-
-            <div id="scannerArea" style="display:none;">
-                <div style="font-size: 12px; font-weight: 600; color: #15803d; background: #f0fdf4; padding: 10px; text-align: center; border-radius: 8px; margin-bottom: 10px; border: 1px solid #dcfce7;">
-                    📍 Mode Aktif: <b id="lokasiAktifText">-</b> <span style="cursor:pointer; color:#2563eb; text-decoration:underline; margin-left:10px;" onclick="gantiLokasi()">(Ganti)</span>
-                </div>
-                <div class="scan-box">
-                    <div id="reader"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="jadwalPage" class="tab-page">
-            <div class="page-title">
-                <div class="page-icon">📅</div>
-                <h2>JADWAL KERJA</h2>
-                <p>Jadwal kerja bulanan karyawan</p>
-            </div>
-            <input type="text" id="searchJadwal" class="search-box" placeholder="🔍 Cari nama karyawan..." onkeyup="filterTabelJadwal()">
-            <div class="jadwal-container-wrapper">
-                <div class="rekap-wrapper" id="jadwalContent">
-                    <div style="text-align:center; padding:20px; color:#64748b;">Memuat jadwal kerja...</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="logPage" class="tab-page">
-            <div class="page-title">
-                <div class="page-icon">📋</div>
-                <h2>LOG HARIAN</h2>
-                <p>Riwayat absensi karyawan hari ini</p>
-                <p id="logCurrentDate" style="font-size: 13px; font-weight: 600; color: #2563eb; margin-top: 4px;"></p>
-            </div>
-            <input type="text" id="searchLog" class="search-box" placeholder="🔍 Cari nama karyawan, status, atau lokasi..." onkeyup="filterTabelLog()">
-            <div class="log-container-wrapper">
-                <div class="rekap-wrapper" id="logContent">
-                    <div style="text-align:center; padding:20px; color:#64748b;">Memuat log absensi...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">© MMBC PADANG</div>
-    </div>
+    <footer>&copy; 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
 
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbyokn5uN2NyiHanuwjafc158puU5B6SMR2HBWu2sCsM1e5k4VGwv_8oLuwJtg1_wpF9/exec";
+        const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
         const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        let selectedLokasi = "";
-        let html5QrCode = null;
-        let sedangProses = false;
-        let activeStaffId = "";
-        let activeStaffName = "";
-        let streamSelfie = null;
+        const currentDate = new Date();
+        const bulanBerjalan = namaBulanArr[currentDate.getMonth()] + " " + currentDate.getFullYear();
 
-        let rawJadwalData = [];
-        let rawLogData = [];
-
-        function updateClock(){
-            const now = new Date();
-            const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            const tanggalStr = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
-            
-            document.getElementById("tanggal").innerText = tanggalStr;
-            document.getElementById("jam").innerText = now.toLocaleTimeString("id-ID");
-            
-            const logDateEl = document.getElementById("logCurrentDate");
-            if (logDateEl) {
-                logDateEl.innerText = "📅 " + tanggalStr + " | ⏰ " + now.toLocaleTimeString("id-ID") + " WIB";
-            }
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
 
         function switchTab(tabName, btn) {
-            document.querySelectorAll('.tab-page').forEach(el => el.classList.remove('active-page'));
-            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            if(tabName === 'absensi') {
-                document.getElementById('absensiPage').classList.add('active-page');
-            } else if(tabName === 'jadwal') {
-                document.getElementById('jadwalPage').classList.add('active-page');
-                loadJadwalKerja();
+            if(tabName === 'scanner') {
+                document.getElementById('tab-scanner').classList.add('active');
+            } else if(tabName === 'rekap') {
+                document.getElementById('tab-rekap').classList.add('active');
+                if(!window.loadedJadwal) { loadRekapBulanan(); }
             } else if(tabName === 'log') {
-                document.getElementById('logPage').classList.add('active-page');
-                loadLogHarian();
+                document.getElementById('tab-log').classList.add('active');
+                loadLogHariIni();
+            } else if(tabName === 'peraturan') {
+                document.getElementById('tab-peraturan').classList.add('active');
+            } else if(tabName === 'admin') {
+                document.getElementById('tab-admin').classList.add('active');
             }
             btn.classList.add('active');
         }
 
-        function pilihLokasi(lokasi) {
-            const btnLokasi = document.querySelectorAll('.btnLokasi');
-            btnLokasi.forEach(btn => btn.disabled = true);
+        async function cekPasswordAdmin() {
+            let inputUser = document.getElementById("adminUsernameInput").value.trim();
+            let inputVal = document.getElementById("adminPassInput").value.trim();
+            let errorEl = document.getElementById("authError");
+            let btnLogin = document.getElementById("btnLoginAdmin");
             
-            selectedLokasi = lokasi;
-            document.getElementById('lokasiAktifText').innerText = lokasi;
-            document.getElementById('pilihanLokasi').style.display = 'none';
-            document.getElementById('scannerArea').style.display = 'block';
-            mulaiScanner();
-        }
-
-        function gantiLokasi() {
-            if (html5QrCode) {
-                html5QrCode.stop().catch(e => {});
+            if (!inputUser || !inputVal) {
+                errorEl.style.display = "block";
+                errorEl.innerText = "Username dan Password tidak boleh kosong!";
+                return;
             }
-            document.getElementById('scannerArea').style.display = 'none';
-            document.getElementById('pilihanLokasi').style.display = 'block';
 
-            const btnLokasi = document.querySelectorAll('.btnLokasi');
-            btnLokasi.forEach(btn => btn.disabled = false);
-        }
+            errorEl.style.display = "none";
+            btnLogin.innerText = "Memeriksa...";
+            btnLogin.disabled = true;
 
-        function mulaiScanner() {
-            sedangProses = false;
-            setTimeout(() => {
-                if (!html5QrCode) {
-                    html5QrCode = new Html5Qrcode("reader");
-                }
-                if (html5QrCode.isScanning) {
-                    html5QrCode.stop().then(() => {
-                        jalankanKameraScanner();
-                    }).catch(err => {
-                        jalankanKameraScanner();
-                    });
+            try {
+                let response = await fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal }) // Menggunakan fungsi 'login' yang sudah ada di backend
+                });
+                let res = await response.json();
+
+                if (res.sukses) {
+                    // Menyimpan nama admin yang berhasil login secara spesifik sesuai input username
+                    window.adminLoginNama = res.nama || inputUser;
+
+                    document.getElementById("authOverlay").style.display = "none";
+                    document.getElementById("adminContentBody").style.display = "block";
+                    muatIpAdmin();
+                    loadAdminLogHariIni();
+                    muatStatistikKunjungan();
                 } else {
-                    jalankanKameraScanner();
+                    errorEl.style.display = "block";
+                    errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
                 }
-            }, 800);
+            } catch (err) {
+                errorEl.style.display = "block";
+                errorEl.innerText = "❌ Gagal terhubung ke server.";
+            } finally {
+                btnLogin.innerText = "Masuk";
+                btnLogin.disabled = false;
+            }
         }
-
-        function jalankanKameraScanner() {
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: 230 },
-                (decodedText) => {
-                    if (sedangProses) return;
-                    sedangProses = true;
-                    
-                    html5QrCode.stop().then(() => {
-                        prosesQRData(decodedText);
-                    }).catch(err => {
-                        prosesQRData(decodedText);
-                    });
-                },
-                (err) => {}
-            ).catch(err => {
-                console.log("Kamera sibuk:", err);
-                setTimeout(() => { sedangProses = false; }, 2000);
-            });
-        }
-
-        function prosesQRData(idStaff) {
-            activeStaffId = idStaff;
-            document.getElementById("selfieStaffName").innerText = "Memeriksa ID: " + idStaff + "...";
-            const modal = document.getElementById("selfieModal");
-            modal.style.display = "flex";
-
+        function muatStatistikKunjungan() {
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "cekNama", id: idStaff })
+                body: JSON.stringify({ action: "catatKunjungan", info: "Cek Admin" })
             })
             .then(r => r.json())
             .then(res => {
-                activeStaffName = res.status ? res.nama : "Staff (" + idStaff + ")";
-                document.getElementById("selfieStaffName").innerText = "👤 " + activeStaffName;
-                bukaKameraSelfieStream();
+                if (res.sukses) {
+                    document.getElementById("statHariIni").innerText = res.hariIni;
+                    document.getElementById("statTotal").innerText = res.total;
+                }
+            }).catch(e => console.log(e));
+        }
+
+        function muatIpAdmin() {
+            fetch("https://api.ipify.org?format=json")
+                .then(r => r.json())
+                .then(data => {
+                    window.adminMyIp = data.ip;
+                    document.getElementById("adminCurrentIp").innerText = "IP Publik: " + window.adminMyIp;
+                })
+                .catch(err => {
+                    document.getElementById("adminCurrentIp").innerText = "Gagal mendeteksi IP";
+                });
+        }
+
+        function updateIpKantorDariTab() {
+            if (!window.adminMyIp) {
+                alert("IP belum terdeteksi, mohon tunggu sebentar...");
+                return;
+            }
+
+            let msg = document.getElementById("statusMsgAdmin");
+            let btnUpdate = event.target; // Mengambil tombol yang diklik
+            
+            // Disable tombol agar tidak bisa klik 2 kali
+            btnUpdate.disabled = true;
+            btnUpdate.style.opacity = "0.6";
+
+            msg.style.color = "#1e293b";
+            msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
+
+            let targetTerpilih = document.getElementById("targetWifi").value;
+            let namaStaffAktif = window.adminLoginNama || "Manual Staff";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ 
+                    action: "updateWifi", 
+                    ip: window.adminMyIp, 
+                    target: targetTerpilih,
+                    namaStaff: namaStaffAktif 
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.sukses) {
+                    msg.style.color = "#059669";
+                    msg.innerText = "✅ " + res.pesan;
+                } else {
+                    msg.style.color = "#dc2626";
+                    msg.innerText = "❌ " + res.pesan;
+                }
             })
             .catch(err => {
-                activeStaffName = "Staff (" + idStaff + ")";
-                document.getElementById("selfieStaffName").innerText = "👤 " + activeStaffName;
-                bukaKameraSelfieStream();
+                msg.style.color = "#dc2626";
+                msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
+            })
+            .finally(() => {
+                // Aktifkan kembali tombol setelah selesai
+                btnUpdate.disabled = false;
+                btnUpdate.style.opacity = "1";
+            });
+        }
+function loadRekapBulanan() {
+            const container = document.getElementById('rekapContent');
+            if (!container) return;
+            container.innerHTML = "Sedang Memuat jadwal...";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getRekapBulanan", bulan: bulanBerjalan })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    container.innerHTML = "❌ Gagal memuat data: " + res.pesan;
+                    return;
+                }
+                window.loadedJadwal = true;
+                let rows = res.data;
+                let html = '<table class="rekap-table" id="tabelJadwal">';
+                
+                let counterNo = 1;
+                rows.forEach((row, rowIndex) => {
+                    if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
+
+                    let textKolomB = row[1] !== null ? String(row[1]).trim() : '';
+                    let isBarisKhusus = textKolomB.includes("Daftar absen harian") || textKolomB.includes("Total Staff yang Online");
+                    let isBarisKosong = (rowIndex > 1 && textKolomB === '' && !isBarisKhusus);
+
+                    if (isBarisKosong) {
+                        html += '<tr style="height: 6px; line-height: 0; font-size: 0px;">';
+                    } else {
+                        html += '<tr>';
+                    }
+
+                   if (rowIndex === 0 || rowIndex === 1) {
+                        let tag = 'th';
+                        let noHeader = rowIndex === 0 ? 'No' : '';
+                        html += `<${tag}>${noHeader}</${tag}>`;
+                    } else {
+                        let tag = 'td';
+                        let namaStaffCell = textKolomB;
+                        let nomorUrut = '';
+                        
+                        if (namaStaffCell !== '' && counterNo <= 35 && !isBarisKhusus) {
+                            nomorUrut = counterNo;
+                            counterNo++;
+                        }
+                        let noUrutFinal = isBarisKhusus ? '' : nomorUrut;
+                        let extraStyleNo = isBarisKosong ? 'style="padding: 0; height: 6px; font-size: 0px;"' : '';
+                        html += `<${tag} ${extraStyleNo}><b>${noUrutFinal}</b></${tag}>`;
+                    }
+
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 0) return;
+                        if (colIndex === row.length - 1) return;
+                        let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
+                        let cellText = cell !== null ? String(cell).trim() : '';
+                        
+                        if (rowIndex === 0 && colIndex === 1) {
+                            cellText = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;">Nama</div>';
+                        }
+                        if (rowIndex === 1 && colIndex === 1) {
+                            cellText = "";
+                        }
+                            
+                        // Bungkus Nama Staff di Tab Jadwal dengan Kapsul Elegan
+                        if (tag === 'td' && colIndex === 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
+                            cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
+                        }
+
+                        if (rowIndex === 1 && colIndex > 1) {
+                            cellText = formatTanggalHeaderClean(cellText);
+                        } else if (cellText.includes && cellText.includes('T') && cellText.includes('Z') && cellText.length > 15) {
+                            let d = new Date(cellText);
+                            if (!isNaN(d.getTime())) cellText = d.getDate();
+                        }
+
+                        if (tag === 'td' && colIndex > 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
+                            let upperVal = String(cellText).toUpperCase();
+                            let badgeClass = 'badge-shift ';
+                            
+                            const isJmlOn = colIndex === row.length - 2;
+                            const isUangMakan = colIndex === row.length - 1;
+
+                            if (isJmlOn) {
+                                badgeClass += 'badge-jmlon';
+                            } else if (isUangMakan) {
+                                badgeClass += 'badge-uangmakan';
+                                let num = Number(cellText.replace(/[^0-9]/g, ''));
+                                if (!isNaN(num) && num > 0) {
+                                    cellText = "Rp " + num.toLocaleString('id-ID');
+                                }
+                            } else if (upperVal.includes('S1') || upperVal.includes('S2') || upperVal.includes('S3')) {
+                                badgeClass += 'shift-s1';
+                            } else if (upperVal.includes('OFF') || upperVal.includes('LIBUR') || upperVal === 'L') {
+                                badgeClass += 'shift-off';
+                            } else if (upperVal.includes('CUTI') || upperVal.includes('TLT') || upperVal === 'T' || upperVal.includes('CN')) {
+                                badgeClass += 'shift-cuti';
+                            } else {
+                                badgeClass += 'shift-wfh';
+                            }
+                            cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                        }
+
+                        let isTotalOnlineRow = textKolomB.includes("Total Staff yang Online");
+                        let styleBg = isBarisKhusus ? 'style="background-color: #f1f5f9 !important; font-weight: bold;"' : (isBarisKosong ? 'style="padding: 0; height: 6px; font-size: 0px; background-color: #e2e8f0 !important;"' : '');
+                        
+                        if (isTotalOnlineRow && colIndex > 2 && cellText !== '') {
+                            cellText = `<span class="badge-shift shift-s1" style="font-weight: bold;">${cellText}</span>`;
+                        }
+
+                        html += `<${tag} ${styleBg}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });                
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => { 
+                console.error(err);
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
             });
         }
 
-        function bukaKameraSelfieStream() {
+        function loadLogHariIni() {
+            const container = document.getElementById('logContent');
+            container.innerHTML = "Memuat log absensi hari ini...";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getLogHariIni" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
+                    return;
+                }
+                let rows = res.data;
+                if(!rows || rows.length <= 1) {
+                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada staff yang melakukan scan absen hari ini.</div>";
+                    return;
+                }
+
+                let totalData = rows.length - 1;
+                let html = '<table class="rekap-table" id="tabelLog">';
+                
+                rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        let nomorUrut = totalData - (rowIndex - 1);
+                        html += `<td><b>${nomorUrut}</b></td>`;
+                    }
+
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 1 || colIndex === 7) return; 
+                        
+                        let cellText = cell !== null ? String(cell).trim() : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+
+                        if (tag === 'td') {
+                            // Kapsul untuk Tanggal
+                            if (colIndex === 0 && cellText !== "") {
+                                cellText = `<span class="badge-kapsul">${cellText}</span>`;
+                            }
+                            // Kapsul untuk Nama Staff di Log Absen
+                            else if (colIndex === 2 && cellText !== "") {
+                                cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
+                            }
+                            // Kapsul untuk Jam Masuk & Pulang
+                            else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
+                                cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
+                            }
+                            else if (colIndex === 5) {
+                                let upperVal = cellText.toUpperCase();
+                                let badgeClass = "badge-shift ";
+                                if (upperVal.includes("TERLAMBAT")) {
+                                    badgeClass += "shift-off";
+                                } else if (upperVal.includes("MALAM")) {
+                                    badgeClass += "shift-s3";
+                                } else {
+                                    badgeClass += "badge-hadir";
+                                }
+                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                            }
+                            else if (colIndex === 6) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
+                                }
+                            }
+                            else if (colIndex === 8) {
+                                let upperVal = cellText.toUpperCase();
+                                let bClass = "shift-s1";
+                                if (upperVal.includes("MALAM")) bClass = "shift-s3";
+                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                            }
+                            else if (colIndex === 9) {
+                                let num = Number(cellText.replace(/[^0-9]/g, ''));
+                                let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                                cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                            }
+                        }
+
+                        html += `<${tag}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => { 
+                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
+            });
+        }
+
+function fixGoogleDriveUrl(url) {
+            if (!url) return "";
+            let fileId = "";
+            if (url.includes("/file/d/")) {
+                let parts = url.split("/file/d/");
+                if (parts[1]) fileId = parts[1].split("/")[0];
+            } else if (url.includes("id=")) {
+                let urlParams = new URLSearchParams(url.split("?")[1]);
+                fileId = urlParams.get("id");
+            }
+            if (fileId) {
+                return "https://lh3.googleusercontent.com/d/" + fileId;
+            }
+            return url;
+        }
+
+function loadAdminLogHariIni() {
+            const container = document.getElementById('adminLogContent');
+            container.innerHTML = "Memuat log eksklusif...";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getLogHariIni" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses || !res.data || res.data.length <= 1) {
+                    container.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b;'>Belum ada data log hari ini.</div>";
+                    return;
+                }
+
+                let rows = res.data;
+                let totalData = rows.length - 1;
+                let html = '<table class="rekap-table" id="tabelAdminLog">';
+                
+                rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        let nomorUrut = totalData - (rowIndex - 1);
+                        html += `<td><b>${nomorUrut}</b></td>`;
+                    }
+
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 1) return; 
+                        
+                        let cellText = cell !== null ? String(cell).trim() : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+
+                        if (tag === 'td') {
+                            if (colIndex === 7) {
+                                if (cellText !== "" && (cellText.startsWith("http") || cellText.includes("drive.google.com"))) {
+                                    let directImg = fixGoogleDriveUrl(cellText);
+                                    cellText = `<img src="${directImg}" class="selfie-thumb" onclick="openImageModal('${directImg}')" title="Klik untuk memperbesar" onerror="this.onerror=null; this.src='https://via.placeholder.com/42?text=Foto';">`;
+                                } else {
+                                    cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
+                                }
+                            }
+                            else if (colIndex === 3 || colIndex === 4) {
+                                if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
+                            }
+                            else if (colIndex === 5) {
+                                let upperVal = cellText.toUpperCase();
+                                let badgeClass = "badge-shift ";
+                                if (upperVal.includes("TERLAMBAT")) {
+                                    badgeClass += "shift-off";
+                                } else if (upperVal.includes("MALAM")) {
+                                    badgeClass += "shift-s3";
+                                } else {
+                                    badgeClass += "badge-hadir";
+                                }
+                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                            }
+                            else if (colIndex === 6) {
+                                if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
+                            }
+                            else if (colIndex === 8) {
+                                let upperVal = cellText.toUpperCase();
+                                let bClass = "shift-s1";
+                                if (upperVal.includes("BELUM ABSEN")) {
+                                    bClass = "shift-off";
+                                } else if (upperVal.includes("SELESAI") || upperVal.includes("✅")) {
+                                    bClass = "badge-hadir";
+                                }
+                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                            }
+                            else if (colIndex === 9) {
+                                let num = Number(cellText.replace(/[^0-9]/g, ''));
+                                let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                                cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                            }
+                        }
+
+                        html += `<${tag}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                container.innerHTML = "❌ Gagal memuat log.";
+            });
+        }
+
+        function openImageModal(imgUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = imgUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function filterTabelJadwal() {
+            let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
+            let table = document.getElementById('tabelJadwal');
+            if(!table) return;
+            let tr = table.getElementsByTagName('tr');
+            for (let i = 2; i < tr.length; i++) {
+                let tdNama = tr[i].getElementsByTagName('td')[1];
+                if (tdNama) {
+                    let txt = tdNama.textContent || tdNama.innerText;
+                    tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        function filterTabelLog() {
+            let input = document.getElementById('searchLog').value.toLowerCase();
+            let table = document.getElementById('tabelLog');
+            if(!table) return;
+            let tr = table.getElementsByTagName('tr');
+            for (let i = 1; i < tr.length; i++) {
+                let tdNama = tr[i].getElementsByTagName('td')[2];
+                if (tdNama) {
+                    let txt = tdNama.textContent || tdNama.innerText;
+                    tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        function filterTabelAdminLog() {
+            let input = document.getElementById('searchAdminLog').value.toLowerCase();
+            let table = document.getElementById('tabelAdminLog');
+            if(!table) return;
+            let tr = table.getElementsByTagName('tr');
+            for (let i = 1; i < tr.length; i++) {
+                let tdNama = tr[i].getElementsByTagName('td')[2];
+                if (tdNama) {
+                    let txt = tdNama.textContent || tdNama.innerText;
+                    tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        function updateClock(){
+            const now = new Date();
+            const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const elTgl = document.getElementById("tanggal");
+            const elJam = document.getElementById("jam");
+            if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
+            if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let userIP = "";
+        fetch("https://api.ipify.org?format=json")
+            .then(r => r.json())
+            .then(data => { 
+                userIP = data.ip; 
+                return fetch(API, { method: "POST", body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) });
+            })
+            .then(r => r ? r.text() : null)
+            .then(text => {
+                if(!text) return;
+                let res = JSON.parse(text);
+                if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
+            }).catch(e => console.log(e));
+
+        // Catat kunjungan otomatis saat web/app dibuka
+        fetch(API, {
+            method: "POST",
+            body: JSON.stringify({ action: "catatKunjungan", ip: userIP, info: "Akses Web/App" })
+        }).catch(e => {});
+
+        const qr = new Html5Qrcode("reader");
+        let sedangProses = false;
+        let lastScanTime = 0; 
+        let activeStaffId = "";
+        let streamSelfie = null;
+
+        qr.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 230 },
+            (decodedText) => {
+                let currentTime = new Date().getTime();
+                if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
+                
+                sedangProses = true;
+                lastScanTime = currentTime;
+                
+                qr.stop().then(() => {
+                    jalankanProsesAbsen(decodedText);
+                }).catch(err => {
+                    jalankanProsesAbsen(decodedText);
+                });
+            },
+            (err) => {}
+        ).catch(err => console.log(err));
+
+        function jalankanProsesAbsen(decodedText) {
+            activeStaffId = decodedText;
+
+            const overlay = document.getElementById("fullScreenOverlay");
+            const icon = document.getElementById("overlayIcon");
+            const title = document.getElementById("overlayTitle");
+            const nameEl = document.getElementById("overlayName");
+            const timeEl = document.getElementById("overlayTime");
+            const wifiEl = document.getElementById("overlayWifi");
+            const msgEl = document.getElementById("overlayMsg");
+
+            overlay.className = "theme-loading";
+            icon.innerText = "⏳";
+            title.innerText = "Mengecek Status...";
+            nameEl.innerText = "Mohon Tunggu Sebentar";
+            timeEl.innerText = "";
+            wifiEl.innerText = "";
+            msgEl.innerHTML = "Memeriksa data absensi...";
+            overlay.style.display = "flex";
+
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "cekStatus", id: decodedText, ip: userIP })
+            })
+            .then(r => r.json())
+            .then(res => {
+                overlay.style.display = "none";
+
+                if (!res.sukses && res.status === "sudah_absen") {
+                    tampilkanPesanError(res.pesan);
+                    return;
+                }
+
+                if (res.status === "masuk") {
+                    window.activeStaffNama = res.nama;
+                    bukaKameraSelfie(res.nama); 
+                } else if (res.status === "pulang") {
+                    const overlayPulang = document.getElementById("fullScreenOverlay");
+                    document.getElementById("overlayIcon").innerText = "⏳";
+                    document.getElementById("overlayTitle").innerText = "Menyimpan Absen Pulang";
+                    document.getElementById("overlayName").innerText = res.nama || "Staff";
+                    document.getElementById("overlayTime").innerText = "";
+                    document.getElementById("overlayWifi").innerText = "";
+                    document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+                    overlayPulang.className = "theme-loading";
+                    overlayPulang.style.display = "flex";
+
+                    eksekusiAbsenFinal("");
+                } else {
+                    tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
+                }
+            })
+            .catch(err => {
+                tampilkanPesanError("Gangguan koneksi ke server.");
+            });
+        }
+
+        function bukaKameraSelfie(namaStaff) {
+            document.getElementById("selfieStaffName").innerText = "Halo, " + namaStaff;
+            const modal = document.getElementById("selfieModal");
+            modal.style.display = "flex";
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert("Browser Anda tidak mendukung akses kamera secara langsung. Pastikan menggunakan HTTPS.");
+                modal.style.display = "none";
+                resetScannerKamera();
+                return;
+            }
+
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                 .then(stream => {
                     streamSelfie = stream;
                     const videoElement = document.getElementById("selfieVideo");
                     videoElement.srcObject = stream;
-                    videoElement.play().catch(e => {});
+                    videoElement.play().catch(e => console.log("Play error:", e));
                 })
                 .catch(err => {
-                    alert("Gagal mengakses kamera depan untuk selfie.");
-                    document.getElementById("selfieModal").style.display = "none";
-                    mulaiScanner();
-                    sedangProses = false;
+                    alert("Gagal mengakses kamera depan!\n\nPastikan:\n1. Anda memberikan izin kamera pada browser.\n2. Menggunakan link HTTPS.");
+                    modal.style.display = "none";
+                    resetScannerKamera();
                 });
         }
 
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
-            const canvas = document.getElementById("canvas");
+            const canvas = document.createElement("canvas");
             
             if (video.videoWidth === 0 || video.videoHeight === 0) {
                 alert("Kamera sedang bersiap, silakan coba ketuk tombol ambil foto sekali lagi.");
                 return;
             }
 
-            const btn = document.querySelector('.btn-capture');
-            btn.disabled = true;
-            btn.innerHTML = "<span>⏳</span> Mengirim Absen...";
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            canvas.width = 480;
+            canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
             const ctx = canvas.getContext("2d");
             
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
             const nowWib = new Date();
-            const tglStr = nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " - " + nowWib.toLocaleTimeString("id-ID");
+            const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const tglStr = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
             
-            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-            ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
-            ctx.font = "bold 20px Arial";
-            ctx.fillStyle = "#38bdf8";
-            ctx.fillText("👤 " + activeStaffName, 20, canvas.height - 65);
-            ctx.font = "15px Arial";
-            ctx.fillStyle = "#ffffff";
-            ctx.fillText("📅 " + tglStr, 20, canvas.height - 40);
-            ctx.fillText("📍 Lokasi: " + selectedLokasi + " (MMBC PADANG)", 20, canvas.height - 15);
+            ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
+            ctx.fillRect(0, canvas.height - 75, canvas.width, 75);
 
-            const base64Image = canvas.toDataURL("image/jpeg", 0.85);
+            ctx.font = "bold 15px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = "#38bdf8";
+            ctx.fillText("👤 " + (window.activeStaffNama || "Staff MMBC"), 12, canvas.height - 48);
+
+            ctx.font = "11px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText("📅 " + tglStr, 12, canvas.height - 30);
+
+            ctx.font = "10px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = "#cbd5e1";
+            ctx.fillText("📍 MMBC Tour & Travel", 12, canvas.height - 12);
+
+            const base64Image = canvas.toDataURL("image/jpeg", 0.65);
 
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
             }
             document.getElementById("selfieModal").style.display = "none";
 
-            tampilkanLoading("MENYIMPAN ABSEN", "Sedang mengunggah foto dan memproses data...");
+            const overlay = document.getElementById("fullScreenOverlay");
+            document.getElementById("overlayIcon").innerText = "⏳";
+            document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
+            document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+            document.getElementById("overlayTime").innerText = "";
+            document.getElementById("overlayWifi").innerText = "";
+            document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+            overlay.className = "theme-loading";
+            overlay.style.display = "flex";
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "simpanAbsensi", id: activeStaffId, foto: base64Image, lokasi: selectedLokasi })
+                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
             })
             .then(r => r.json())
             .then(res => {
-                btn.disabled = false;
-                btn.innerHTML = "<span>📸</span> Ambil Foto & Kirim Absen";
-                
-                if (res.status) {
-                    const tglFormat = nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
-                    const overlay = document.getElementById("fullScreenOverlay");
-                    
-                    playTringBellSound();
+                handleHasilAbsen(res);
+            })
+            .catch(err => {
+                uploadSelfieTerpisah(base64Image);
+            });
+        }
 
-                    let teksUcapkan = "";
-                    
-                    document.getElementById("overlayLoaderContainer").style.display = "none";
-                    document.getElementById("overlayIcon").style.display = "flex";
-                    document.getElementById("overlayInfoGrid").style.display = "flex";
-                    document.getElementById("overlayInfoLokasi").innerText = selectedLokasi + " (MMBC PADANG)";
+        function uploadSelfieTerpisah(base64Image) {
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
+            })
+            .then(r => r.json())
+            .then(resUpload => {
+                let fotoUrl = resUpload.sukses ? resUpload.url : "";
+                eksekusiAbsenFinal(fotoUrl);
+            })
+            .catch(err => {
+                eksekusiAbsenFinal("");
+            });
+        }
 
-                    if (res.statusAbsen && res.statusAbsen.toUpperCase() === "PULANG") {
-                        overlay.className = "theme-pulang";
-                        document.getElementById("overlayIcon").innerText = "🏡";
-                        document.getElementById("overlaySubtitle").innerText = "ABSEN PULANG SUKSES";
-                        document.getElementById("overlayTitle").innerText = "Hati-Hati di Jalan!";
-                        document.getElementById("overlayMsg").innerHTML = `Selamat beristirahat, terima kasih atas kerjanya hari ini! <span class="waving-hand">👋</span>`;
-                        teksUcapkan = "Absen Pulang Berhasil";
-                    } else {
-                        overlay.className = "theme-masuk";
-                        document.getElementById("overlayIcon").innerText = "🏢";
-                        document.getElementById("overlaySubtitle").innerText = "ABSEN MASUK SUKSES";
-                        document.getElementById("overlayTitle").innerText = "Selamat Bekerja!";
-                        document.getElementById("overlayMsg").innerHTML = `Semoga harinya menyenangkan dan penuh semangat! <span class="waving-hand">👋</span>`;
-                        teksUcapkan = "Absen Masuk Berhasil";
+        function eksekusiAbsenFinal(fotoUrl) {
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "absen", id: activeStaffId, ip: userIP, foto: fotoUrl })
+            })
+            .then(r => r.json())
+            .then(res => {
+                handleHasilAbsen(res);
+            })
+            .catch(err => {
+                tampilkanPesanError("Gangguan koneksi, namun sistem sedang memproses.");
+            });
+        }
+function handleHasilAbsen(res) {
+            const overlay = document.getElementById("fullScreenOverlay");
+            const icon = document.getElementById("overlayIcon");
+            const title = document.getElementById("overlayTitle");
+            const nameEl = document.getElementById("overlayName");
+            const timeEl = document.getElementById("overlayTime");
+            const wifiEl = document.getElementById("overlayWifi");
+            const msgEl = document.getElementById("overlayMsg");
+
+            if (res.sukses) {
+                let isPulang = res.tipe === "pulang";
+                const nowWib = new Date();
+                const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                const tglFormat = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
+
+                if (isPulang) {
+                    overlay.className = "theme-pulang";
+                    icon.innerText = "🏡";
+                    title.innerText = "Absensi Pulang Berhasil";
+                    msgEl.innerHTML = `Hati-hati di jalan, selamat beristirahat! <span class="waving-hand">👋</span>`;
+                } else {
+                    overlay.className = "theme-masuk";
+                    icon.innerText = "🏢";
+                    title.innerText = "Absensi Masuk Berhasil";
+                    msgEl.innerHTML = `Selamat bekerja, semoga harinya menyenangkan! <span class="waving-hand">👋</span>`;
+                }
+
+                nameEl.innerText = res.nama;
+                timeEl.innerText = "📅 " + tglFormat;
+                wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
+                overlay.style.display = "flex";
+
+                // --- AUDIO "TRING" & SUARA UCAPAN TANPA KATA "ANDA" ---
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    function playTone(freq, startTime, duration) {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+                        
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime + startTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+                        
+                        osc.start(ctx.currentTime + startTime);
+                        osc.stop(ctx.currentTime + startTime + duration);
                     }
 
-                    document.getElementById("overlayName").innerText = res.nama;
-                    document.getElementById("overlayTime").innerText = tglFormat;
-                    
-                    overlay.style.display = "flex";
-                    setTimeout(() => { overlay.classList.add("show"); }, 10);
+                    // Nada Dering "Tring"
+                    playTone(1046.50, 0.0, 0.3);
+                    playTone(1318.51, 0.1, 0.4);
 
+                    // Suara Teks (Speech Synthesis) tanpa kata "Anda"
                     if ('speechSynthesis' in window) {
-                        window.speechSynthesis.cancel();
                         setTimeout(() => {
-                            const utterance = new SpeechSynthesisUtterance(teksUcapkan);
+                            let teksUcap = isPulang 
+                                ? "Absensi Pulang Berhasil" 
+                                : "Absensi Masuk Berhasil";
+                            
+                            const utterance = new SpeechSynthesisUtterance(teksUcap);
                             utterance.lang = 'id-ID';
                             utterance.rate = 1.0;
                             utterance.pitch = 1.1;
                             window.speechSynthesis.speak(utterance);
-                        }, 400);
+                        }, 300);
                     }
-
-                    setTimeout(() => {
-                        overlay.classList.remove("show");
-                        setTimeout(() => {
-                            overlay.style.display = "none";
-                            const btnLokasi = document.querySelectorAll('.btnLokasi');
-                            btnLokasi.forEach(b => b.disabled = false);
-                            
-                            mulaiScanner();
-                            sedangProses = false;
-                        }, 350);
-                    }, 6500);
-                } else {
-                    tampilkanPesanError(res.pesan);
+                } catch(e) {
+                    console.log("Audio/Speech error:", e);
                 }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerHTML = "<span>📸</span> Ambil Foto & Kirim Absen";
-                tampilkanPesanError("Gagal mengirim data ke server.");
-            });
-        }
 
-        function playTringBellSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                function playTone(freq, delay, duration, vol) {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
-                    gain.gain.setValueAtTime(vol, audioCtx.currentTime + delay);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + duration);
-                    osc.start(audioCtx.currentTime + delay);
-                    osc.stop(audioCtx.currentTime + delay + duration);
-                }
-                playTone(1318.51, 0.0, 0.6, 0.25);
-                playTone(2093.00, 0.08, 0.8, 0.3);
-                playTone(2637.02, 0.15, 1.0, 0.2);
-            } catch(e) {}
-        }
+            } else {
+                tampilkanPesanError(res.pesan);
+                return;
+            }
 
-        function tampilkanLoading(judul, sub) {
-            const overlay = document.getElementById("fullScreenOverlay");
-            overlay.className = "theme-loading";
-            document.getElementById("overlayLoaderContainer").style.display = "block";
-            document.getElementById("overlayIcon").style.display = "none";
-            document.getElementById("overlayInfoGrid").style.display = "none";
-            document.getElementById("overlaySubtitle").innerText = "MMBC PADANG";
-            document.getElementById("overlayTitle").innerText = judul;
-            document.getElementById("overlayName").innerText = "Mohon Tunggu Sebentar";
-            document.getElementById("overlayMsg").innerHTML = sub;
-            overlay.style.display = "flex";
-            setTimeout(() => { overlay.classList.add("show"); }, 10);
-        }
-
-        function tutupLoading() {
-            const overlay = document.getElementById("fullScreenOverlay");
-            overlay.classList.remove("show");
-            setTimeout(() => { overlay.style.display = "none"; }, 350);
+            setTimeout(() => {
+                overlay.style.display = "none";
+                resetScannerKamera();
+            }, 5000);
         }
 
         function tampilkanPesanError(pesan) {
             const overlay = document.getElementById("fullScreenOverlay");
             overlay.className = "error-bg";
-            document.getElementById("overlayLoaderContainer").style.display = "none";
-            document.getElementById("overlayIcon").style.display = "flex";
             document.getElementById("overlayIcon").innerText = "⚠️";
-            document.getElementById("overlayInfoGrid").style.display = "none";
-            document.getElementById("overlaySubtitle").innerText = "PERHATIAN";
-            document.getElementById("overlayTitle").innerText = "Gagal Absen";
-            document.getElementById("overlayName").innerText = "Kendala Sistem";
+            document.getElementById("overlayTitle").innerText = "Perhatian";
+            document.getElementById("overlayName").innerText = "Gagal Absen";
+            document.getElementById("overlayTime").innerText = "";
+            document.getElementById("overlayWifi").innerText = "";
             document.getElementById("overlayMsg").innerText = pesan;
-            
             overlay.style.display = "flex";
-            setTimeout(() => { overlay.classList.add("show"); }, 10);
-
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance("Gagal melakukan absensi");
-                utterance.lang = 'id-ID';
-                window.speechSynthesis.speak(utterance);
-            }
 
             setTimeout(() => {
-                overlay.classList.remove("show");
-                setTimeout(() => {
-                    overlay.style.display = "none";
-                    const btnLokasi = document.querySelectorAll('.btnLokasi');
-                    btnLokasi.forEach(b => b.disabled = false);
-
-                    mulaiScanner();
-                    sedangProses = false;
-                }, 350);
+                overlay.style.display = "none";
+                resetScannerKamera();
             }, 4000);
         }
 
-        function loadJadwalKerja() {
-            const container = document.getElementById('jadwalContent');
-            container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Memuat jadwal kerja...</div>";
-
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getJadwal" })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if (!res.status) {
-                    container.innerHTML = `<div style='text-align:center; padding:20px; color:#dc2626;'>${res.pesan}</div>`;
-                    return;
-                }
-                rawJadwalData = res.data;
-                renderJadwalTable(rawJadwalData, res.namaSheet);
-            })
-            .catch(err => {
-                container.innerHTML = "<div style='text-align:center; padding:20px; color:#dc2626;'>Gagal memuat jadwal kerja.</div>";
-            });
-        }
-
-        function renderJadwalTable(rows, namaSheet) {
-            const container = document.getElementById('jadwalContent');
-            let html = `<div style="font-weight: bold; font-size: 13px; color: #1e293b; margin-bottom: 8px; text-align: center;">📅 Periode: ${namaSheet}</div>`;
-            html += '<table class="rekap-table" id="tabelJadwalIsi">';
-            
-            rows.forEach((row, idx) => {
-                html += '<tr>';
-                row.forEach((cell, colIdx) => {
-                    let tag = idx === 0 || idx === 1 ? 'th' : 'td';
-                    let cellText = cell !== null ? String(cell).trim() : '';
-
-                    if (idx >= 2 && (colIdx === 1 || colIdx >= row.length - 3) && cellText !== '') {
-                        cellText = `<span class="badge-log-cell">${cellText}</span>`;
-                    }
-
-                    if (idx >= 2 && colIdx > 1 && cellText !== '') {
-                        let upperVal = cellText.toUpperCase();
-                        let badgeClass = "";
+        function resetScannerKamera() {
+            setTimeout(() => {
+                sedangProses = false;
+                try { qr.clear(); } catch(e) {}
+                qr.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: 230 },
+                    (decodedText) => {
+                        let currentTime = new Date().getTime();
+                        if (sedangProses || (currentTime - lastScanTime < 20000)) return; 
                         
-                        const isJmlOn = colIdx === row.length - 2;
-                        const isUangMakan = colIdx === row.length - 1;
-
-                        if (isJmlOn) {
-                            badgeClass = "badge-shift badge-jmlon";
-                        } else if (isUangMakan) {
-                            badgeClass = "badge-shift badge-uangmakan";
-                            let num = Number(cellText.replace(/[^0-9]/g, ''));
-                            if (!isNaN(num) && num > 0) {
-                                cellText = "Rp " + num.toLocaleString('id-ID');
-                            }
-                        } else if (upperVal === "S1") badgeClass = "badge-shift badge-s1";
-                        else if (upperVal === "S2") badgeClass = "badge-shift badge-s2";
-                        else if (upperVal === "OFF" || upperVal === "LIBUR") badgeClass = "badge-shift badge-off";
-                        else if (upperVal.includes("CUTI")) badgeClass = "badge-shift badge-cuti";
-                        else if (upperVal === "TLT" || upperVal === "T") badgeClass = "badge-shift badge-tlt";
-
-                        if (badgeClass !== "") {
-                            cellText = `<span class="${badgeClass}">${cellText}</span>`;
-                        }
-                    }
-
-                    html += `<${tag}>${cellText}</${tag}>`;
-                });
-                html += '</tr>';
-            });
-            html += '</table>';
-            container.innerHTML = html;
+                        sedangProses = true;
+                        lastScanTime = currentTime;
+                        
+                        qr.stop().then(() => {
+                            jalankanProsesAbsen(decodedText);
+                        }).catch(err => {
+                            jalankanProsesAbsen(decodedText);
+                        });
+                    },
+                    (err) => {}
+                ).catch(err => console.log("Restart scanner error:", err));
+            }, 1500);
         }
-
-        function filterTabelJadwal() {
-            const keyword = document.getElementById('searchJadwal').value.toLowerCase();
-            if (rawJadwalData.length === 0) return;
-
-            let header1 = rawJadwalData[0];
-            let header2 = rawJadwalData[1];
-            let bodyRows = rawJadwalData.slice(2);
-
-            let filteredBody = bodyRows.filter(row => {
-                return row.some(cell => String(cell).toLowerCase().includes(keyword));
-            });
-
-            renderJadwalTable([header1, header2, ...filteredBody], "Hasil Pencarian");
+        // Tambahkan fungsi helper kecil ini di dalam <script> index.html kamu
+function formatTanggalHeaderClean(val) {
+    if (!val) return '';
+    let strVal = String(val);
+    if (strVal.includes("T") && strVal.includes("Z")) {
+        let d = new Date(strVal);
+        if (!isNaN(d.getTime())) {
+            let day = String(d.getDate()).padStart(2, '0');
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            return `${day}/${month}`;
         }
-
-        function loadLogHarian() {
-            const container = document.getElementById('logContent');
-            container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Memuat log absensi hari ini...</div>";
-
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getLogHarian" })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if (!res.status) {
-                    container.innerHTML = `<div style='text-align:center; padding:20px; color:#dc2626;'>${res.pesan}</div>`;
-                    return;
-                }
-                
-                let originalRows = res.data;
-                if (originalRows.length <= 1) {
-                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada karyawan yang absen hari ini.</div>";
-                    return;
-                }
-
-                rawLogData = originalRows.map((row, index) => {
-                    let namaStaff = row[2];
-                    let masuk = row[3];
-                    let pulang = row[4];
-                    let keterangan = row[5];
-                    let foto = row[6];
-                    let hasil = row[8] !== undefined ? row[8] : "";
-                    
-                    let newRow = [namaStaff, masuk, pulang, keterangan, foto, hasil];
-                    
-                    if (index === 0) {
-                        newRow.unshift("No");
-                        newRow[1] = "Nama Staff";
-                        newRow[newRow.length - 1] = "Hasil";
-                    } else {
-                        newRow.unshift(index);
-                    }
-                    return newRow;
-                });
-
-                renderLogTable(rawLogData);
-            })
-            .catch(err => {
-                container.innerHTML = "<div style='text-align:center; padding:20px; color:#dc2626;'>Gagal memuat log harian.</div>";
-            });
-        }
-
-        function renderLogTable(rows) {
-            const container = document.getElementById('logContent');
-            let html = '<table class="rekap-table" id="tabelLogIsi">';
-            rows.forEach((row, idx) => {
-                html += '<tr>';
-                row.forEach((cell, colIdx) => {
-                    let tag = idx === 0 ? 'th' : 'td';
-                    let cellContent = cell !== null ? String(cell).trim() : '';
-
-                    if (idx > 0 && cellContent !== '') {
-                        let upper = cellContent.toUpperCase();
-                        let badgeStyleClass = "badge-log-cell"; 
-
-                        if (colIdx === 1) {
-                            cellContent = `<span class="badge-log-cell">${cellContent}</span>`;
-                        }
-
-                        if (colIdx === 4) {
-                            if (upper.includes("TERLAMBAT") || upper.includes("TLT")) {
-                                badgeStyleClass = "badge-ket-terlambat";
-                            } else if (upper.includes("TIDAK") || upper.includes("PULANG ❌") || upper.includes("❌")) {
-                                badgeStyleClass = "badge-ket-absen";
-                            } else {
-                                badgeStyleClass = "badge-ket-sukses";
-                            }
-                        }
-
-                        if (cellContent !== "" && colIdx !== 0 && colIdx !== 1 && colIdx !== 5) {
-                            cellContent = `<span class="${badgeStyleClass}">${cellContent}</span>`;
-                        }
-                    }
-
-                    if (idx > 0 && colIdx === 5 && cellContent !== '') {
-                        let match = cellContent.match(/[-\w]{25,}/);
-                        if (match) {
-                            let imgUrl = "https://lh3.googleusercontent.com/d/" + match[0];
-                            cellContent = `<a href="${cellContent}" target="_blank"><img src="${imgUrl}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1; box-shadow:0 2px 4px rgba(0,0,0,0.1);" title="Klik untuk lihat foto asli"></a>`;
-                        } else if (cellContent.startsWith("http")) {
-                            cellContent = `<a href="${cellContent}" target="_blank" style="color:#2563eb; text-decoration:underline;">Lihat Foto</a>`;
-                        }
-                    }
-
-                    html += `<` + tag + `>` + cellContent + `</` + tag + `>`;
-                });
-                html += '</tr>';
-            });
-            html += '</table>';
-            container.innerHTML = html;
-        }
-
-        function filterTabelJadwal() {
-            const keyword = document.getElementById('searchJadwal').value.toLowerCase();
-            if (rawJadwalData.length === 0) return;
-
-            let header1 = rawJadwalData[0];
-            let header2 = rawJadwalData[1];
-            let bodyRows = rawJadwalData.slice(2);
-
-            let filteredBody = bodyRows.filter(row => {
-                return row.some(cell => String(cell).toLowerCase().includes(keyword));
-            });
-
-            renderJadwalTable([header1, header2, ...filteredBody], "Hasil Pencarian");
-        }
+    }
+    return strVal;
+}
     </script>
 </body>
 </html>
