@@ -324,12 +324,15 @@
         
         <div id="authOverlay" style="padding: 25px; text-align: center; max-width: 450px; margin: 0 auto;">
             <h2>🔒</h2>
-            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password admin untuk mengakses Dashboard & Pembaruan IP Wi-Fi.</p>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan Username dan Password Admin untuk mengakses Dashboard.</p>
+            
+            <!-- Tambahan Input Username -->
+            <input type="text" id="adminUsernameInput" class="search-input" placeholder="Masukkan Nama/Username Admin..." style="margin-bottom: 10px;">
+            
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
             <button id="btnLoginAdmin" onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
-
         <div id="adminContentBody" style="display: none; padding: 20px;">
             
             <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
@@ -407,13 +410,14 @@
         }
 
         async function cekPasswordAdmin() {
+            let inputUser = document.getElementById("adminUsernameInput").value.trim();
             let inputVal = document.getElementById("adminPassInput").value.trim();
             let errorEl = document.getElementById("authError");
             let btnLogin = document.getElementById("btnLoginAdmin");
             
-            if (!inputVal) {
+            if (!inputUser || !inputVal) {
                 errorEl.style.display = "block";
-                errorEl.innerText = "Password tidak boleh kosong!";
+                errorEl.innerText = "Username dan Password tidak boleh kosong!";
                 return;
             }
 
@@ -424,13 +428,13 @@
             try {
                 let response = await fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "cekPasswordAdmin", password: inputVal })
+                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal }) // Menggunakan fungsi 'login' yang sudah ada di backend
                 });
                 let res = await response.json();
 
                 if (res.sukses) {
-                    // Menyimpan nama admin yang berhasil login dari respons Apps Script
-                    window.adminLoginNama = res.namaAdmin || "Web Admin";
+                    // Menyimpan nama admin yang berhasil login secara spesifik sesuai input username
+                    window.adminLoginNama = res.nama || inputUser;
 
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
@@ -439,7 +443,7 @@
                     muatStatistikKunjungan();
                 } else {
                     errorEl.style.display = "block";
-                    errorEl.innerText = "❌ Password Admin Salah!";
+                    errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
                 }
             } catch (err) {
                 errorEl.style.display = "block";
