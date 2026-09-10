@@ -139,17 +139,25 @@
         #tabelJadwal tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
 
-        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; text-overflow: ellipsis; overflow: hidden; }
+        #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: center; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; text-overflow: ellipsis; overflow: hidden; }
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
-        #tabelLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
-        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
+        /* TAB LOG: Kolom 0 (Nama Staff - karena Tanggal sudah dihapus) diset sticky ke kiri & text center */
+        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1) { min-width: 42px; max-width: 42px; text-align: center; }
+        #tabelLog th:nth-child(2), #tabelLog td:nth-child(2) { 
+            position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: center; min-width: 155px; max-width: 155px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; 
+        }
+        #tabelLog tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
+        #tabelLog tr:nth-child(1) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; text-align: center; }
 
-        #tabelAdminLog th:nth-child(3), #tabelAdminLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
-        #tabelAdminLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
-        #tabelAdminLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
+        /* TAB ADMIN LOG: Menyesuaikan karena Tanggal dihilangkan */
+        #tabelAdminLog th:nth-child(1), #tabelAdminLog td:nth-child(1) { min-width: 42px; max-width: 42px; text-align: center; }
+        #tabelAdminLog th:nth-child(2), #tabelAdminLog td:nth-child(2) { 
+            position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: center; min-width: 155px; max-width: 155px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; 
+        }
+        #tabelAdminLog tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
+        #tabelAdminLog tr:nth-child(1) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; text-align: center; }
 
         .badge-shift { display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; min-width: 32px; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
@@ -167,29 +175,27 @@
 
         #tab-rekap, #tab-log { padding: 0 !important; }
         #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
-     /* === TAMBAHKAN KODE CSS KAPSUL DI SINI === */
-    .badge-kapsul {
-        display: inline-block;
-        padding: 4px 10px;
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        font-weight: 600;
-    }
-    .badge-nama-kapsul {
-        display: inline-block;
-        padding: 4px 12px;
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        font-weight: 600;
-        text-align: left;
-    }
-    /* ======================================= */
 
-</style>
+        .badge-kapsul {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+        .badge-nama-kapsul {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 600;
+            text-align: center !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -245,7 +251,6 @@
         <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
         <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
         
-        <!-- TEKS BERJALAN (MARQUEE) PENGINGAT CUTI -->
         <div class="marquee-box">
             <marquee behavior="scroll" direction="left" scrollamount="5">
                 ⚠️ Jika Absensi Error cukup lakukan muat Uang, ( Geser kebawah ) dan Coba kembali.
@@ -279,6 +284,7 @@
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>LOG ABSEN HARI INI</h1>
+            <div id="liveClockLog" style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Memuat waktu...</div>
         </div>
         <div class="search-box-wrapper">
             <input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari nama staff yang sudah scan..." onkeyup="filterTabelLog()">
@@ -288,7 +294,7 @@
         </div>
     </div>
 
-    <!-- TAB 4: PERATURAN CUTI & PERusahaan -->
+    <!-- TAB 4: PERATURAN -->
     <div id="tab-peraturan" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -310,7 +316,7 @@
                 <li><b>i.</b> Telat lebih dari 5 kali tidak mendapatkan bonus tahunan.</li>
                 <li><b>j.</b> Menabung libur maksimal 1 hari dalam satu bulan (kondisi normal).</li>
                 <li><b>k.</b> Waktu cuti berlaku dan harus dihabiskan sampai 30 September di tahun berjalan.</li>
-                <li><b>i.</b> Jika tidak konsisten, manajemen berhak meninjau ulang kebijakan cuti berikutnya.</li>
+                <li><b>l.</b> Jika tidak konsisten, manajemen berhak meninjau ulang kebijakan cuti berikutnya.</li>
             </ul>
         </div>
     </div>
@@ -326,29 +332,27 @@
             <h2>🔒</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan Username dan Password Admin untuk mengakses Dashboard.</p>
             
-            <!-- Tambahan Input Username -->
             <input type="text" id="adminUsernameInput" class="search-input" placeholder="Masukkan Nama/Username Admin..." style="margin-bottom: 10px;">
-            
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
             <button id="btnLoginAdmin" onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
         <div id="adminContentBody" style="display: none; padding: 20px;">
             
-            <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
-<div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
-    <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
-    <div style="display: flex; justify-content: space-around; gap: 8px;">
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
-            <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
-        </div>
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
-            <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
-        </div>
-    </div>
-</div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
+                <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
+                <div style="display: flex; justify-content: space-around; gap: 8px;">
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
+                        <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
+                        <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
+                    </div>
+                </div>
+            </div>
+
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -428,14 +432,12 @@
             try {
                 let response = await fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal }) // Menggunakan fungsi 'login' yang sudah ada di backend
+                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
                 });
                 let res = await response.json();
 
                 if (res.sukses) {
-                    // Menyimpan nama admin yang berhasil login secara spesifik sesuai input username
                     window.adminLoginNama = res.nama || inputUser;
-
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
@@ -453,6 +455,7 @@
                 btnLogin.disabled = false;
             }
         }
+
         function muatStatistikKunjungan() {
             fetch(API, {
                 method: "POST",
@@ -486,9 +489,8 @@
             }
 
             let msg = document.getElementById("statusMsgAdmin");
-            let btnUpdate = event.target; // Mengambil tombol yang diklik
+            let btnUpdate = event.target;
             
-            // Disable tombol agar tidak bisa klik 2 kali
             btnUpdate.disabled = true;
             btnUpdate.style.opacity = "0.6";
 
@@ -522,12 +524,12 @@
                 msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
             })
             .finally(() => {
-                // Aktifkan kembali tombol setelah selesai
                 btnUpdate.disabled = false;
                 btnUpdate.style.opacity = "1";
             });
         }
-function loadRekapBulanan() {
+
+        function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
             container.innerHTML = "Sedang Memuat jadwal...";
@@ -591,7 +593,6 @@ function loadRekapBulanan() {
                             cellText = "";
                         }
                             
-                        // Bungkus Nama Staff di Tab Jadwal dengan Kapsul Elegan
                         if (tag === 'td' && colIndex === 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
                             cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
                         }
@@ -683,21 +684,17 @@ function loadRekapBulanan() {
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1 || colIndex === 7) return; 
+                        // Hilangkan Kolom 0 (Tanggal) dan Kolom 7 (Foto di tabel publik)
+                        if (colIndex === 0 || colIndex === 1 || colIndex === 7) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            // Kapsul untuk Tanggal
-                            if (colIndex === 0 && cellText !== "") {
-                                cellText = `<span class="badge-kapsul">${cellText}</span>`;
+                            // Kolom 2 di data mentah adalah Nama Staff, diposisikan ke tengah
+                            if (colIndex === 2 && cellText !== "") {
+                                cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
                             }
-                            // Kapsul untuk Nama Staff di Log Absen
-                            else if (colIndex === 2 && cellText !== "") {
-                                cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
-                            }
-                            // Kapsul untuk Jam Masuk & Pulang
                             else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
                                 cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
                             }
@@ -729,9 +726,14 @@ function loadRekapBulanan() {
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
                             }
+                        } else if (tag === 'th') {
+                            // Judul Header Nama Staff diatur tengah
+                            if (colIndex === 2) {
+                                cellText = "Nama Staff";
+                            }
                         }
 
-                        html += `<${tag}>${cellText}</${tag}>`;
+                        html += `<${tag} style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</${tag}>`;
                     });
                     html += '</tr>';
                 });
@@ -743,7 +745,7 @@ function loadRekapBulanan() {
             });
         }
 
-function fixGoogleDriveUrl(url) {
+        function fixGoogleDriveUrl(url) {
             if (!url) return "";
             let fileId = "";
             if (url.includes("/file/d/")) {
@@ -759,7 +761,7 @@ function fixGoogleDriveUrl(url) {
             return url;
         }
 
-function loadAdminLogHariIni() {
+        function loadAdminLogHariIni() {
             const container = document.getElementById('adminLogContent');
             container.innerHTML = "Memuat log eksklusif...";
 
@@ -788,7 +790,8 @@ function loadAdminLogHariIni() {
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 1) return; 
+                        // Abaikan Kolom 0 (Tanggal) karena sudah ada di header utama
+                        if (colIndex === 0) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
@@ -801,6 +804,10 @@ function loadAdminLogHariIni() {
                                 } else {
                                     cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
                                 }
+                            }
+                            // Kolom 2 Nama Staff diatur tengah
+                            else if (colIndex === 2 && cellText !== "") {
+                                cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
                             }
                             else if (colIndex === 3 || colIndex === 4) {
                                 if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
@@ -835,9 +842,13 @@ function loadAdminLogHariIni() {
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
                             }
+                        } else if (tag === 'th') {
+                            if (colIndex === 2) {
+                                cellText = "Nama Staff";
+                            }
                         }
 
-                        html += `<${tag}>${cellText}</${tag}>`;
+                        html += `<${tag} style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</${tag}>`;
                     });
                     html += '</tr>';
                 });
@@ -880,7 +891,7 @@ function loadAdminLogHariIni() {
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[2];
+                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom 1 karena Tanggal dihapus
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -894,7 +905,7 @@ function loadAdminLogHariIni() {
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[2];
+                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom 1 karena Tanggal dihapus
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -905,10 +916,19 @@ function loadAdminLogHariIni() {
         function updateClock(){
             const now = new Date();
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const tglString = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
+            const jamString = now.toLocaleTimeString("id-ID");
+
             const elTgl = document.getElementById("tanggal");
             const elJam = document.getElementById("jam");
-            if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
-            if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
+            if(elTgl) elTgl.innerHTML = tglString;
+            if(elJam) elJam.innerHTML = jamString;
+
+            // Live clock untuk header Log Absen Hari Ini (Sama persis seperti Tab Scanner)
+            const elLiveClockLog = document.getElementById("liveClockLog");
+            if(elLiveClockLog) {
+                elLiveClockLog.innerHTML = tglString + " | " + jamString;
+            }
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -927,7 +947,6 @@ function loadAdminLogHariIni() {
                 if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
             }).catch(e => console.log(e));
 
-        // Catat kunjungan otomatis saat web/app dibuka
         fetch(API, {
             method: "POST",
             body: JSON.stringify({ action: "catatKunjungan", ip: userIP, info: "Akses Web/App" })
@@ -1133,7 +1152,8 @@ function loadAdminLogHariIni() {
                 tampilkanPesanError("Gangguan koneksi, namun sistem sedang memproses.");
             });
         }
-function handleHasilAbsen(res) {
+
+        function handleHasilAbsen(res) {
             const overlay = document.getElementById("fullScreenOverlay");
             const icon = document.getElementById("overlayIcon");
             const title = document.getElementById("overlayTitle");
@@ -1165,7 +1185,6 @@ function handleHasilAbsen(res) {
                 wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
                 overlay.style.display = "flex";
 
-                // --- AUDIO "TRING" & SUARA UCAPAN TANPA KATA "ANDA" ---
                 try {
                     const ctx = new (window.AudioContext || window.webkitAudioContext)();
                     
@@ -1184,17 +1203,12 @@ function handleHasilAbsen(res) {
                         osc.stop(ctx.currentTime + startTime + duration);
                     }
 
-                    // Nada Dering "Tring"
                     playTone(1046.50, 0.0, 0.3);
                     playTone(1318.51, 0.1, 0.4);
 
-                    // Suara Teks (Speech Synthesis) tanpa kata "Anda"
                     if ('speechSynthesis' in window) {
                         setTimeout(() => {
-                            let teksUcap = isPulang 
-                                ? "Absensi Pulang Berhasil" 
-                                : "Absensi Masuk Berhasil";
-                            
+                            let teksUcap = isPulang ? "Absensi Pulang Berhasil" : "Absensi Masuk Berhasil";
                             const utterance = new SpeechSynthesisUtterance(teksUcap);
                             utterance.lang = 'id-ID';
                             utterance.rate = 1.0;
@@ -1258,20 +1272,20 @@ function handleHasilAbsen(res) {
                 ).catch(err => console.log("Restart scanner error:", err));
             }, 1500);
         }
-        // Tambahkan fungsi helper kecil ini di dalam <script> index.html kamu
-function formatTanggalHeaderClean(val) {
-    if (!val) return '';
-    let strVal = String(val);
-    if (strVal.includes("T") && strVal.includes("Z")) {
-        let d = new Date(strVal);
-        if (!isNaN(d.getTime())) {
-            let day = String(d.getDate()).padStart(2, '0');
-            let month = String(d.getMonth() + 1).padStart(2, '0');
-            return `${day}/${month}`;
+
+        function formatTanggalHeaderClean(val) {
+            if (!val) return '';
+            let strVal = String(val);
+            if (strVal.includes("T") && strVal.includes("Z")) {
+                let d = new Date(strVal);
+                if (!isNaN(d.getTime())) {
+                    let day = String(d.getDate()).padStart(2, '0');
+                    let month = String(d.getMonth() + 1).padStart(2, '0');
+                    return `${day}/${month}`;
+                }
+            }
+            return strVal;
         }
-    }
-    return strVal;
-}
     </script>
 </body>
 </html>
