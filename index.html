@@ -143,27 +143,13 @@
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        /* Sticky khusus Log Absen (Kolom Nama di index ke-2 setelah No) */
-/* STICKY BARU KHUSUS TABEL LOG (KARENA KOLOM TANGGAL SUDAH DIHAPUS) */
-        /* Kolom No (Sticky ke posisi 0) */
-        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1),
-        #tabelAdminLog th:nth-child(1), #tabelAdminLog td:nth-child(1) {
-            position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: center; min-width: 42px; max-width: 42px; font-weight: bold; border-right: 1px solid #cbd5e1;
-        }
-        #tabelLog tr:nth-child(even) td:nth-child(1),
-        #tabelAdminLog tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
-        #tabelLog tr:nth-child(1) th:nth-child(1),
-        #tabelAdminLog tr:nth-child(1) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
+        #tabelLog th:nth-child(3), #tabelLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
+        #tabelLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
+        #tabelLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        /* Kolom Nama (Sticky ke posisi 42px karena lebar kolom No adalah 42px) */
-        #tabelLog th:nth-child(2), #tabelLog td:nth-child(2),
-        #tabelAdminLog th:nth-child(2), #tabelAdminLog td:nth-child(2) {
-            position: sticky; left: 42px; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600;
-        }
-        #tabelLog tr:nth-child(even) td:nth-child(2),
-        #tabelAdminLog tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
-        #tabelLog tr:nth-child(1) th:nth-child(2),
-        #tabelAdminLog tr:nth-child(1) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
+        #tabelAdminLog th:nth-child(3), #tabelAdminLog td:nth-child(3) { position: sticky; left: 0; z-index: 8; background: #ffffff; text-align: left; min-width: 145px; max-width: 145px; border-right: 2px solid #cbd5e1 !important; font-weight: 600; }
+        #tabelAdminLog tr:nth-child(even) td:nth-child(3) { background: #f8fafc; }
+        #tabelAdminLog tr:nth-child(1) th:nth-child(3) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
         .badge-shift { display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; min-width: 32px; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
@@ -181,34 +167,38 @@
 
         #tab-rekap, #tab-log { padding: 0 !important; }
         #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
-        
-        .badge-kapsul {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            font-weight: 600;
-        }
-        .badge-nama-kapsul {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            font-weight: 600;
-            text-align: left;
-        }
-    </style>
+     /* === TAMBAHKAN KODE CSS KAPSUL DI SINI === */
+    .badge-kapsul {
+        display: inline-block;
+        padding: 4px 10px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        font-weight: 600;
+    }
+    .badge-nama-kapsul {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        font-weight: 600;
+        text-align: left;
+    }
+    /* ======================================= */
+
+</style>
 </head>
 <body>
 
+    <!-- MODAL ZOOM FOTO SELFIE -->
     <div id="imageModal" onclick="closeImageModal()">
         <img id="modalImg" src="" alt="Foto Selfie Full">
     </div>
 
+    <!-- NAVIGASI TAB -->
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
         <button class="tab-btn" onclick="switchTab('log', this)">📋 Absensi</button>
@@ -217,6 +207,7 @@
         <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
     </div>
 
+    <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
         <div class="selfie-header">
@@ -230,6 +221,7 @@
         </div>
     </div>
 
+    <!-- FULL SCREEN OVERLAY -->
     <div id="fullScreenOverlay">
         <div class="overlay-card">
             <div class="overlay-icon" id="overlayIcon">✅</div>
@@ -243,6 +235,7 @@
         </div>
     </div>
 
+    <!-- TAB 1: SCANNER -->
     <div id="tab-scanner" class="container active">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -252,9 +245,10 @@
         <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
         <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
         
+        <!-- TEKS BERJALAN (MARQUEE) PENGINGAT CUTI -->
         <div class="marquee-box">
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                ⚠️ Jika Setelah Selfi Error, cukup lakukan Refresh ( Geser/Tarik Halaman Absensi kebawah ) dan Coba kembali. Lalu cek di Tab Absensi hari ini
+                ⚠️ Jika Absensi Error cukup lakukan muat Uang, ( Geser kebawah ) dan Coba kembali.
             </marquee>
         </div>
 
@@ -264,6 +258,7 @@
         </div>
     </div>
 
+    <!-- TAB 2: JADWAL -->
     <div id="tab-rekap" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -278,12 +273,12 @@
         </div>
     </div>
 
+    <!-- TAB 3: LOG (PUBLIK) -->
     <div id="tab-log" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
             <div class="logo-text">MMBC Tour & Travel</div>
             <h1>LOG ABSEN HARI INI</h1>
-            <div id="liveClockLog" style="font-size: 12px; font-weight: 600; color: #475569; margin-top: 4px;">Memuat waktu...</div>
         </div>
         <div class="search-box-wrapper">
             <input type="text" id="searchLog" class="search-input" placeholder="🔍 Cari nama staff yang sudah scan..." onkeyup="filterTabelLog()">
@@ -293,6 +288,7 @@
         </div>
     </div>
 
+    <!-- TAB 4: PERATURAN CUTI & PERusahaan -->
     <div id="tab-peraturan" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -319,6 +315,7 @@
         </div>
     </div>
 
+    <!-- TAB 5: ADMIN -->
     <div id="tab-admin" class="container">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
@@ -327,29 +324,28 @@
         
         <div id="authOverlay" style="padding: 25px; text-align: center; max-width: 450px; margin: 0 auto;">
             <h2>🔒</h2>
-            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan Username dan Password Admin untuk mengakses Dashboard.</p>
-            
-            <input type="text" id="adminUsernameInput" class="search-input" placeholder="Masukkan Nama/Username Admin..." style="margin-bottom: 10px;">
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan password admin untuk mengakses Dashboard & Pembaruan IP Wi-Fi.</p>
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
             <button id="btnLoginAdmin" onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
+
         <div id="adminContentBody" style="display: none; padding: 20px;">
             
-            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
-                <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
-                <div style="display: flex; justify-content: space-around; gap: 8px;">
-                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-                        <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
-                        <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
-                    </div>
-                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-                        <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
-                        <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
-                    </div>
-                </div>
-            </div>
-
+            <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
+<div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
+    <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
+    <div style="display: flex; justify-content: space-around; gap: 8px;">
+        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+            <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
+            <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
+        </div>
+        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+            <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
+            <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
+        </div>
+    </div>
+</div>
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -379,7 +375,7 @@
         </div>
     </div>
 
-    <footer>© 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
+    <footer>&copy; 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
@@ -411,14 +407,13 @@
         }
 
         async function cekPasswordAdmin() {
-            let inputUser = document.getElementById("adminUsernameInput").value.trim();
             let inputVal = document.getElementById("adminPassInput").value.trim();
             let errorEl = document.getElementById("authError");
             let btnLogin = document.getElementById("btnLoginAdmin");
             
-            if (!inputUser || !inputVal) {
+            if (!inputVal) {
                 errorEl.style.display = "block";
-                errorEl.innerText = "Username dan Password tidak boleh kosong!";
+                errorEl.innerText = "Password tidak boleh kosong!";
                 return;
             }
 
@@ -429,12 +424,11 @@
             try {
                 let response = await fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
+                    body: JSON.stringify({ action: "cekPasswordAdmin", password: inputVal })
                 });
                 let res = await response.json();
 
                 if (res.sukses) {
-                    window.adminLoginNama = res.nama || inputUser;
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
@@ -442,7 +436,7 @@
                     muatStatistikKunjungan();
                 } else {
                     errorEl.style.display = "block";
-                    errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
+                    errorEl.innerText = "❌ Password Admin Salah!";
                 }
             } catch (err) {
                 errorEl.style.display = "block";
@@ -470,8 +464,8 @@
         function muatIpAdmin() {
             fetch("https://api.ipify.org?format=json")
                 .then(r => r.json())
-                .then(data => { 
-                    window.adminMyIp = data.ip; 
+                .then(data => {
+                    window.adminMyIp = data.ip;
                     document.getElementById("adminCurrentIp").innerText = "IP Publik: " + window.adminMyIp;
                 })
                 .catch(err => {
@@ -486,25 +480,14 @@
             }
 
             let msg = document.getElementById("statusMsgAdmin");
-            let btnUpdate = event.target; 
-            
-            btnUpdate.disabled = true;
-            btnUpdate.style.opacity = "0.6";
-
             msg.style.color = "#1e293b";
             msg.innerText = "Sedang memperbarui IP Wi-Fi kantor...";
 
             let targetTerpilih = document.getElementById("targetWifi").value;
-            let namaStaffAktif = window.adminLoginNama || "Manual Staff";
 
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ 
-                    action: "updateWifi", 
-                    ip: window.adminMyIp, 
-                    target: targetTerpilih,
-                    namaStaff: namaStaffAktif 
-                })
+                body: JSON.stringify({ action: "updateWifi", ip: window.adminMyIp, target: targetTerpilih })
             })
             .then(r => r.json())
             .then(res => {
@@ -519,14 +502,9 @@
             .catch(err => {
                 msg.style.color = "#dc2626";
                 msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
-            })
-            .finally(() => {
-                btnUpdate.disabled = false;
-                btnUpdate.style.opacity = "1";
             });
         }
-
-        function loadRekapBulanan() {
+function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
             container.innerHTML = "Sedang Memuat jadwal...";
@@ -590,6 +568,7 @@
                             cellText = "";
                         }
                             
+                        // Bungkus Nama Staff di Tab Jadwal dengan Kapsul Elegan
                         if (tag === 'td' && colIndex === 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
                             cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
                         }
@@ -681,15 +660,18 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // KONDISI PENYEMBUNYIAN KOLOM TANGGAL (colIndex === 0) DAN FOTO (colIndex === 7)
-                        if (colIndex === 0 || colIndex === 1 || colIndex === 7) return; 
+                        if (colIndex === 1 || colIndex === 7) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
+                            // Kapsul untuk Tanggal
+                            if (colIndex === 0 && cellText !== "") {
+                                cellText = `<span class="badge-kapsul">${cellText}</span>`;
+                            }
                             // Kapsul untuk Nama Staff di Log Absen
-                            if (colIndex === 2 && cellText !== "") {
+                            else if (colIndex === 2 && cellText !== "") {
                                 cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
                             }
                             // Kapsul untuk Jam Masuk & Pulang
@@ -738,7 +720,7 @@
             });
         }
 
-        function fixGoogleDriveUrl(url) {
+function fixGoogleDriveUrl(url) {
             if (!url) return "";
             let fileId = "";
             if (url.includes("/file/d/")) {
@@ -754,7 +736,7 @@
             return url;
         }
 
-        function loadAdminLogHariIni() {
+function loadAdminLogHariIni() {
             const container = document.getElementById('adminLogContent');
             container.innerHTML = "Memuat log eksklusif...";
 
@@ -783,8 +765,7 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // Sembunyikan kolom Tanggal (colIndex === 0) di Admin Log juga agar konsisten
-                        if (colIndex === 0 || colIndex === 1) return; 
+                        if (colIndex === 1) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
@@ -876,7 +857,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Indeks kolom nama jadi 1 karena kolom tanggal disembunyikan
+                let tdNama = tr[i].getElementsByTagName('td')[2];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -890,7 +871,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Indeks kolom nama jadi 1 karena tanggal disembunyikan
+                let tdNama = tr[i].getElementsByTagName('td')[2];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -905,15 +886,6 @@
             const elJam = document.getElementById("jam");
             if(elTgl) elTgl.innerHTML = hari[now.getDay()] + ", " + now.getDate() + " " + namaBulanArr[now.getMonth()] + " " + now.getFullYear();
             if(elJam) elJam.innerHTML = now.toLocaleTimeString("id-ID");
-
-            // Update juga Live Clock di bawah judul Log Absen
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const tanggalStr = now.toLocaleDateString('id-ID', options);
-            const timeStr = now.toLocaleTimeString('id-ID') + " WIB";
-            const liveClockEl = document.getElementById("liveClockLog");
-            if(liveClockEl) {
-                liveClockEl.innerHTML = `📅 ${tanggalStr} | ⏰ ${timeStr}`;
-            }
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -1080,7 +1052,7 @@
             ctx.fillStyle = "#cbd5e1";
             ctx.fillText("📍 MMBC Tour & Travel", 12, canvas.height - 12);
 
-            const base64Image = canvas.toDataURL("image/jpeg", 0.45);
+            const base64Image = canvas.toDataURL("image/jpeg", 0.65);
 
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
@@ -1097,28 +1069,16 @@
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
-            // === PENGAMAN TIMEOUT ABORTCONTROLLER 25 DETIK ===
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 25000); 
-
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image }),
-                signal: controller.signal
+                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
             })
-            .then(r => {
-                clearTimeout(timeoutId);
-                return r.json();
-            })
+            .then(r => r.json())
             .then(res => {
                 handleHasilAbsen(res);
             })
             .catch(err => {
-                clearTimeout(timeoutId);
-                
-                // PESAN ERROR RAMAH JIKA TERJADI TIMEOUT / GANGGUAN KONEKSI
-                tampilkanPesanError("Silakan coba kembali dari awal");
-                resetScannerKamera();
+                uploadSelfieTerpisah(base64Image);
             });
         }
 
@@ -1150,8 +1110,7 @@
                 tampilkanPesanError("Gangguan koneksi, namun sistem sedang memproses.");
             });
         }
-
-        function handleHasilAbsen(res) {
+function handleHasilAbsen(res) {
             const overlay = document.getElementById("fullScreenOverlay");
             const icon = document.getElementById("overlayIcon");
             const title = document.getElementById("overlayTitle");
@@ -1183,7 +1142,7 @@
                 wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
                 overlay.style.display = "flex";
 
-                // --- AUDIO "TRING" & SUARA UCAPAN ---
+                // --- AUDIO "TRING" & SUARA UCAPAN TANPA KATA "ANDA" ---
                 try {
                     const ctx = new (window.AudioContext || window.webkitAudioContext)();
                     
@@ -1202,12 +1161,17 @@
                         osc.stop(ctx.currentTime + startTime + duration);
                     }
 
+                    // Nada Dering "Tring"
                     playTone(1046.50, 0.0, 0.3);
                     playTone(1318.51, 0.1, 0.4);
 
+                    // Suara Teks (Speech Synthesis) tanpa kata "Anda"
                     if ('speechSynthesis' in window) {
                         setTimeout(() => {
-                            let teksUcap = isPulang ? "Absensi Pulang Berhasil" : "Absensi Masuk Berhasil";
+                            let teksUcap = isPulang 
+                                ? "Absensi Pulang Berhasil" 
+                                : "Absensi Masuk Berhasil";
+                            
                             const utterance = new SpeechSynthesisUtterance(teksUcap);
                             utterance.lang = 'id-ID';
                             utterance.rate = 1.0;
@@ -1271,20 +1235,20 @@
                 ).catch(err => console.log("Restart scanner error:", err));
             }, 1500);
         }
-
-        function formatTanggalHeaderClean(val) {
-            if (!val) return '';
-            let strVal = String(val);
-            if (strVal.includes("T") && strVal.includes("Z")) {
-                let d = new Date(strVal);
-                if (!isNaN(d.getTime())) {
-                    let day = String(d.getDate()).padStart(2, '0');
-                    let month = String(d.getMonth() + 1).padStart(2, '0');
-                    return `${day}/${month}`;
-                }
-            }
-            return strVal;
+        // Tambahkan fungsi helper kecil ini di dalam <script> index.html kamu
+function formatTanggalHeaderClean(val) {
+    if (!val) return '';
+    let strVal = String(val);
+    if (strVal.includes("T") && strVal.includes("Z")) {
+        let d = new Date(strVal);
+        if (!isNaN(d.getTime())) {
+            let day = String(d.getDate()).padStart(2, '0');
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            return `${day}/${month}`;
         }
+    }
+    return strVal;
+}
     </script>
 </body>
 </html>
