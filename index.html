@@ -63,7 +63,6 @@
         .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
         .instruction-sub { font-size: 13px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        /* MARQUEE PENGINGAT CUTI */
         .marquee-box { background: #fffbeb; color: #b45309; padding: 8px 12px; font-size: 12px; font-weight: 700; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
 
         .scanner-wrapper { padding: 15px; text-align: center; }
@@ -167,29 +166,27 @@
 
         #tab-rekap, #tab-log { padding: 0 !important; }
         #tab-rekap .rekap-wrapper, #tab-log .rekap-wrapper { border-radius: 0 0 20px 20px; }
-     /* === TAMBAHKAN KODE CSS KAPSUL DI SINI === */
-    .badge-kapsul {
-        display: inline-block;
-        padding: 4px 10px;
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        font-weight: 600;
-    }
-    .badge-nama-kapsul {
-        display: inline-block;
-        padding: 4px 12px;
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        font-weight: 600;
-        text-align: left;
-    }
-    /* ======================================= */
 
-</style>
+        .badge-kapsul {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+        .badge-nama-kapsul {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 600;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
 
@@ -245,10 +242,9 @@
         <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
         <div class="wifi-info-box">📡 Jaringan: <b id="namaWifiText">Mendeteksi...</b></div>
         
-        <!-- TEKS BERJALAN (MARQUEE) PENGINGAT CUTI -->
         <div class="marquee-box">
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                ⚠️ Jika Absensi Error cukup lakukan muat Uang, ( Geser Layar absen kebawah ) dan Coba kembali.
+                ⚠️ Jika Absensi Error cukup lakukan muat Ulang, ( Geser Layar absen kebawah ) dan Coba kembali.
             </marquee>
         </div>
 
@@ -288,7 +284,7 @@
         </div>
     </div>
 
-    <!-- TAB 4: PERATURAN CUTI & PERusahaan -->
+    <!-- TAB 4: PERATURAN -->
     <div id="tab-peraturan" class="container">
         <div class="header-brand">
             <img src="logo.png" alt="Logo MMBC" class="logo-img">
@@ -326,29 +322,26 @@
             <h2>🔒</h2>
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan Username dan Password Admin untuk mengakses Dashboard.</p>
             
-            <!-- Tambahan Input Username -->
             <input type="text" id="adminUsernameInput" class="search-input" placeholder="Masukkan Nama/Username Admin..." style="margin-bottom: 10px;">
-            
             <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
             <button id="btnLoginAdmin" onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
         <div id="adminContentBody" style="display: none; padding: 20px;">
             
-            <!-- KOTAK STATISTIK PENGUNJUNG (Eksklusif Admin - Diperkecil) -->
-<div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
-    <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
-    <div style="display: flex; justify-content: space-around; gap: 8px;">
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
-            <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
-        </div>
-        <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
-            <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
-            <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
-        </div>
-    </div>
-</div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 10px; margin: 0 auto 15px auto; max-width: 400px; text-align: center;">
+                <h4 style="color: #1e40af; font-size: 13px; margin-bottom: 8px;">📊 Statistik Kunjungan Website</h4>
+                <div style="display: flex; justify-content: space-around; gap: 8px;">
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Hari Ini</span>
+                        <b id="statHariIni" style="font-size: 15px; color: #2563eb;">0</b>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px 10px; border-radius: 6px; flex: 1; border: 1px solid #dbeafe;">
+                        <span style="font-size: 10px; color: #64748b; display: block;">Total Keseluruhan</span>
+                        <b id="statTotal" style="font-size: 15px; color: #1d4ed8;">0</b>
+                    </div>
+                </div>
+            </div>
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
@@ -428,14 +421,12 @@
             try {
                 let response = await fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal }) // Menggunakan fungsi 'login' yang sudah ada di backend
+                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
                 });
                 let res = await response.json();
 
                 if (res.sukses) {
-                    // Menyimpan nama admin yang berhasil login secara spesifik sesuai input username
                     window.adminLoginNama = res.nama || inputUser;
-
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
@@ -453,6 +444,7 @@
                 btnLogin.disabled = false;
             }
         }
+
         function muatStatistikKunjungan() {
             fetch(API, {
                 method: "POST",
@@ -486,9 +478,8 @@
             }
 
             let msg = document.getElementById("statusMsgAdmin");
-            let btnUpdate = event.target; // Mengambil tombol yang diklik
+            let btnUpdate = event.target;
             
-            // Disable tombol agar tidak bisa klik 2 kali
             btnUpdate.disabled = true;
             btnUpdate.style.opacity = "0.6";
 
@@ -522,12 +513,12 @@
                 msg.innerText = "❌ Terjadi kesalahan koneksi ke server.";
             })
             .finally(() => {
-                // Aktifkan kembali tombol setelah selesai
                 btnUpdate.disabled = false;
                 btnUpdate.style.opacity = "1";
             });
         }
-function loadRekapBulanan() {
+
+        function loadRekapBulanan() {
             const container = document.getElementById('rekapContent');
             if (!container) return;
             container.innerHTML = "Sedang Memuat jadwal...";
@@ -591,7 +582,6 @@ function loadRekapBulanan() {
                             cellText = "";
                         }
                             
-                        // Bungkus Nama Staff di Tab Jadwal dengan Kapsul Elegan
                         if (tag === 'td' && colIndex === 1 && cellText !== '' && !isBarisKhusus && !isBarisKosong) {
                             cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
                         }
@@ -689,19 +679,13 @@ function loadRekapBulanan() {
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            // Kapsul untuk Tanggal
                             if (colIndex === 0 && cellText !== "") {
                                 cellText = `<span class="badge-kapsul">${cellText}</span>`;
-                            }
-                            // Kapsul untuk Nama Staff di Log Absen
-                            else if (colIndex === 2 && cellText !== "") {
+                            } else if (colIndex === 2 && cellText !== "") {
                                 cellText = `<span class="badge-nama-kapsul">${cellText}</span>`;
-                            }
-                            // Kapsul untuk Jam Masuk & Pulang
-                            else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
+                            } else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
                                 cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
-                            }
-                            else if (colIndex === 5) {
+                            } else if (colIndex === 5) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -712,19 +696,16 @@ function loadRekapBulanan() {
                                     badgeClass += "badge-hadir";
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
-                            }
-                            else if (colIndex === 6) {
+                            } else if (colIndex === 6) {
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                                 }
-                            }
-                            else if (colIndex === 8) {
+                            } else if (colIndex === 8) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("MALAM")) bClass = "shift-s3";
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-                            }
-                            else if (colIndex === 9) {
+                            } else if (colIndex === 9) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -743,7 +724,7 @@ function loadRekapBulanan() {
             });
         }
 
-function fixGoogleDriveUrl(url) {
+        function fixGoogleDriveUrl(url) {
             if (!url) return "";
             let fileId = "";
             if (url.includes("/file/d/")) {
@@ -759,7 +740,7 @@ function fixGoogleDriveUrl(url) {
             return url;
         }
 
-function loadAdminLogHariIni() {
+        function loadAdminLogHariIni() {
             const container = document.getElementById('adminLogContent');
             container.innerHTML = "Memuat log eksklusif...";
 
@@ -801,11 +782,9 @@ function loadAdminLogHariIni() {
                                 } else {
                                     cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
                                 }
-                            }
-                            else if (colIndex === 3 || colIndex === 4) {
+                            } else if (colIndex === 3 || colIndex === 4) {
                                 if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
-                            }
-                            else if (colIndex === 5) {
+                            } else if (colIndex === 5) {
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -816,11 +795,9 @@ function loadAdminLogHariIni() {
                                     badgeClass += "badge-hadir";
                                 }
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
-                            }
-                            else if (colIndex === 6) {
+                            } else if (colIndex === 6) {
                                 if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
-                            }
-                            else if (colIndex === 8) {
+                            } else if (colIndex === 8) {
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("BELUM ABSEN")) {
@@ -829,8 +806,7 @@ function loadAdminLogHariIni() {
                                     bClass = "badge-hadir";
                                 }
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-                            }
-                            else if (colIndex === 9) {
+                            } else if (colIndex === 9) {
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -927,7 +903,6 @@ function loadAdminLogHariIni() {
                 if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
             }).catch(e => console.log(e));
 
-        // Catat kunjungan otomatis saat web/app dibuka
         fetch(API, {
             method: "POST",
             body: JSON.stringify({ action: "catatKunjungan", ip: userIP, info: "Akses Web/App" })
@@ -1005,7 +980,7 @@ function loadAdminLogHariIni() {
                     overlayPulang.className = "theme-loading";
                     overlayPulang.style.display = "flex";
 
-                    eksekusiAbsenFinal("");
+                    eksekusiAbsenPulangFinal("");
                 } else {
                     tampilkanPesanError(res.pesan || "Terjadi kesalahan sistem.");
                 }
@@ -1041,6 +1016,7 @@ function loadAdminLogHariIni() {
                 });
         }
 
+        // --- FUNGSI AMBIL FOTO & KIRIM SEKALI JALAN (SINGLE PAYLOAD) ---
         function ambilFotoDanKirim() {
             const video = document.getElementById("selfieVideo");
             const canvas = document.createElement("canvas");
@@ -1053,7 +1029,6 @@ function loadAdminLogHariIni() {
             canvas.width = 480;
             canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
             const ctx = canvas.getContext("2d");
-            
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
             const nowWib = new Date();
@@ -1075,7 +1050,8 @@ function loadAdminLogHariIni() {
             ctx.fillStyle = "#cbd5e1";
             ctx.fillText("📍 MMBC Tour & Travel", 12, canvas.height - 12);
 
-            const base64Image = canvas.toDataURL("image/jpeg", 0.65);
+            // Kompresi diatur ke 0.55 agar ukuran file di bawah 100 KB dan cepat terkirim
+            const base64Image = canvas.toDataURL("image/jpeg", 0.55);
 
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
@@ -1084,43 +1060,29 @@ function loadAdminLogHariIni() {
 
             const overlay = document.getElementById("fullScreenOverlay");
             document.getElementById("overlayIcon").innerText = "⏳";
-            document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
-            document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+            document.getElementById("overlayTitle").innerText = "Memproses Absen...";
+            document.getElementById("overlayName").innerText = "Menyimpan Data & Foto";
             document.getElementById("overlayTime").innerText = "";
             document.getElementById("overlayWifi").innerText = "";
             document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
+            // Single request langsung ke action "absen"
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
+                body: JSON.stringify({ action: "absen", id: activeStaffId, ip: userIP, foto: base64Image })
             })
             .then(r => r.json())
             .then(res => {
                 handleHasilAbsen(res);
             })
             .catch(err => {
-                uploadSelfieTerpisah(base64Image);
+                tampilkanPesanError("Gangguan koneksi ke server, silakan coba scan ulang.");
             });
         }
 
-        function uploadSelfieTerpisah(base64Image) {
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
-            })
-            .then(r => r.json())
-            .then(resUpload => {
-                let fotoUrl = resUpload.sukses ? resUpload.url : "";
-                eksekusiAbsenFinal(fotoUrl);
-            })
-            .catch(err => {
-                eksekusiAbsenFinal("");
-            });
-        }
-
-        function eksekusiAbsenFinal(fotoUrl) {
+        function eksekusiAbsenPulangFinal(fotoUrl) {
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "absen", id: activeStaffId, ip: userIP, foto: fotoUrl })
@@ -1133,7 +1095,8 @@ function loadAdminLogHariIni() {
                 tampilkanPesanError("Gangguan koneksi, namun sistem sedang memproses.");
             });
         }
-function handleHasilAbsen(res) {
+
+        function handleHasilAbsen(res) {
             const overlay = document.getElementById("fullScreenOverlay");
             const icon = document.getElementById("overlayIcon");
             const title = document.getElementById("overlayTitle");
@@ -1165,7 +1128,6 @@ function handleHasilAbsen(res) {
                 wifiEl.innerText = "📡 Jaringan Wi-Fi: " + res.wifi;
                 overlay.style.display = "flex";
 
-                // --- AUDIO "TRING" & SUARA UCAPAN TANPA KATA "ANDA" ---
                 try {
                     const ctx = new (window.AudioContext || window.webkitAudioContext)();
                     
@@ -1184,17 +1146,12 @@ function handleHasilAbsen(res) {
                         osc.stop(ctx.currentTime + startTime + duration);
                     }
 
-                    // Nada Dering "Tring"
                     playTone(1046.50, 0.0, 0.3);
                     playTone(1318.51, 0.1, 0.4);
 
-                    // Suara Teks (Speech Synthesis) tanpa kata "Anda"
                     if ('speechSynthesis' in window) {
                         setTimeout(() => {
-                            let teksUcap = isPulang 
-                                ? "Absensi Pulang Berhasil" 
-                                : "Absensi Masuk Berhasil";
-                            
+                            let teksUcap = isPulang ? "Absensi Pulang Berhasil" : "Absensi Masuk Berhasil";
                             const utterance = new SpeechSynthesisUtterance(teksUcap);
                             utterance.lang = 'id-ID';
                             utterance.rate = 1.0;
@@ -1202,9 +1159,7 @@ function handleHasilAbsen(res) {
                             window.speechSynthesis.speak(utterance);
                         }, 300);
                     }
-                } catch(e) {
-                    console.log("Audio/Speech error:", e);
-                }
+                } catch(e) {}
 
             } else {
                 tampilkanPesanError(res.pesan);
@@ -1258,20 +1213,20 @@ function handleHasilAbsen(res) {
                 ).catch(err => console.log("Restart scanner error:", err));
             }, 1500);
         }
-        // Tambahkan fungsi helper kecil ini di dalam <script> index.html kamu
-function formatTanggalHeaderClean(val) {
-    if (!val) return '';
-    let strVal = String(val);
-    if (strVal.includes("T") && strVal.includes("Z")) {
-        let d = new Date(strVal);
-        if (!isNaN(d.getTime())) {
-            let day = String(d.getDate()).padStart(2, '0');
-            let month = String(d.getMonth() + 1).padStart(2, '0');
-            return `${day}/${month}`;
+
+        function formatTanggalHeaderClean(val) {
+            if (!val) return '';
+            let strVal = String(val);
+            if (strVal.includes("T") && strVal.includes("Z")) {
+                let d = new Date(strVal);
+                if (!isNaN(d.getTime())) {
+                    let day = String(d.getDate()).padStart(2, '0');
+                    let month = String(d.getMonth() + 1).padStart(2, '0');
+                    return `${day}/${month}`;
+                }
+            }
+            return strVal;
         }
-    }
-    return strVal;
-}
     </script>
 </body>
 </html>
