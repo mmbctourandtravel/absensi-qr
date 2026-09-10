@@ -1110,11 +1110,14 @@ function loadAdminLogHariIni() {
             })
             .catch(err => {
                 clearTimeout(timeoutId);
-                // Jika timeout atau error jaringan, lempar ke fungsi cadangan
-                uploadSelfieTerpisah(base64Image);
+                
+                // Tampilkan pesan error ramah ke layar staf
+                tampilkanPesanError("Silakan coba kembali dari awal");
+                
+                // Reset scanner kamera agar bisa langsung dipakai scan ulang
+                resetScannerKamera();
             });
         }
-
         function uploadSelfieTerpisah(base64Image) {
             fetch(API, {
                 method: "POST",
