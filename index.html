@@ -1071,7 +1071,7 @@
             // Single request langsung ke action "absen"
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "absen", id: activeStaffId, ip: userIP, foto: base64Image })
+                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
             })
             .then(r => r.json())
             .then(res => {
