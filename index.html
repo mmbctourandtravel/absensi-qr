@@ -1113,71 +1113,74 @@ table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; f
                     resetScannerKamera();
                 });
         }
+function ambilFotoDanKirim() {
+    const video = document.getElementById("selfieVideo");
+    const canvas = document.createElement("canvas");
+    
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+        alert("Kamera sedang bersiap, silakan coba ketuk tombol ambil foto sekali lagi.");
+        return;
+    }
 
-        function ambilFotoDanKirim() {
-            const video = document.getElementById("selfieVideo");
-            const canvas = document.createElement("canvas");
-            
-            if (video.videoWidth === 0 || video.videoHeight === 0) {
-                alert("Kamera sedang bersiap, silakan coba ketuk tombol ambil foto sekali lagi.");
-                return;
-            }
+    // 🚀 OPTIMALISASI 1: Ubah lebar ke 400px agar payload ringan
+    const targetWidth = 400;
+    canvas.width = targetWidth;
+    canvas.height = Math.floor(video.videoHeight * (targetWidth / video.videoWidth));
+    const ctx = canvas.getContext("2d");
+    
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            canvas.width = 480;
-            canvas.height = Math.floor(video.videoHeight * (480 / video.videoWidth));
-            const ctx = canvas.getContext("2d");
-            
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const nowWib = new Date();
+    const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const tglStr = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
+    
+    // Watermark disesuaikan proporsional
+    const hBox = Math.floor(canvas.height * 0.22);
+    ctx.fillStyle = "rgba(15, 23, 42, 0.8)";
+    ctx.fillRect(0, canvas.height - hBox, canvas.width, hBox);
 
-            const nowWib = new Date();
-            const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            const tglStr = hariArr[nowWib.getDay()] + ", " + nowWib.getDate() + " " + namaBulanArr[nowWib.getMonth()] + " " + nowWib.getFullYear() + " | " + nowWib.toLocaleTimeString("id-ID");
-            
-            ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
-            ctx.fillRect(0, canvas.height - 75, canvas.width, 75);
+    ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillText("👤 " + (window.activeStaffNama || "Staff MMBC"), 10, canvas.height - (hBox * 0.65));
 
-            ctx.font = "bold 15px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#38bdf8";
-            ctx.fillText("👤 " + (window.activeStaffNama || "Staff MMBC"), 12, canvas.height - 48);
+    ctx.font = "10px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("📅 " + tglStr, 10, canvas.height - (hBox * 0.38));
 
-            ctx.font = "11px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#ffffff";
-            ctx.fillText("📅 " + tglStr, 12, canvas.height - 30);
+    ctx.font = "9px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillText("📍 MMBC Tour & Travel", 10, canvas.height - (hBox * 0.15));
 
-            ctx.font = "10px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#cbd5e1";
-            ctx.fillText("📍 MMBC Tour & Travel", 12, canvas.height - 12);
+    // 🚀 OPTIMALISASI 2: Kompresi JPEG ke 0.5 (Ukuran cuma ~50-80 KB)
+    const base64Image = canvas.toDataURL("image/jpeg", 0.5);
 
-            const base64Image = canvas.toDataURL("image/jpeg", 0.65);
+    if (streamSelfie) {
+        streamSelfie.getTracks().forEach(track => track.stop());
+    }
+    document.getElementById("selfieModal").style.display = "none";
 
-            if (streamSelfie) {
-                streamSelfie.getTracks().forEach(track => track.stop());
-            }
-            document.getElementById("selfieModal").style.display = "none";
+    const overlay = document.getElementById("fullScreenOverlay");
+    document.getElementById("overlayIcon").innerText = "⏳";
+    document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
+    document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+    document.getElementById("overlayTime").innerText = "";
+    document.getElementById("overlayWifi").innerText = "";
+    document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+    overlay.className = "theme-loading";
+    overlay.style.display = "flex";
 
-            const overlay = document.getElementById("fullScreenOverlay");
-            document.getElementById("overlayIcon").innerText = "⏳";
-            document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
-            document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
-            document.getElementById("overlayTime").innerText = "";
-            document.getElementById("overlayWifi").innerText = "";
-            document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
-            overlay.className = "theme-loading";
-            overlay.style.display = "flex";
-
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
-            })
-            .then(r => r.json())
-            .then(res => {
-                handleHasilAbsen(res);
-            })
-            .catch(err => {
-                uploadSelfieTerpisah(base64Image);
-            });
-        }
-
+    fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
+    })
+    .then(r => r.json())
+    .then(res => {
+        handleHasilAbsen(res);
+    })
+    .catch(err => {
+        uploadSelfieTerpisah(base64Image);
+    });
+}
         function uploadSelfieTerpisah(base64Image) {
             fetch(API, {
                 method: "POST",
