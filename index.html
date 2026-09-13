@@ -988,7 +988,16 @@ table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; f
         updateClock();
 
         let userIP = "";
-        fetch("https://api.ipify.org?format=json")
+        
+        // Buat fungsi timeout untuk fetch ipify agar tidak nyangkut selamanya
+        const fetchWithTimeout = (url, options = {}, timeout = 3000) => {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), timeout))
+            ]);
+        };
+
+        fetchWithTimeout("https://api.ipify.org?format=json", {}, 3000)
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
@@ -999,7 +1008,14 @@ table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; f
                 if(!text) return;
                 let res = JSON.parse(text);
                 if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
-            }).catch(e => console.log(e));
+            }).catch(e => {
+                // Fallback jika timeout atau gagal koneksi IP luar
+                if (userIP) {
+                    document.getElementById("namaWifiText").innerText = userIP + " (Jaringan Luar)";
+                } else {
+                    document.getElementById("namaWifiText").innerText = "Bukan Wifi Kantor";
+                }
+            });
 
         fetch(API, {
             method: "POST",
