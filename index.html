@@ -989,7 +989,17 @@ table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; f
 
         let userIP = "";
         
-        // Buat fungsi timeout untuk fetch ipify agar tidak nyangkut selamanya
+        // Ubah teks awal jadi mendeteksi dengan indikator
+        const elWifi = document.getElementById("namaWifiText");
+        elWifi.innerText = "Mendeteksi...";
+
+        // Timer pengaman jika melebihi 3 detik
+        let networkTimeout = setTimeout(() => {
+            if (elWifi.innerText === "Mendeteksi...") {
+                elWifi.innerText = "⚠️ Jaringan Lambat / Timeout (Bukan Wifi Kantor)";
+            }
+        }, 4000); // Batas 3 detik
+
         const fetchWithTimeout = (url, options = {}, timeout = 3000) => {
             return Promise.race([
                 fetch(url, options),
@@ -1001,19 +1011,25 @@ table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; f
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
-                return fetch(API, { method: "POST", body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) });
+                return fetchWithTimeout(API, { 
+                    method: "POST", 
+                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+                }, 3000);
             })
             .then(r => r ? r.text() : null)
             .then(text => {
+                clearTimeout(networkTimeout); // Matikan timer jika berhasil merespons
                 if(!text) return;
                 let res = JSON.parse(text);
-                if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
+                if(res.wifi) {
+                    elWifi.innerText = res.wifi;
+                }
             }).catch(e => {
-                // Fallback jika timeout atau gagal koneksi IP luar
+                clearTimeout(networkTimeout); // Matikan timer jika error/timeout
                 if (userIP) {
-                    document.getElementById("namaWifiText").innerText = userIP + " (Jaringan Luar)";
+                    elWifi.innerText = userIP + " (Jaringan Luar / Lambat)";
                 } else {
-                    document.getElementById("namaWifiText").innerText = "Bukan Wifi Kantor";
+                    elWifi.innerText = "⚠️ Jaringan Lambat - Bukan Wifi Kantor";
                 }
             });
 
