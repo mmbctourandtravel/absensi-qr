@@ -988,51 +988,66 @@ table.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; f
         updateClock();
 
         let userIP = "";
-        
-        // Ubah teks awal jadi mendeteksi dengan indikator
         const elWifi = document.getElementById("namaWifiText");
         elWifi.innerText = "Mendeteksi...";
 
-        // Timer pengaman jika melebihi 3 detik
-        let networkTimeout = setTimeout(() => {
-            if (elWifi.innerText === "Mendeteksi...") {
-                elWifi.innerText = "⚠️ Jaringan Lambat / Timeout (Bukan Wifi Kantor)";
-            }
-        }, 4000); // Batas 3 detik
+        // Flag untuk menandai apakah server sudah merespons
+        let serverResponded = false;
 
-        const fetchWithTimeout = (url, options = {}, timeout = 3000) => {
+        // Timer pengaman jika melebihi 6 detik total
+        let networkTimeout = setTimeout(() => {
+            if (!serverResponded) {
+                if (userIP) {
+                    elWifi.innerText = userIP + " (Jaringan Luar / Lambat)";
+                } else {
+                    elWifi.innerText = "⚠️ Jaringan Lambat - Bukan Wifi Kantor";
+                }
+            }
+        }, 6000); // Diberi waktu 6 detik agar Apps Script sempat membalas
+
+        const fetchWithTimeout = (url, options = {}, timeout = 5000) => {
             return Promise.race([
                 fetch(url, options),
                 new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), timeout))
             ]);
         };
 
-        fetchWithTimeout("https://api.ipify.org?format=json", {}, 3000)
+        fetchWithTimeout("https://api.ipify.org?format=json", {}, 4000)
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
+                // Kirim request ke Apps Script untuk cek nama Wi-Fi
                 return fetchWithTimeout(API, { 
                     method: "POST", 
                     body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-                }, 3000);
+                }, 5000);
             })
             .then(r => r ? r.text() : null)
             .then(text => {
-                clearTimeout(networkTimeout); // Matikan timer jika berhasil merespons
-                if(!text) return;
+                serverResponded = true; // Tandai bahwa server sudah merespons
+                clearTimeout(networkTimeout); // Batalkan timer timeout
+                
+                if(!text) {
+                    elWifi.innerText = userIP + " (Bukan Wifi Kantor)";
+                    return;
+                }
+
                 let res = JSON.parse(text);
+                // Jika server mengenali nama Wi-Fi kantor (misal: Basecamp MMBC)
                 if(res.wifi) {
                     elWifi.innerText = res.wifi;
+                } else {
+                    elWifi.innerText = userIP + " (Bukan Wifi Kantor)";
                 }
             }).catch(e => {
-                clearTimeout(networkTimeout); // Matikan timer jika error/timeout
+                serverResponded = true;
+                clearTimeout(networkTimeout);
                 if (userIP) {
-                    elWifi.innerText = userIP + " (Jaringan Luar / Lambat)";
+                    elWifi.innerText = userIP + " (Bukan Wifi Kantor)";
                 } else {
-                    elWifi.innerText = "⚠️ Jaringan Lambat - Bukan Wifi Kantor";
+                    elWifi.innerText = "⚠️ Gagal Mendeteksi Jaringan";
                 }
             });
-
         fetch(API, {
             method: "POST",
             body: JSON.stringify({ action: "catatKunjungan", ip: userIP, info: "Akses Web/App" })
