@@ -1151,6 +1151,7 @@
             ctx.fillStyle = "#cbd5e1";
             ctx.fillText("📍 MMBC Tour & Travel", 10, canvas.height - (hBox * 0.15));
 
+            // Kembalikan ke kualitas 0.3 yang stabil seperti sedia kala
             const base64Image = canvas.toDataURL("image/jpeg", 0.3);
 
             if (streamSelfie) {
@@ -1160,14 +1161,15 @@
 
             const overlay = document.getElementById("fullScreenOverlay");
             document.getElementById("overlayIcon").innerText = "⏳";
-            document.getElementById("overlayTitle").innerText = "Mengupload Foto...";
-            document.getElementById("overlayName").innerText = "Menyimpan Absen Masuk";
+            document.getElementById("overlayTitle").innerText = "Mengirim Absen...";
+            document.getElementById("overlayName").innerText = "Mohon tunggu sebentar";
             document.getElementById("overlayTime").innerText = "";
             document.getElementById("overlayWifi").innerText = "";
-            document.getElementById("overlayMsg").innerText = "Mohon tunggu sebentar...";
+            document.getElementById("overlayMsg").innerText = "Menyimpan data & foto selfie...";
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
+            // HANYA TEMBAK SATU ENDPOINT UTAMA (Langsung proses simpan data + upload foto di backend)
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
@@ -1177,22 +1179,7 @@
                 handleHasilAbsen(res);
             })
             .catch(err => {
-                uploadSelfieTerpisah(base64Image);
-            });
-        }
-
-        function uploadSelfieTerpisah(base64Image) {
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "uploadSelfie", id: activeStaffId, foto: base64Image })
-            })
-            .then(r => r.json())
-            .then(resUpload => {
-                let fotoUrl = resUpload.sukses ? resUpload.url : "";
-                eksekusiAbsenFinal(fotoUrl);
-            })
-            .catch(err => {
-                eksekusiAbsenFinal("");
+                tampilkanPesanError("Gangguan koneksi ke server, silakan coba lagi.");
             });
         }
 
