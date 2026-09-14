@@ -961,47 +961,50 @@
 
  let userIP = "";
 
-async function deteksiIPDanWifi() {
-    try {
-        // Coba API pertama (Cloudflare trace - sangat cepat)
-        let response = await fetch("https://www.cloudflare.com/cdn-cgi/trace");
-        let text = await response.text();
-        let match = text.match(/ip=(.+)/);
-        if (match && match[1]) {
-            userIP = match[1].trim();
-        }
-    } catch (e) {
+    async function deteksiIPDanWifi() {
+        const wifiTextEl = document.getElementById("namaWifiText");
+        wifiTextEl.innerText = "Mendeteksi ulang jaringan...";
+        
         try {
-            // Cadangan 1: ipify
-            let res = await fetch("https://api.ipify.org?format=json");
-            let data = await res.json();
-            userIP = data.ip;
-        } catch (err) {
-            // Cadangan terakhir jika internet benar-benar ngadat
-            userIP = "127.0.0.1";
+            // Coba API Cloudflare trace (sangat cepat & stabil)
+            let response = await fetch("https://www.cloudflare.com/cdn-cgi/trace");
+            let text = await response.text();
+            let match = text.match(/ip=(.+)/);
+            if (match && match[1]) {
+                userIP = match[1].trim();
+            }
+        } catch (e) {
+            try {
+                // Cadangan 1: ipify
+                let res = await fetch("https://api.ipify.org?format=json");
+                let data = await res.json();
+                userIP = data.ip;
+            } catch (err) {
+                userIP = "127.0.0.1";
+            }
+        }
+
+        // Kirim IP ke backend Apps Script untuk dicocokkan dengan Master WiFi
+        try {
+            let wifiRes = await fetch(API, { 
+                method: "POST", 
+                body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+            });
+            let wifiText = await wifiRes.text();
+            let wifiJson = JSON.parse(wifiText);
+            
+            if(wifiJson.wifi) {
+                wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
+            } else {
+                wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
+            }
+        } catch (e) {
+            wifiTextEl.innerText = "Gagal memuat nama Wi-Fi (Ketuk untuk ulangi)";
         }
     }
 
-    // Kirim IP ke backend untuk cek nama Wi-Fi kantor
-    try {
-        let wifiRes = await fetch(API, { 
-            method: "POST", 
-            body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-        });
-        let wifiText = await wifiRes.text();
-        let wifiJson = JSON.parse(wifiText);
-        if(wifiJson.wifi) {
-            document.getElementById("namaWifiText").innerText = wifiJson.wifi;
-        } else {
-            document.getElementById("namaWifiText").innerText = userIP;
-        }
-    } catch (e) {
-        document.getElementById("namaWifiText").innerText = "Gagal memuat nama Wi-Fi";
-    }
-}
-
-// Jalankan fungsi deteksi IP saat halaman dibuka
-deteksiIPDanWifi();
+    // Jalankan fungsi otomatis saat halaman pertama kali dibuka
+    deteksiIPDanWifi();
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
