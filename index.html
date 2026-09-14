@@ -1117,7 +1117,7 @@
             ctx.fillStyle = "#cbd5e1";
             ctx.fillText("📍 MMBC Tour & Travel", 10, canvas.height - (hBox * 0.15));
 
-            const base64Image = canvas.toDataURL("image/jpeg", 0.5);
+            const base64Image = canvas.toDataURL("image/jpeg", 0.3);
 
             if (streamSelfie) {
                 streamSelfie.getTracks().forEach(track => track.stop());
