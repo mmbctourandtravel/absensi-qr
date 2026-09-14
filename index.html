@@ -975,8 +975,7 @@
                     elWifi.innerText = "⚠️ Jaringan Lambat - Bukan Wifi Kantor";
                 }
             }
-        }, 6000); // Diberi waktu 6 detik agar Apps Script sempat membalas
-
+        }, 15000); // Disesuaikan jadi 15 detik
         const fetchWithTimeout = (url, options = {}, timeout = 5000) => {
             return Promise.race([
                 fetch(url, options),
@@ -984,15 +983,14 @@
             ]);
         };
 
-        fetchWithTimeout("https://api.ipify.org?format=json", {}, 4000)
+        fetchWithTimeout("https://api.ipify.org?format=json", {}, 6000)
             .then(r => r.json())
             .then(data => { 
                 userIP = data.ip; 
-                // Kirim request ke Apps Script untuk cek nama Wi-Fi
                 return fetchWithTimeout(API, { 
                     method: "POST", 
                     body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-                }, 5000);
+                }, 15000); // <-- Diubah ke 15 detik agar tidak gampang timeout
             })
             .then(r => r ? r.text() : null)
             .then(text => {
