@@ -959,65 +959,9 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        let userIP = "";
+        let userIP = ""; // Diset kosong karena validasi jaringan otomatis ditangani server saat scan
         const elWifi = document.getElementById("namaWifiText");
-        elWifi.innerText = "Mendeteksi...";
-
-        // Flag untuk menandai apakah server sudah merespons
-        let serverResponded = false;
-
-        // Timer pengaman jika melebihi 6 detik total
-        let networkTimeout = setTimeout(() => {
-            if (!serverResponded) {
-                if (userIP) {
-                    elWifi.innerText = userIP + " (Jaringan Luar / Lambat)";
-                } else {
-                    elWifi.innerText = "⚠️ Jaringan Lambat - Bukan Wifi Kantor";
-                }
-            }
-        }, 15000); // Disesuaikan jadi 15 detik
-        const fetchWithTimeout = (url, options = {}, timeout = 5000) => {
-            return Promise.race([
-                fetch(url, options),
-                new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), timeout))
-            ]);
-        };
-
-        fetchWithTimeout("https://api.ipify.org?format=json", {}, 6000)
-            .then(r => r.json())
-            .then(data => { 
-                userIP = data.ip; 
-                return fetchWithTimeout(API, { 
-                    method: "POST", 
-                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-                }, 15000); // <-- Diubah ke 15 detik agar tidak gampang timeout
-            })
-            .then(r => r ? r.text() : null)
-            .then(text => {
-                serverResponded = true; // Tandai bahwa server sudah merespons
-                clearTimeout(networkTimeout); // Batalkan timer timeout
-                
-                if(!text) {
-                    elWifi.innerText = userIP + " (Bukan Wifi Kantor)";
-                    return;
-                }
-
-                let res = JSON.parse(text);
-                // Jika server mengenali nama Wi-Fi kantor (misal: Basecamp MMBC)
-                if(res.wifi) {
-                    elWifi.innerText = res.wifi;
-                } else {
-                    elWifi.innerText = userIP + " (Bukan Wifi Kantor)";
-                }
-            }).catch(e => {
-                serverResponded = true;
-                clearTimeout(networkTimeout);
-                if (userIP) {
-                    elWifi.innerText = userIP + " (Bukan Wifi Kantor)";
-                } else {
-                    elWifi.innerText = "⚠️ Gagal Mendeteksi Jaringan";
-                }
-            });
+        elWifi.innerText = "Siap Digunakan (Terverifikasi saat Scan)";
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
