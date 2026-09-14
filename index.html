@@ -959,9 +959,31 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        let userIP = ""; // Diset kosong karena validasi jaringan otomatis ditangani server saat scan
+        let userIP = "";
         const elWifi = document.getElementById("namaWifiText");
-        elWifi.innerText = "Siap Digunakan (Terverifikasi saat Scan)";
+        
+        if (elWifi) {
+            elWifi.innerText = "Mendeteksi Jaringan Kantor...";
+            
+            // Cek otomatis ke backend Apps Script untuk mencocokkan dengan 3 IP Master Wi-Fi
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getWifiInfo", ip: "" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.wifi && res.wifi !== "Tanpa IP" && res.wifi !== "Gagal") {
+                    elWifi.innerText = res.wifi; // Akan langsung memunculkan nama Wi-Fi kantor (misal: Megavision / Basecamp)
+                    elWifi.style.color = "#15803d"; // Hijau
+                } else {
+                    elWifi.innerText = "⚠️ Jaringan Luar / Bukan Wi-Fi Kantor";
+                    elWifi.style.color = "#b91c1c"; // Merah
+                }
+            })
+            .catch(err => {
+                elWifi.innerText = "⚠️ Siap Digunakan (Terverifikasi saat Scan)";
+            });
+        }
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
