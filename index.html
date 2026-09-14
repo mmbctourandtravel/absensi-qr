@@ -959,31 +959,19 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        let userIP = "";
-        const elWifi = document.getElementById("namaWifiText");
-        
-        if (elWifi) {
-            elWifi.innerText = "Mendeteksi Jaringan Kantor...";
-            
-            // Cek otomatis ke backend Apps Script untuk mencocokkan dengan 3 IP Master Wi-Fi
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getWifiInfo", ip: "" })
-            })
+ let userIP = "";
+        fetch("https://api.ipify.org?format=json")
             .then(r => r.json())
-            .then(res => {
-                if (res.wifi && res.wifi !== "Tanpa IP" && res.wifi !== "Gagal") {
-                    elWifi.innerText = res.wifi; // Akan langsung memunculkan nama Wi-Fi kantor (misal: Megavision / Basecamp)
-                    elWifi.style.color = "#15803d"; // Hijau
-                } else {
-                    elWifi.innerText = "⚠️ Jaringan Luar / Bukan Wi-Fi Kantor";
-                    elWifi.style.color = "#b91c1c"; // Merah
-                }
+            .then(data => { 
+                userIP = data.ip; 
+                return fetch(API, { method: "POST", body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) });
             })
-            .catch(err => {
-                elWifi.innerText = "⚠️ Siap Digunakan (Terverifikasi saat Scan)";
-            });
-        }
+            .then(r => r ? r.text() : null)
+            .then(text => {
+                if(!text) return;
+                let res = JSON.parse(text);
+                if(res.wifi) document.getElementById("namaWifiText").innerText = res.wifi;
+            }).catch(e => console.log(e));
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
