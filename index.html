@@ -785,38 +785,48 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        let userIP = "";
+ let userIP = "";
 
         async function deteksiIPDanWifi() {
             const wifiTextEl = document.getElementById("namaWifiText");
             wifiTextEl.innerText = "Mendeteksi ulang jaringan...";
             
-            try {
-                let response = await fetch("https://www.cloudflare.com/cdn-cgi/trace");
-                let text = await response.text();
-                let match = text.match(/ip=(.+)/);
-                if (match && match[1]) {
-                    userIP = match[1].trim();
+            // Gunakan Promise.any atau balapan fetch ke layanan IP publik yang paling cepat & ringan
+            const fetchIP = async () => {
+                const services = [
+                    "https://api.ipify.org?format=json",
+                    "https://ipapi.co/json/",
+                    "https://api.myip.com"
+                ];
+
+                for (let url of services) {
+                    try {
+                        let controller = new AbortController();
+                        let timeoutId = setTimeout(() => controller.abort(), 3000); // Batas maksimal 3 detik per layanan
+                        let res = await fetch(url, { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        let data = await res.json();
+                        let ip = data.ip || data.query;
+                        if (ip) return ip;
+                    } catch (e) {
+                        continue; // Coba layanan berikutnya jika gagal/timeout
+                    }
                 }
-            } catch (e) {
-                try {
-                    let res = await fetch("https://api.ipify.org?format=json");
-                    let data = await res.json();
-                    userIP = data.ip;
-                } catch (err) {
-                    userIP = "127.0.0.1";
-                }
-            }
+                return "127.0.0.1";
+            };
 
             try {
+                // Ambil IP dengan cepat
+                userIP = await fetchIP();
+
+                // Langsung tembak ke Apps Script untuk mencocokkan nama Wi-Fi
                 let wifiRes = await fetch(API, { 
                     method: "POST", 
                     body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
                 });
-                let wifiText = await wifiRes.text();
-                let wifiJson = JSON.parse(wifiText);
+                let wifiJson = await wifiRes.json();
                 
-                if(wifiJson.wifi) {
+                if (wifiJson.wifi) {
                     wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
                 } else {
                     wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
@@ -826,8 +836,8 @@
             }
         }
 
+        // Jalankan deteksi IP sesegera mungkin saat halaman dibuka
         deteksiIPDanWifi();
-
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
         let lastScanTime = 0; 
