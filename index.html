@@ -63,7 +63,6 @@
         .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
         .instruction-sub { font-size: 13px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        /* MARQUEE PENGINGAT CUTI */
         .marquee-box { background: #fffbeb; color: #b45309; padding: 8px 12px; font-size: 12px; font-weight: 700; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
 
         .scanner-wrapper { padding: 15px; text-align: center; }
@@ -92,12 +91,6 @@
         .overlay-msg-box { background: #f1f5f9; padding: 10px 14px; border-radius: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; }
         .waving-hand { display: inline-block; animation: wave 1.2s infinite; transform-origin: 70% 70%; font-size: 18px; }
 
-        .selfie-thumb {
-            width: 42px; height: 42px; border-radius: 50%; object-fit: cover; cursor: pointer;
-            border: 2px solid #2563eb; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-        .selfie-thumb:hover { transform: scale(1.15); }
-        
         #imageModal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85);
             display: none; align-items: center; justify-content: center; z-index: 999999; padding: 20px; backdrop-filter: blur(5px);
@@ -131,14 +124,11 @@
         #tabelJadwal tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
         #tabelJadwal tr:nth-child(2) th { position: sticky; top: 35px; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
         #tabelLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
-        #tabelAdminLog tr:nth-child(1) th { position: sticky; top: 0; z-index: 10; background: #1e293b !important; color: #ffffff !important; }
 
         table.rekap-table tr:nth-child(even) td { background-color: #f8fafc; }
 
-        /* Kolom 1 (No): Fixed width konsisten dan box-sizing border-box agar tidak goyang */
         #tabelJadwal th:nth-child(1), #tabelJadwal td:nth-child(1),
-        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1),
-        #tabelAdminLog th:nth-child(1), #tabelAdminLog td:nth-child(1) { 
+        #tabelLog th:nth-child(1), #tabelLog td:nth-child(1) { 
             position: sticky; 
             left: 0; 
             z-index: 8; 
@@ -152,14 +142,11 @@
             box-sizing: border-box;
         }
         #tabelJadwal tr:nth-child(even) td:nth-child(1),
-        #tabelLog tr:nth-child(even) td:nth-child(1),
-        #tabelAdminLog tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
+        #tabelLog tr:nth-child(even) td:nth-child(1) { background: #f8fafc; }
 
         #tabelJadwal tr:nth-child(1) th:nth-child(1), #tabelJadwal tr:nth-child(2) th:nth-child(1),
-        #tabelLog tr:nth-child(1) th:nth-child(1),
-        #tabelAdminLog tr:nth-child(1) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
+        #tabelLog tr:nth-child(1) th:nth-child(1) { z-index: 12; background: #1e293b !important; border-right: 1px solid #334155 !important; }
 
-        /* Kolom 2 (Nama Staff): Sesuaikan nilai 'left' persis dengan lebar kolom 1 (yaitu 45px) */
         #tabelJadwal th:nth-child(2), #tabelJadwal td:nth-child(2) { 
             position: sticky; 
             left: 45px; 
@@ -178,7 +165,6 @@
         #tabelJadwal tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
         #tabelJadwal tr:nth-child(1) th:nth-child(2), #tabelJadwal tr:nth-child(2) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; }
 
-        /* TAB LOG: Kolom 2 */
         #tabelLog th:nth-child(2), #tabelLog td:nth-child(2) {  
             position: sticky; 
             left: 45px; 
@@ -194,23 +180,6 @@
         }
         #tabelLog tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
         #tabelLog tr:nth-child(1) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; text-align: center; }
-
-        /* TAB ADMIN LOG: Kolom 2 */
-        #tabelAdminLog th:nth-child(2), #tabelAdminLog td:nth-child(2) {  
-            position: sticky; 
-            left: 45px; 
-            z-index: 8; 
-            background: #ffffff; 
-            text-align: center; 
-            min-width: 155px; 
-            max-width: 155px; 
-            width: 155px;
-            border-right: 2px solid #cbd5e1 !important; 
-            font-weight: 600; 
-            box-sizing: border-box;
-        }
-        #tabelAdminLog tr:nth-child(even) td:nth-child(2) { background: #f8fafc; }
-        #tabelAdminLog tr:nth-child(1) th:nth-child(2) { z-index: 12; background: #1e293b !important; border-right: 2px solid #334155 !important; text-align: center; }
 
         .badge-shift { display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; min-width: 32px; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .shift-s1, .shift-s2, .shift-s3 { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
@@ -375,7 +344,7 @@
         </div>
     </div>
 
-    <!-- TAB 5: ADMIN -->
+    <!-- TAB 5: ADMIN (BERSIH: HANYA UPDATE IP WIFI) -->
     <div id="tab-admin" class="container">
         <div class="header-brand">
             <div class="logo-text">MMBC Tour & Travel</div>
@@ -393,8 +362,7 @@
         </div>
         
         <div id="adminContentBody" style="display: none; padding: 20px;">
-            
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto 25px auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
                 🌐 Jaringan Anda saat ini:<br>
                 <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
                 
@@ -410,16 +378,6 @@
                     🔄 Perbarui IP Wi-Fi Sekarang
                 </button>
                 <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
-            </div>
-
-            <div style="border-top: 2px solid #e2e8f0; padding-top: 15px;">
-                <h3 style="font-size: 14px; color: #1e293b; margin-bottom: 10px; text-align: center;">📸 Log Absen Hari Ini (Eksklusif Admin)</h3>
-                <div class="search-box-wrapper" style="padding: 0 0 10px 0;">
-                    <input type="text" id="searchAdminLog" class="search-input" placeholder="🔍 Cari nama staff..." onkeyup="filterTabelAdminLog()">
-                </div>
-                <div class="rekap-wrapper" style="max-height: 450px; border-radius: 10px; border: 1px solid #cbd5e1;">
-                    <div id="adminLogContent" class="loading-rekap">Memuat log dengan foto...</div>
-                </div>
             </div>
         </div>
     </div>
@@ -483,7 +441,6 @@
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     muatIpAdmin();
-                    loadAdminLogHariIni();
                 } else {
                     errorEl.style.display = "block";
                     errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
@@ -678,6 +635,7 @@
             });
         }
 
+        // TAB 3: LOG ABSENSI UTAMA TETAP BERJALAN NORMAL
         function loadLogHariIni() {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -711,14 +669,12 @@
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // Hilangkan Kolom 0 (Tanggal) dan Kolom 7 (Foto di tabel publik)
                         if (colIndex === 0 || colIndex === 1 || colIndex === 7) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
-                            // Kolom 2 di data mentah adalah Nama Staff, diposisikan ke tengah
                             if (colIndex === 2 && cellText !== "") {
                                 cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
                             }
@@ -754,7 +710,6 @@
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
                             }
                         } else if (tag === 'th') {
-                            // Judul Header Nama Staff diatur tengah
                             if (colIndex === 2) {
                                 cellText = "Nama Staff";
                             }
@@ -769,121 +724,6 @@
             })
             .catch(err => { 
                 container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
-            });
-        }
-
-        function fixGoogleDriveUrl(url) {
-            if (!url) return "";
-            let fileId = "";
-            if (url.includes("/file/d/")) {
-                let parts = url.split("/file/d/");
-                if (parts[1]) fileId = parts[1].split("/")[0];
-            } else if (url.includes("id=")) {
-                let urlParams = new URLSearchParams(url.split("?")[1]);
-                fileId = urlParams.get("id");
-            }
-            if (fileId) {
-                return "https://lh3.googleusercontent.com/d/" + fileId;
-            }
-            return url;
-        }
-
-        function loadAdminLogHariIni() {
-            const container = document.getElementById('adminLogContent');
-            container.innerHTML = "Memuat log eksklusif...";
-
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getLogHariIni" })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if(!res.sukses || !res.data || res.data.length <= 1) {
-                    container.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b;'>Belum ada data log hari ini.</div>";
-                    return;
-                }
-
-                let rows = res.data;
-                let totalData = rows.length - 1;
-                let html = '<table class="rekap-table" id="tabelAdminLog">';
-                
-                rows.forEach((row, rowIndex) => {
-                    html += '<tr>';
-                    if (rowIndex === 0) {
-                        html += `<th>No</th>`;
-                    } else {
-                        let nomorUrut = totalData - (rowIndex - 1);
-                        html += `<td><b>${nomorUrut}</b></td>`;
-                    }
-
-                    row.forEach((cell, colIndex) => {
-                        // Abaikan Kolom 0 (Tanggal) karena sudah ada di header utama
-                        if (colIndex === 0) return; 
-                        
-                        let cellText = cell !== null ? String(cell).trim() : '';
-                        let tag = rowIndex === 0 ? 'th' : 'td';
-
-                        if (tag === 'td') {
-                            if (colIndex === 7) {
-                                if (cellText !== "" && (cellText.startsWith("http") || cellText.includes("drive.google.com"))) {
-                                    let directImg = fixGoogleDriveUrl(cellText);
-                                    cellText = `<img src="${directImg}" class="selfie-thumb" onclick="openImageModal('${directImg}')" title="Klik untuk memperbesar" onerror="this.onerror=null; this.src='https://via.placeholder.com/42?text=Foto';">`;
-                                } else {
-                                    cellText = `<span style="font-size:10px; color:#94a3b8;">Tanpa Foto</span>`;
-                                }
-                            }
-                            // Kolom 2 Nama Staff diatur tengah
-                            else if (colIndex === 2 && cellText !== "") {
-                                cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
-                            }
-                            else if (colIndex === 3 || colIndex === 4) {
-                                if (cellText !== "") cellText = `<span class="time-text">${cellText}</span>`;
-                            }
-                            else if (colIndex === 5) {
-                                let upperVal = cellText.toUpperCase();
-                                let badgeClass = "badge-shift ";
-                                if (upperVal.includes("TERLAMBAT")) {
-                                    badgeClass += "shift-off";
-                                } else if (upperVal.includes("MALAM")) {
-                                    badgeClass += "shift-s3";
-                                } else {
-                                    badgeClass += "badge-hadir";
-                                }
-                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
-                            }
-                            else if (colIndex === 6) {
-                                if (cellText !== "") cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
-                            }
-                            else if (colIndex === 8) {
-                                let upperVal = cellText.toUpperCase();
-                                let bClass = "shift-s1";
-                                if (upperVal.includes("BELUM ABSEN")) {
-                                    bClass = "shift-off";
-                                } else if (upperVal.includes("SELESAI") || upperVal.includes("✅")) {
-                                    bClass = "badge-hadir";
-                                }
-                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-                            }
-                            else if (colIndex === 9) {
-                                let num = Number(cellText.replace(/[^0-9]/g, ''));
-                                let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
-                                cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
-                            }
-                        } else if (tag === 'th') {
-                            if (colIndex === 2) {
-                                cellText = "Nama Staff";
-                            }
-                        }
-
-                        html += `<${tag} style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</${tag}>`;
-                    });
-                    html += '</tr>';
-                });
-                html += '</table>';
-                container.innerHTML = html;
-            })
-            .catch(err => {
-                container.innerHTML = "❌ Gagal memuat log.";
             });
         }
 
@@ -918,21 +758,7 @@
             if(!table) return;
             let tr = table.getElementsByTagName('tr');
             for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom 1 karena Tanggal dihapus
-                if (tdNama) {
-                    let txt = tdNama.textContent || tdNama.innerText;
-                    tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
-                }
-            }
-        }
-
-        function filterTabelAdminLog() {
-            let input = document.getElementById('searchAdminLog').value.toLowerCase();
-            let table = document.getElementById('tabelAdminLog');
-            if(!table) return;
-            let tr = table.getElementsByTagName('tr');
-            for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1]; // Kolom 1 karena Tanggal dihapus
+                let tdNama = tr[i].getElementsByTagName('td')[1];
                 if (tdNama) {
                     let txt = tdNama.textContent || tdNama.innerText;
                     tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -951,7 +777,6 @@
             if(elTgl) elTgl.innerHTML = tglString;
             if(elJam) elJam.innerHTML = jamString;
 
-            // Live clock untuk header Log Absen Hari Ini (Sama persis seperti Tab Scanner)
             const elLiveClockLog = document.getElementById("liveClockLog");
             if(elLiveClockLog) {
                 elLiveClockLog.innerHTML = tglString + " | " + jamString;
@@ -960,52 +785,48 @@
         setInterval(updateClock, 1000);
         updateClock();
 
- let userIP = "";
+        let userIP = "";
 
-    async function deteksiIPDanWifi() {
-        const wifiTextEl = document.getElementById("namaWifiText");
-        wifiTextEl.innerText = "Mendeteksi ulang jaringan...";
-        
-        try {
-            // Coba API Cloudflare trace (sangat cepat & stabil)
-            let response = await fetch("https://www.cloudflare.com/cdn-cgi/trace");
-            let text = await response.text();
-            let match = text.match(/ip=(.+)/);
-            if (match && match[1]) {
-                userIP = match[1].trim();
-            }
-        } catch (e) {
-            try {
-                // Cadangan 1: ipify
-                let res = await fetch("https://api.ipify.org?format=json");
-                let data = await res.json();
-                userIP = data.ip;
-            } catch (err) {
-                userIP = "127.0.0.1";
-            }
-        }
-
-        // Kirim IP ke backend Apps Script untuk dicocokkan dengan Master WiFi
-        try {
-            let wifiRes = await fetch(API, { 
-                method: "POST", 
-                body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-            });
-            let wifiText = await wifiRes.text();
-            let wifiJson = JSON.parse(wifiText);
+        async function deteksiIPDanWifi() {
+            const wifiTextEl = document.getElementById("namaWifiText");
+            wifiTextEl.innerText = "Mendeteksi ulang jaringan...";
             
-            if(wifiJson.wifi) {
-                wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
-            } else {
-                wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
+            try {
+                let response = await fetch("https://www.cloudflare.com/cdn-cgi/trace");
+                let text = await response.text();
+                let match = text.match(/ip=(.+)/);
+                if (match && match[1]) {
+                    userIP = match[1].trim();
+                }
+            } catch (e) {
+                try {
+                    let res = await fetch("https://api.ipify.org?format=json");
+                    let data = await res.json();
+                    userIP = data.ip;
+                } catch (err) {
+                    userIP = "127.0.0.1";
+                }
             }
-        } catch (e) {
-            wifiTextEl.innerText = "Gagal memuat nama Wi-Fi (Ketuk untuk ulangi)";
-        }
-    }
 
-    // Jalankan fungsi otomatis saat halaman pertama kali dibuka
-    deteksiIPDanWifi();
+            try {
+                let wifiRes = await fetch(API, { 
+                    method: "POST", 
+                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+                });
+                let wifiText = await wifiRes.text();
+                let wifiJson = JSON.parse(wifiText);
+                
+                if(wifiJson.wifi) {
+                    wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
+                } else {
+                    wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
+                }
+            } catch (e) {
+                wifiTextEl.innerText = "Gagal memuat nama Wi-Fi (Ketuk untuk ulangi)";
+            }
+        }
+
+        deteksiIPDanWifi();
 
         const qr = new Html5Qrcode("reader");
         let sedangProses = false;
@@ -1151,7 +972,6 @@
             ctx.fillStyle = "#cbd5e1";
             ctx.fillText("📍 MMBC Tour & Travel", 10, canvas.height - (hBox * 0.15));
 
-            // Kembalikan ke kualitas 0.3 yang stabil seperti sedia kala
             const base64Image = canvas.toDataURL("image/jpeg", 0.3);
 
             if (streamSelfie) {
@@ -1169,7 +989,6 @@
             overlay.className = "theme-loading";
             overlay.style.display = "flex";
 
-            // HANYA TEMBAK SATU ENDPOINT UTAMA (Langsung proses simpan data + upload foto di backend)
             fetch(API, {
                 method: "POST",
                 body: JSON.stringify({ action: "uploadSelfieAndAbsen", id: activeStaffId, ip: userIP, foto: base64Image })
