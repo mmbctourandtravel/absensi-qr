@@ -362,16 +362,17 @@
         
         <div id="adminContentBody" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto;">
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-                <h3 style="color: #1e293b; margin-bottom: 10px;">👋 Selamat Datang, Admin</h3>
+                <h3 style="color: #1e293b; margin-bottom: 10px;">👋 Selamat Datang, <span id="salamNamaAdmin">Admin</span></h3>
                 <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Pilih menu manajemen di bawah ini:</p>
                 
-                <!-- Tombol Pintas Khusus Admin untuk Buka Log & Jadwal -->
+                <!-- Tombol Pintas Khusus Admin untuk Buka Log & Jadwal (Bisa dilihat semua yang login) -->
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
                     <button onclick="bukaMenuAdminTab('log')" style="background: #0ea5e9; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">📋 Lihat Log Absensi</button>
                     <button onclick="bukaMenuAdminTab('rekap')" style="background: #10b981; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">📊 Lihat Jadwal Bulanan</button>
                 </div>
 
-                <div style="border-top: 1px solid #cbd5e1; padding-top: 15px;">
+                <!-- KOTAK UPDATE IP (Hanya muncul jika yang login 4 admin utama) -->
+                <div id="kotakUpdateIpWifi" style="border-top: 1px solid #cbd5e1; padding-top: 15px; display: none;">
                     🌐 Jaringan Anda saat ini:<br>
                     <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
                     
@@ -390,15 +391,13 @@
                 </div>
             </div>
 
-            <!-- Area Konten Tersembunyi (Log & Jadwal) yang hanya muncul jika admin mengklik tombol di atas -->
+            <!-- Area Konten Tersembunyi (Log & Jadwal) -->
             <div id="adminSubContainer" style="display: none; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; margin-top: 15px;">
                 <div style="background: #1e293b; color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;">
                     <b id="adminSubTitle">Sub Menu Admin</b>
                     <button onclick="tutupSubMenuAdmin()" style="background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold;">Tutup ✕</button>
                 </div>
-                <div id="adminSubContentBody" style="padding: 15px; overflow-x: auto;">
-                    <!-- Konten Log / Rekap akan dimuat di sini -->
-                </div>
+                <div id="adminSubContentBody" style="padding: 15px; overflow-x: auto;"></div>
             </div>
         </div>
 
@@ -433,7 +432,7 @@
             btn.classList.add('active');
         }
 
-        async function cekPasswordAdmin() {
+async function cekPasswordAdmin() {
             let inputUser = document.getElementById("adminUsernameInput").value.trim();
             let inputVal = document.getElementById("adminPassInput").value.trim();
             let errorEl = document.getElementById("authError");
@@ -460,7 +459,24 @@
                     window.adminLoginNama = res.nama || inputUser;
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
-                    muatIpAdmin();
+                    
+                    // --- PEMISAHAN TAMPILAN BERDASARKAN HAK AKSES ---
+                    // Daftar nama 4 admin utama yang boleh melihat menu update IP
+                    const daftarAdminUtama = ["Rifai", "Andri", "Fadil", "Yasin"];
+                    
+                    // Ambil elemen kotak update IP
+                    const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
+                    
+                    if (daftarAdminUtama.includes(window.adminLoginNama)) {
+                        // Jika yang login adalah admin utama, tampilkan menu update IP & jalankan deteksi IP
+                        if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
+                        muatIpAdmin();
+                    } else {
+                        // Jika yang login adalah Staf biasa, sembunyikan kotak update IP agar bersih
+                        if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
+                    }
+                    // -----------------------------------------------
+
                 } else {
                     errorEl.style.display = "block";
                     errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
