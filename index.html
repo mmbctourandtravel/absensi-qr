@@ -443,7 +443,6 @@ async function cekPasswordAdmin() {
             btnLogin.disabled = true;
 
             try {
-                // Selaraskan kembali menggunakan JSON.stringify agar cocok dengan backend Code.gs
                 let response = await fetch(API, {
                     method: "POST",
                     body: JSON.stringify({ 
@@ -457,7 +456,6 @@ async function cekPasswordAdmin() {
                 if (res.sukses) {
                     window.adminLoginNama = res.nama || inputUser;
                     
-                    // --- SET NAMA SAPAAN DI DASHBOARD ---
                     let elSalam = document.getElementById("salamNamaAdmin");
                     if (elSalam) {
                         elSalam.innerText = window.adminLoginNama;
@@ -466,7 +464,6 @@ async function cekPasswordAdmin() {
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     
-                    // --- PEMISAHAN TAMPILAN BERDASARKAN HAK AKSES ---
                     const daftarAdminUtama = ["Rifai", "Andri", "Fadil", "Yasin"];
                     const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
                     
@@ -476,9 +473,6 @@ async function cekPasswordAdmin() {
                     } else {
                         if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
                     }
-
-                }
-
                 } else {
                     errorEl.style.display = "block";
                     errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
