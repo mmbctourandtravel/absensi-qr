@@ -355,7 +355,10 @@
             <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Masukkan Username dan Password Admin untuk mengakses Dashboard.</p>
             
             <input type="text" id="adminUsernameInput" class="search-input" placeholder="Masukkan Nama/Username Admin..." style="margin-bottom: 10px;">
-            <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="margin-bottom: 10px;">
+            <div style="position: relative; margin-bottom: 10px;">
+                <input type="password" id="adminPassInput" class="search-input" placeholder="Masukkan Password..." style="padding-right: 40px; margin-bottom: 0;">
+                <span onclick="togglePasswordVisibilitas()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; user-select: none;" title="Tampilkan/Sembunyikan Password">👁️</span>
+            </div>
             <button id="btnLoginAdmin" onclick="cekPasswordAdmin()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
@@ -390,16 +393,7 @@
                     <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
                 </div>
             </div>
-
-            <!-- Area Konten Tersembunyi (Log & Jadwal) -->
-            <div id="adminSubContainer" style="display: none; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; margin-top: 15px;">
-                <div style="background: #1e293b; color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <b id="adminSubTitle">Sub Menu Admin</b>
-                    <button onclick="tutupSubMenuAdmin()" style="background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold;">Tutup ✕</button>
-                </div>
-                <div id="adminSubContentBody" style="padding: 15px; overflow-x: auto;"></div>
-            </div>
-        </div>
+       </div>
 
     <footer>&copy; 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
 
@@ -501,7 +495,17 @@ async function cekPasswordAdmin() {
                     document.getElementById("adminCurrentIp").innerText = "Gagal mendeteksi IP";
                 });
         }
-
+function togglePasswordVisibilitas() {
+            const passInput = document.getElementById("adminPassInput");
+            const iconMata = event.target;
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                iconMata.innerText = "🙈"; // Berubah jadi mata tertutup saat teks terlihat
+            } else {
+                passInput.type = "password";
+                iconMata.innerText = "👁️"; // Berubah jadi mata terbuka saat teks disembunyikan
+            }
+        }
         function updateIpKantorDariTab() {
             if (!window.adminMyIp) {
                 alert("IP belum terdeteksi, mohon tunggu sebentar...");
@@ -1209,92 +1213,23 @@ async function cekPasswordAdmin() {
             return strVal;
         }
         function bukaMenuAdminTab(menu) {
-            const subContainer = document.getElementById("adminSubContainer");
-            const subTitle = document.getElementById("adminSubTitle");
-            const subBody = document.getElementById("adminSubContentBody");
-            
-            subContainer.style.display = "block";
-            
             if (menu === 'log') {
-                subTitle.innerText = "📋 Log Absensi Hari Ini (Admin View)";
-                subBody.innerHTML = '<div style="text-align:center; padding:20px;">Memuat log...</div>';
-                // Panggil fungsi pemuat log ke kontainer khusus admin
-                loadLogAdminView(subBody);
-            } else if (menu === 'rekap') {
-                subTitle.innerText = "📊 Jadwal Bulanan - " + bulanBerjalan + " (Admin View)";
-                subBody.innerHTML = '<div style="text-align:center; padding:20px;">Memuat jadwal...</div>';
-                loadRekapAdminView(subBody);
-            }
-        }
-
-        function tutupSubMenuAdmin() {
-            document.getElementById("adminSubContainer").style.display = "none";
-        }
-
-        // Fungsi khusus render log untuk admin di dalam panel
-        function loadLogAdminView(container) {
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getLogHariIni" })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if(!res.sukses || !res.data || res.data.length <= 1) {
-                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada data absensi hari ini.</div>";
-                    return;
-                }
-                let rows = res.data;
-                let totalData = rows.length - 1;
-                let html = '<table class="rekap-table" style="width:100%;">';
-                rows.forEach((row, rowIndex) => {
-                    html += '<tr>';
-                    if (rowIndex === 0) {
-                        html += `<th>No</th>`;
-                    } else {
-                        html += `<td><b>${totalData - (rowIndex - 1)}</b></td>`;
+                // Langsung buka Tab Log Utama secara full dan lebar
+                const allTabBtns = document.querySelectorAll('.tab-btn');
+                allTabBtns.forEach(btn => {
+                    if (btn.innerText.includes("Log") || btn.onclick.toString().includes("log")) {
+                        switchTab('log', btn);
                     }
-                    row.forEach((cell, colIndex) => {
-                        if (colIndex === 0 || colIndex === 1 || colIndex === 7) return;
-                        let cellText = cell !== null ? String(cell).trim() : '';
-                        let tag = rowIndex === 0 ? 'th' : 'td';
-                        html += `<${tag}>${cellText}</${tag}>`;
-                    });
-                    html += '</tr>';
                 });
-                html += '</table>';
-                container.innerHTML = html;
-            })
-            .catch(err => { container.innerHTML = "Gagal memuat log."; });
-        }
-
-        // Fungsi khusus render rekap untuk admin di dalam panel
-        function loadRekapAdminView(container) {
-            fetch(API, {
-                method: "POST",
-                body: JSON.stringify({ action: "getRekapBulanan", bulan: bulanBerjalan })
-            })
-            .then(r => r.json())
-            .then(res => {
-                if(!res.sukses || !res.data) {
-                    container.innerHTML = "Gagal memuat jadwal.";
-                    return;
-                }
-                let rows = res.data;
-                let html = '<table class="rekap-table" style="width:100%;">';
-                rows.forEach((row, rowIndex) => {
-                    if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
-                    html += '<tr>';
-                    row.forEach((cell, colIndex) => {
-                        if (colIndex === 0 || colIndex === row.length - 1) return;
-                        let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
-                        html += `<${tag}>${cell !== null ? cell : ''}</${tag}>`;
-                    });
-                    html += '</tr>';
+            } else if (menu === 'rekap') {
+                // Langsung buka Tab Jadwal Bulanan Utama secara full dan lebar
+                const allTabBtns = document.querySelectorAll('.tab-btn');
+                allTabBtns.forEach(btn => {
+                    if (btn.innerText.includes("Jadwal") || btn.innerText.includes("Rekap") || btn.onclick.toString().includes("rekap")) {
+                        switchTab('rekap', btn);
+                    }
                 });
-                html += '</table>';
-                container.innerHTML = html;
-            })
-            .catch(err => { container.innerHTML = "Gagal memuat rekap."; });
+            }
         }
     </script>
 </body>
