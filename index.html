@@ -456,6 +456,13 @@ async function cekPasswordAdmin() {
 
                 if (res.sukses) {
                     window.adminLoginNama = res.nama || inputUser;
+                    
+                    // --- SET NAMA SAPAAN DI DASHBOARD ---
+                    let elSalam = document.getElementById("salamNamaAdmin");
+                    if (elSalam) {
+                        elSalam.innerText = window.adminLoginNama;
+                    }
+
                     document.getElementById("authOverlay").style.display = "none";
                     document.getElementById("adminContentBody").style.display = "block";
                     
@@ -469,6 +476,8 @@ async function cekPasswordAdmin() {
                     } else {
                         if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
                     }
+
+                }
 
                 } else {
                     errorEl.style.display = "block";
