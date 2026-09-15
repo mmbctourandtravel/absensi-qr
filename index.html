@@ -443,9 +443,15 @@ async function cekPasswordAdmin() {
             btnLogin.disabled = true;
 
             try {
+                // Gunakan URLSearchParams agar tidak diblokir CORS browser
+                let payload = new URLSearchParams();
+                payload.append("action", "login");
+                payload.append("username", inputUser);
+                payload.append("password", inputVal);
+
                 let response = await fetch(API, {
                     method: "POST",
-                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
+                    body: payload
                 });
                 let res = await response.json();
 
@@ -455,27 +461,22 @@ async function cekPasswordAdmin() {
                     document.getElementById("adminContentBody").style.display = "block";
                     
                     // --- PEMISAHAN TAMPILAN BERDASARKAN HAK AKSES ---
-                    // Daftar nama 4 admin utama yang boleh melihat menu update IP
                     const daftarAdminUtama = ["Rifai", "Andri", "Fadil", "Yasin"];
-                    
-                    // Ambil elemen kotak update IP
                     const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
                     
                     if (daftarAdminUtama.includes(window.adminLoginNama)) {
-                        // Jika yang login adalah admin utama, tampilkan menu update IP & jalankan deteksi IP
                         if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
                         muatIpAdmin();
                     } else {
-                        // Jika yang login adalah Staf biasa, sembunyikan kotak update IP agar bersih
                         if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
                     }
-                    // -----------------------------------------------
 
                 } else {
                     errorEl.style.display = "block";
                     errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
                 }
             } catch (err) {
+                console.error(err);
                 errorEl.style.display = "block";
                 errorEl.innerText = "❌ Gagal terhubung ke server.";
             } finally {
@@ -483,7 +484,6 @@ async function cekPasswordAdmin() {
                 btnLogin.disabled = false;
             }
         }
-
         function muatIpAdmin() {
             fetch("https://api.ipify.org?format=json")
                 .then(r => r.json())
