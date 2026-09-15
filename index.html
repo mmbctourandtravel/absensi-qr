@@ -443,15 +443,14 @@ async function cekPasswordAdmin() {
             btnLogin.disabled = true;
 
             try {
-                // Gunakan URLSearchParams agar tidak diblokir CORS browser
-                let payload = new URLSearchParams();
-                payload.append("action", "login");
-                payload.append("username", inputUser);
-                payload.append("password", inputVal);
-
+                // Selaraskan kembali menggunakan JSON.stringify agar cocok dengan backend Code.gs
                 let response = await fetch(API, {
                     method: "POST",
-                    body: payload
+                    body: JSON.stringify({ 
+                        action: "login", 
+                        username: inputUser, 
+                        password: inputVal 
+                    })
                 });
                 let res = await response.json();
 
