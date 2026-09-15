@@ -1212,23 +1212,20 @@ function togglePasswordVisibilitas() {
             return strVal;
         }
         function bukaMenuAdminTab(menu) {
+            // Langsung aktifkan container tab yang dituju secara manual
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
             if (menu === 'log') {
-                // Langsung buka Tab Log Utama secara full dan lebar
-                const allTabBtns = document.querySelectorAll('.tab-btn');
-                allTabBtns.forEach(btn => {
-                    if (btn.innerText.includes("Log") || btn.onclick.toString().includes("log")) {
-                        switchTab('log', btn);
-                    }
-                });
+                document.getElementById('tab-log').classList.add('active');
+                loadLogHariIni();
             } else if (menu === 'rekap') {
-                // Langsung buka Tab Jadwal Bulanan Utama secara full dan lebar
-                const allTabBtns = document.querySelectorAll('.tab-btn');
-                allTabBtns.forEach(btn => {
-                    if (btn.innerText.includes("Jadwal") || btn.innerText.includes("Rekap") || btn.onclick.toString().includes("rekap")) {
-                        switchTab('rekap', btn);
-                    }
-                });
+                document.getElementById('tab-rekap').classList.add('active');
+                if(!window.loadedJadwal) { loadRekapBulanan(); }
             }
+            
+            // Opsional: Gulir ke atas agar tampilan langsung pas di bagian atas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
