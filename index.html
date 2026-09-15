@@ -226,15 +226,13 @@
         <img id="modalImg" src="" alt="Foto Selfie Full">
     </div>
 
-    <!-- NAVIGASI TAB -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
-        <button class="tab-btn" onclick="switchTab('log', this)">📋 Absensi</button>
-        <button class="tab-btn" onclick="switchTab('rekap', this)">📊 Jadwal</button>
-        <button class="tab-btn" onclick="switchTab('peraturan', this)">📜 Peraturan</button>
-        <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
-    </div>
-
+<!-- NAVIGASI TAB (Hanya Scanner, Peraturan, dan Admin) -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('scanner', this)">📷 Scanner</button>
+            <button class="tab-btn" onclick="switchTab('peraturan', this)">📜 Peraturan</button>
+            <button class="tab-btn" onclick="switchTab('admin', this)">⚙️ Admin</button>
+        </div>
+    
     <!-- MODAL KAMERA SELFIE -->
     <div id="selfieModal">
         <video id="selfieVideo" autoplay playsinline></video>
@@ -362,26 +360,47 @@
             <div id="authError" style="color: #dc2626; font-size: 12px; margin-top: 8px; display: none;">❌ Password salah!</div>
         </div>
         
-        <div id="adminContentBody" style="display: none; padding: 20px;">
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin: 0 auto; font-size: 13px; color: #475569; max-width: 500px; text-align: center;">
-                🌐 Jaringan Anda saat ini:<br>
-                <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
+        <div id="adminContentBody" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                <h3 style="color: #1e293b; margin-bottom: 10px;">👋 Selamat Datang, Admin</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Pilih menu manajemen di bawah ini:</p>
                 
-                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #cbd5e1; text-align: left;">
-                    <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
-                    <select id="targetWifi" class="search-input" style="margin-top: 5px;">
-                        <option value="basecamp">Basecamp MMBC</option>
-                        <option value="megavision">Megavision</option>
-                        <option value="mmbc digital">MMBC DIGITAL</option>
-                    </select>
+                <!-- Tombol Pintas Khusus Admin untuk Buka Log & Jadwal -->
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button onclick="bukaMenuAdminTab('log')" style="background: #0ea5e9; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">📋 Lihat Log Absensi</button>
+                    <button onclick="bukaMenuAdminTab('rekap')" style="background: #10b981; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">📊 Lihat Jadwal Bulanan</button>
                 </div>
-                <button onclick="updateIpKantorDariTab()" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
-                    🔄 Perbarui IP Wi-Fi Sekarang
-                </button>
-                <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
+
+                <div style="border-top: 1px solid #cbd5e1; padding-top: 15px;">
+                    🌐 Jaringan Anda saat ini:<br>
+                    <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
+                    
+                    <div style="margin-top: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
+                        <select id="targetWifi" class="search-input" style="margin-top: 5px;">
+                            <option value="basecamp">Basecamp MMBC</option>
+                            <option value="megavision">Megavision</option>
+                            <option value="mmbc digital">MMBC DIGITAL</option>
+                        </select>
+                    </div>
+                    <button onclick="updateIpKantorDariTab()" style="width: 100%; max-width: 400px; margin-top: 15px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                        🔄 Perbarui IP Wi-Fi Sekarang
+                    </button>
+                    <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
+                </div>
+            </div>
+
+            <!-- Area Konten Tersembunyi (Log & Jadwal) yang hanya muncul jika admin mengklik tombol di atas -->
+            <div id="adminSubContainer" style="display: none; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; margin-top: 15px;">
+                <div style="background: #1e293b; color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <b id="adminSubTitle">Sub Menu Admin</b>
+                    <button onclick="tutupSubMenuAdmin()" style="background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold;">Tutup ✕</button>
+                </div>
+                <div id="adminSubContentBody" style="padding: 15px; overflow-x: auto;">
+                    <!-- Konten Log / Rekap akan dimuat di sini -->
+                </div>
             </div>
         </div>
-    </div>
 
     <footer>&copy; 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
 
@@ -1172,6 +1191,94 @@
                 }
             }
             return strVal;
+        }
+        function bukaMenuAdminTab(menu) {
+            const subContainer = document.getElementById("adminSubContainer");
+            const subTitle = document.getElementById("adminSubTitle");
+            const subBody = document.getElementById("adminSubContentBody");
+            
+            subContainer.style.display = "block";
+            
+            if (menu === 'log') {
+                subTitle.innerText = "📋 Log Absensi Hari Ini (Admin View)";
+                subBody.innerHTML = '<div style="text-align:center; padding:20px;">Memuat log...</div>';
+                // Panggil fungsi pemuat log ke kontainer khusus admin
+                loadLogAdminView(subBody);
+            } else if (menu === 'rekap') {
+                subTitle.innerText = "📊 Jadwal Bulanan - " + bulanBerjalan + " (Admin View)";
+                subBody.innerHTML = '<div style="text-align:center; padding:20px;">Memuat jadwal...</div>';
+                loadRekapAdminView(subBody);
+            }
+        }
+
+        function tutupSubMenuAdmin() {
+            document.getElementById("adminSubContainer").style.display = "none";
+        }
+
+        // Fungsi khusus render log untuk admin di dalam panel
+        function loadLogAdminView(container) {
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getLogHariIni" })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses || !res.data || res.data.length <= 1) {
+                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Belum ada data absensi hari ini.</div>";
+                    return;
+                }
+                let rows = res.data;
+                let totalData = rows.length - 1;
+                let html = '<table class="rekap-table" style="width:100%;">';
+                rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        html += `<td><b>${totalData - (rowIndex - 1)}</b></td>`;
+                    }
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 0 || colIndex === 1 || colIndex === 7) return;
+                        let cellText = cell !== null ? String(cell).trim() : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+                        html += `<${tag}>${cellText}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => { container.innerHTML = "Gagal memuat log."; });
+        }
+
+        // Fungsi khusus render rekap untuk admin di dalam panel
+        function loadRekapAdminView(container) {
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "getRekapBulanan", bulan: bulanBerjalan })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses || !res.data) {
+                    container.innerHTML = "Gagal memuat jadwal.";
+                    return;
+                }
+                let rows = res.data;
+                let html = '<table class="rekap-table" style="width:100%;">';
+                rows.forEach((row, rowIndex) => {
+                    if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
+                    html += '<tr>';
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 0 || colIndex === row.length - 1) return;
+                        let tag = rowIndex === 0 || rowIndex === 1 ? 'th' : 'td';
+                        html += `<${tag}>${cell !== null ? cell : ''}</${tag}>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => { container.innerHTML = "Gagal memuat rekap."; });
         }
     </script>
 </body>
