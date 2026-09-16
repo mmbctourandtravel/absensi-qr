@@ -581,25 +581,23 @@ async function cekPasswordAdmin() {
         let res = await response.json();
 
         if (res.sukses) {
-            // PERBAIKAN DI SINI: Ambil nama dari res.nama atau res.namaAdmin
-            window.adminLoginNama = res.nama || res.namaAdmin || inputUser;
+            // Simpan username yang diinput (misal: Rifai) atau dari respons server
+            window.adminLoginNama = inputUser; 
             
             let elSalam = document.getElementById("salamNamaAdmin");
             if (elSalam) {
-                elSalam.innerText = window.adminLoginNama;
+                elSalam.innerText = res.nama || inputUser; // Menampilkan nama lengkap untuk sapaan
             }
 
             document.getElementById("authOverlay").style.display = "none";
             document.getElementById("adminContentBody").style.display = "block";
             
-            const daftarAdminUtama = ["Rifai", "Andri", "Fadil", "Yasin"];
+            // Daftar Username Admin Utama sesuai Kolom A Sheet Admin
+            const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
             const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
             
-            // Debugging kecil untuk memastikan nama terbaca dengan pas
-            console.log("Admin yang login:", window.adminLoginNama);
-
-            // Cek case-insensitive agar lebih aman (mengantisipasi perbedaan huruf kapital tipis)
-            let isAdminUtama = daftarAdminUtama.some(adm => adm.toLowerCase() === window.adminLoginNama.toLowerCase());
+            let userLower = inputUser.toLowerCase();
+            let isAdminUtama = daftarAdminUtama.includes(userLower);
 
             if (isAdminUtama) {
                 if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
