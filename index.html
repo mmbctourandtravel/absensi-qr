@@ -497,11 +497,11 @@
                 <h3 style="color: #1e293b; margin-bottom: 10px;">👋 Selamat Datang, <span id="salamNamaAdmin">Admin</span></h3>
                 <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Pilih menu manajemen di bawah ini:</p>
                 
-                <!-- Tombol Pintas Khusus Admin untuk Buka Log & Jadwal (Bisa dilihat semua yang login) -->
-    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-    <button onclick="bukaMenuAdminTab('log')" style="background: #0ea5e9; color: white; border: none; padding: 14px 22px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);">📋 Lihat Log Absensi</button>
-    <button onclick="bukaMenuAdminTab('rekap')" style="background: #10b981; color: white; border: none; padding: 14px 22px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">📊 Lihat Jadwal Bulanan</button>
-    </div>
+    <!-- Tombol Pintas Khusus Admin yang Lebih Elegan & "Adem" --> (Bisa dilihat semua yang login) -->
+<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+    <button onclick="bukaMenuAdminTab('log')" style="background: #334155; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(51, 65, 85, 0.25); transition: all 0.2s;">📋 Lihat Log Absensi</button>
+    <button onclick="bukaMenuAdminTab('rekap')" style="background: #1e293b; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25); transition: all 0.2s;">📊 Lihat Jadwal Bulanan</button>
+</div>
 
                 <!-- KOTAK UPDATE IP (Hanya muncul jika yang login 4 admin utama) -->
                 <div id="kotakUpdateIpWifi" style="border-top: 1px solid #cbd5e1; padding-top: 15px; display: none;">
@@ -683,8 +683,8 @@ function togglePasswordVisibilitas() {
                 btnUpdate.style.opacity = "1";
             });
         }
-
-        function loadRekapBulanan() {
+// TAB 2: JADWAL DENGAN FITUR AUTO-RETRY
+        function loadRekapBulanan(retries = 1) {
             const container = document.getElementById('rekapContent');
             if (!container) return;
             container.innerHTML = '<div style="text-align:center; padding:30px; color:#64748b;">⏳ Sedang Memuat jadwal bulanan...</div>';
@@ -703,9 +703,7 @@ function togglePasswordVisibilitas() {
             })
             .then(res => {
                 if(!res || !res.sukses) {
-                    let errMsg = res && res.pesan ? res.pesan : "Gagal memuat rekap.";
-                    container.innerHTML = `<div style="text-align:center; padding:25px; color:#dc2626;">❌ ${errMsg}<br><br><button onclick="loadRekapBulanan()" style="background:#2563eb; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">🔄 Coba Muat Ulang Jadwal</button></div>`;
-                    return;
+                    throw new Error(res && res.pesan ? res.pesan : "Gagal memuat rekap.");
                 }
                 window.loadedJadwal = true;
                 let rows = res.data;
@@ -715,8 +713,8 @@ function togglePasswordVisibilitas() {
                 }
 
                 let html = '<table class="rekap-table" id="tabelJadwal">';
-                
                 let counterNo = 1;
+                
                 rows.forEach((row, rowIndex) => {
                     if(rowIndex === 0 && (!row[1] || row[1] === "")) return;
 
@@ -814,13 +812,18 @@ function togglePasswordVisibilitas() {
                 container.innerHTML = html;
             })
             .catch(err => { 
-                console.error(err);
-                container.innerHTML = `<div style="text-align:center; padding:25px; color:#dc2626;">❌ Terjadi kesalahan koneksi ke server.<br><br><button onclick="loadRekapBulanan()" style="background:#2563eb; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">🔄 Coba Muat Ulang Jadwal</button></div>`; 
+                console.warn("Gagal memuat jadwal, sisa percobaan:", retries);
+                if (retries > 0) {
+                    container.innerHTML = `<div style="text-align:center; padding:25px; color:#475569;">⚠️ Koneksi lambat, mencoba memuat ulang otomatis...</div>`;
+                    setTimeout(() => loadRekapBulanan(retries - 1), 2000); // Coba ulang setelah 2 detik
+                } else {
+                    container.innerHTML = `<div style="text-align:center; padding:25px; color:#dc2626;">❌ Terjadi kesalahan koneksi ke server.<br><br><button onclick="loadRekapBulanan(1)" style="background:#2563eb; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">🔄 Coba Muat Ulang Jadwal</button></div>`; 
+                }
             });
         }
 
-        // TAB 3: LOG ABSENSI UTAMA TETAP BERJALAN NORMAL
-        function loadLogHariIni() {
+        // TAB 3: LOG HARI INI DENGAN FITUR AUTO-RETRY
+        function loadLogHariIni(retries = 1) {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
 
@@ -831,8 +834,7 @@ function togglePasswordVisibilitas() {
             .then(r => r.json())
             .then(res => {
                 if(!res.sukses) {
-                    container.innerHTML = "❌ " + (res.pesan || "Gagal memuat log.");
-                    return;
+                    throw new Error(res.pesan || "Gagal memuat log.");
                 }
                 let rows = res.data;
                 if(!rows || rows.length <= 1) {
@@ -907,7 +909,12 @@ function togglePasswordVisibilitas() {
                 container.innerHTML = html;
             })
             .catch(err => { 
-                container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
+                if (retries > 0) {
+                    container.innerHTML = "<div style='text-align:center; padding:20px; color:#475569;'>⚠️ Mencoba memuat ulang log otomatis...</div>";
+                    setTimeout(() => loadLogHariIni(retries - 1), 2000);
+                } else {
+                    container.innerHTML = "❌ Terjadi kesalahan koneksi ke server."; 
+                }
             });
         }
 
