@@ -492,39 +492,38 @@
 </div>
         
         <div id="adminContentBody" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto;">
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-                <h3 style="color: #1e293b; margin-bottom: 10px;">👋 Selamat Datang, <span id="salamNamaAdmin">Admin</span></h3>
-                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Pilih menu manajemen di bawah ini:</p>
-                
-    <!-- Tombol Pintas Khusus Admin yang Lebih Elegan & "Adem" -->
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-    <button onclick="bukaMenuAdminTab('log')" style="background: #334155; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(51, 65, 85, 0.25); transition: all 0.2s;">📋 Lihat Log Absensi</button>
-    <button onclick="bukaMenuAdminTab('rekap')" style="background: #1e293b; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25); transition: all 0.2s;">📊 Lihat Jadwal Bulanan</button>
-</div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+        <h3 style="color: #1e293b; margin-bottom: 10px;">👋 Selamat Datang, <span id="salamNamaAdmin">Admin</span></h3>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Pilih menu manajemen di bawah ini:</p>
+        
+        <!-- Tombol Pintas Menu Admin -->
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px;">
+            <button onclick="bukaMenuAdminTab('log')" style="background: #334155; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(51, 65, 85, 0.25); transition: all 0.2s;">📋 Lihat Log Absensi</button>
+            <button onclick="bukaMenuAdminTab('rekap')" style="background: #1e293b; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25); transition: all 0.2s;">📊 Lihat Jadwal Bulanan</button>
+        </div>
 
-                <!-- KOTAK UPDATE IP (Hanya muncul jika yang login 4 admin utama) -->
-                <div id="kotakUpdateIpWifi" style="border-top: 1px solid #cbd5e1; padding-top: 15px; display: none;">
-                    🌐 Jaringan Anda saat ini:<br>
-                    <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
-                    
-                    <div style="margin-top: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
-                        <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
-                        <select id="targetWifi" class="search-input" style="margin-top: 5px;">
-                            <option value="basecamp">Basecamp MMBC</option>
-                            <option value="megavision">Megavision</option>
-                            <option value="mmbc digital">MMBC DIGITAL</option>
-                        </select>
-                    </div>
-                    <button onclick="updateIpKantorDariTab()" style="width: 100%; max-width: 400px; margin-top: 15px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
-                        🔄 Perbarui IP Wi-Fi Sekarang
-                    </button>
-                    <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600;"></div>
-                </div>
+        <!-- KOTAK UPDATE IP (Hanya muncul jika yang login Admin Utama: Rifai, Andri, Yasin, Fadil) -->
+        <div id="kotakUpdateIpWifi" style="border-top: 1px solid #cbd5e1; padding-top: 20px; display: none; text-align: left; max-width: 450px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 12px;">
+                🌐 Jaringan Anda saat ini:<br>
+                <b id="adminCurrentIp" style="color: #2563eb; font-size: 15px; display: block; margin-top: 5px;">Mendeteksi IP...</b>
             </div>
-       </div>
-
-    <footer>&copy; 2026 HR MMBC Tour & Travel - All Rights Reserved</footer>
-
+            
+            <div style="margin-top: 15px;">
+                <label style="font-size: 12px; color: #64748b; font-weight: bold;">Pilih Wi-Fi yang akan diperbarui:</label>
+                <select id="targetWifi" class="search-input" style="margin-top: 5px;">
+                    <option value="basecamp">Basecamp MMBC</option>
+                    <option value="megavision">Megavision</option>
+                    <option value="mmbc digital">MMBC DIGITAL</option>
+                </select>
+            </div>
+            <button onclick="updateIpKantorDariTab()" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                🔄 Perbarui IP Wi-Fi Sekarang
+            </button>
+            <div id="statusMsgAdmin" style="margin-top: 8px; font-size: 12px; font-weight: 600; text-align: center;"></div>
+        </div>
+    </div>
+</div>
     <script>
         const API = "https://script.google.com/macros/s/AKfycbzKcfMXWKhdLhRZKNNhxjFxPZu8Pcs4OTqYxchHS4Ua4geP1lkqjv91giu7kftktbmH/exec";
 
