@@ -572,34 +572,26 @@ async function cekPasswordAdmin() {
     try {
         let response = await fetch(API, {
             method: "POST",
-            body: JSON.stringify({ 
-                action: "login", 
-                username: inputUser, 
-                password: inputVal 
-            })
+            body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
         });
         let res = await response.json();
 
         if (res.sukses) {
-            // Simpan username yang diinput (misal: Rifai) atau dari respons server
-            window.adminLoginNama = inputUser; 
+            window.adminLoginNama = inputUser;
             
             let elSalam = document.getElementById("salamNamaAdmin");
             if (elSalam) {
-                elSalam.innerText = res.nama || inputUser; // Menampilkan nama lengkap untuk sapaan
+                elSalam.innerText = res.nama || inputUser;
             }
 
             document.getElementById("authOverlay").style.display = "none";
             document.getElementById("adminContentBody").style.display = "block";
             
-            // Daftar Username Admin Utama sesuai Kolom A Sheet Admin
+            // Logika pemunculan kotak update IP khusus 4 admin utama
             const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
             const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
             
-            let userLower = inputUser.toLowerCase();
-            let isAdminUtama = daftarAdminUtama.includes(userLower);
-
-            if (isAdminUtama) {
+            if (daftarAdminUtama.includes(inputUser.toLowerCase())) {
                 if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
                 muatIpAdmin();
             } else {
@@ -610,7 +602,6 @@ async function cekPasswordAdmin() {
             errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
         }
     } catch (err) {
-        console.error(err);
         errorEl.style.display = "block";
         errorEl.innerText = "❌ Gagal terhubung ke server.";
     } finally {
