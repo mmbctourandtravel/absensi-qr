@@ -898,10 +898,10 @@ function togglePasswordVisibilitas() {
                                     cellText = "Foto Selfie";
                                 } else {
                                     if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
-                                        let fileId = "";
                                         let rawVal = cellText.trim();
+                                        let fileId = "";
 
-                                        // Ekstraksi ID dari berbagai format link Google Drive
+                                        // 1. Jika berupa URL Google Drive lengkap
                                         if (rawVal.includes("id=")) {
                                             try {
                                                 const urlParams = new URLSearchParams(rawVal.split('?')[1]);
@@ -912,24 +912,27 @@ function togglePasswordVisibilitas() {
                                             const parts = rawVal.split('/d/');
                                             if (parts[1]) fileId = parts[1].split('/')[0];
                                         }
-                                        if (!fileId && rawVal.length > 15 && !rawVal.includes("http")) {
-                                            // Kemungkinan besar itu langsung ID file-nya
+                                        
+                                        // 2. Jika isinya berupa File ID murni (seperti yang terlihat di Spreadsheet Anda)
+                                        if (!fileId && rawVal.length >= 10) {
                                             fileId = rawVal;
                                         }
 
                                         if (fileId) {
+                                            // Menggunakan endpoint langsung Google Drive Thumbnail / Content View yang stabil
                                             let fotoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+                                            let lh3Url = `https://lh3.googleusercontent.com/d/${fileId}=s220`; // Cadangan yang sangat stabil untuk render gambar
+                                            
                                             cellText = `
                                                 <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fotoUrl}')" title="Klik untuk memperbesar foto">
-                                                    <img src="${fotoUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'badge-shift\' style=\'background:#fef2f2; color:#dc2626; border-color:#fecaca;\'>⚠️ Gagal Muat</span>';">
+                                                    <img src="${lh3Url}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='${fotoUrl}';">
                                                     <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
                                                 </div>`;
                                         } else {
-                                            // Jika isinya teks biasa/label
-                                            cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569; border-color: #cbd5e1;">📷 Lihat</span>`;
+                                            cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
                                         }
                                     } else {
-                                        cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8; border-color: #e2e8f0;">Tanpa Foto</span>`;
+                                        cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
                                     }
                                 }
                             }
