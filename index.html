@@ -825,8 +825,7 @@ function togglePasswordVisibilitas() {
             });
         }
 
-        // TAB 3: LOG HARI INI DENGAN FITUR AUTO-RETRY
-        // TAB 3: LOG HARI INI DENGAN KOLOM FOTO SELFI
+                // TAB 3: LOG HARI INI DENGAN KOLOM FOTO SELFI
         function loadLogHariIni(retries = 1) {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -898,21 +897,39 @@ function togglePasswordVisibilitas() {
                                 if (rowIndex === 0) {
                                     cellText = "Foto Selfie";
                                 } else {
-                                    if (cellText !== "") {
-                                        // Ubah ID/Link Google Drive menjadi thumbnail link langsung
-                                        let fileId = cellText;
-                                        if (cellText.includes("id=")) {
-                                            const urlParams = new URLSearchParams(cellText.split('?')[1]);
-                                            fileId = urlParams.get('id') || cellText;
-                                        } else if (cellText.includes("/d/")) {
-                                            const parts = cellText.split('/d/');
+                                    if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
+                                        let fileId = "";
+                                        let rawVal = cellText.trim();
+
+                                        // Ekstraksi ID dari berbagai format link Google Drive
+                                        if (rawVal.includes("id=")) {
+                                            try {
+                                                const urlParams = new URLSearchParams(rawVal.split('?')[1]);
+                                                fileId = urlParams.get('id');
+                                            } catch(e) {}
+                                        } 
+                                        if (!fileId && rawVal.includes("/d/")) {
+                                            const parts = rawVal.split('/d/');
                                             if (parts[1]) fileId = parts[1].split('/')[0];
                                         }
-                                        let fotoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-                                        
-                                        cellText = `<img src="${fotoUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; cursor: pointer; border: 2px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="openImageModal('${fotoUrl}')" onerror="this.onerror=null; this.src='https://via.placeholder.com/40?text=No+Foto';">`;
+                                        if (!fileId && rawVal.length > 15 && !rawVal.includes("http")) {
+                                            // Kemungkinan besar itu langsung ID file-nya
+                                            fileId = rawVal;
+                                        }
+
+                                        if (fileId) {
+                                            let fotoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+                                            cellText = `
+                                                <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fotoUrl}')" title="Klik untuk memperbesar foto">
+                                                    <img src="${fotoUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'badge-shift\' style=\'background:#fef2f2; color:#dc2626; border-color:#fecaca;\'>⚠️ Gagal Muat</span>';">
+                                                    <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
+                                                </div>`;
+                                        } else {
+                                            // Jika isinya teks biasa/label
+                                            cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569; border-color: #cbd5e1;">📷 Lihat</span>`;
+                                        }
                                     } else {
-                                        cellText = `<span style="color: #94a3b8; font-size: 11px;">Tanpa Foto</span>`;
+                                        cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8; border-color: #e2e8f0;">Tanpa Foto</span>`;
                                     }
                                 }
                             }
