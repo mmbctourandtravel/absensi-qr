@@ -586,25 +586,12 @@ async function cekPasswordAdmin(retries = 1) {
         }
 
         if (res && res.sukses) {
-            window.adminLoginNama = inputUser;
-            
-            let elSalam = document.getElementById("salamNamaAdmin");
-            if (elSalam) {
-                elSalam.innerText = res.nama || inputUser;
-            }
+            // SIMPAN SESI KE LOCALSTORAGE BROWSER ADMIN (Berlaku selamanya sampai logout/clear data)
+            localStorage.setItem("adminLoggedIn", "true");
+            localStorage.setItem("adminNama", res.nama || inputUser);
+            localStorage.setItem("adminUsername", inputUser);
 
-            document.getElementById("authOverlay").style.display = "none";
-            document.getElementById("adminContentBody").style.display = "block";
-            
-            const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
-            const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
-            
-            if (daftarAdminUtama.includes(inputUser.toLowerCase())) {
-                if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
-                muatIpAdmin();
-            } else {
-                if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
-            }
+            terapkanTampilanAdmin(res.nama || inputUser, inputUser);
         } else {
             errorEl.style.display = "block";
             errorEl.innerText = "❌ " + (res && res.pesan ? res.pesan : "Username atau Password Salah!");
@@ -614,9 +601,8 @@ async function cekPasswordAdmin(retries = 1) {
         if (retries > 0) {
             errorEl.style.display = "block";
             errorEl.innerText = "⏳ Server sedang merespons (cold start), mencoba ulang otomatis...";
-            // Tunggu 2 detik lalu coba sekali lagi secara otomatis
             setTimeout(() => cekPasswordAdmin(retries - 1), 2000);
-            return; // Jangan kembalikan tombol ke kondisi semula sebelum retry selesai
+            return;
         } else {
             errorEl.style.display = "block";
             errorEl.innerText = "❌ Gagal terhubung ke server. Periksa koneksi internet Anda.";
@@ -627,6 +613,38 @@ async function cekPasswordAdmin(retries = 1) {
             btnLogin.disabled = false;
         }
     }
+}
+        function terapkanTampilanAdmin(namaLengkap, username) {
+    window.adminLoginNama = username;
+    
+    let elSalam = document.getElementById("salamNamaAdmin");
+    if (elSalam) {
+        elSalam.innerText = namaLengkap;
+    }
+
+    document.getElementById("authOverlay").style.display = "none";
+    document.getElementById("adminContentBody").style.display = "block";
+    
+    const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
+    const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
+    
+    if (daftarAdminUtama.includes(username.toLowerCase())) {
+        if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
+        muatIpAdmin();
+    } else {
+        if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
+    }
+}
+
+// Tambahkan fungsi Logout jika sewaktu-waktu admin ingin keluar
+function logoutAdmin() {
+    localStorage.removeItem("adminLoggedIn");
+    localStorage.removeItem("adminNama");
+    localStorage.removeItem("adminUsername");
+    
+    document.getElementById("authOverlay").style.display = "block";
+    document.getElementById("adminContentBody").style.display = "none";
+    document.getElementById("adminPassInput").value = "";
 }
         function muatIpAdmin() {
             fetch("https://api.ipify.org?format=json")
@@ -1578,6 +1596,16 @@ function jalankanPencarianRiwayat(keyword) {
             // Opsional: Gulir ke atas agar tampilan langsung pas di bagian atas
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        // CEK CACHE LOGIN SAAT HALAMAN DIBUKA
+window.addEventListener("DOMContentLoaded", () => {
+    let isLogged = localStorage.getItem("adminLoggedIn");
+    let savedNama = localStorage.getItem("adminNama");
+    let savedUser = localStorage.getItem("adminUsername");
+
+    if (isLogged === "true" && savedUser) {
+        terapkanTampilanAdmin(savedNama, savedUser);
+    }
+});
     </script>
 </body>
 </html>
