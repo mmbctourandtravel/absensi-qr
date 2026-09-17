@@ -868,9 +868,14 @@ function togglePasswordVisibilitas() {
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // Lewati kolom Tanggal (0), ID Staff (1)
-                        if (colIndex === 0 || colIndex === 1) return; 
-                        
+                        // Perhatikan urutan: kita skip dulu colIndex 0 (Tanggal) di awal, nanti kita render setelah Nama Staff (colIndex 2)
+                        if (colIndex === 1) return; // Lewati ID Staff (1)
+                        if (colIndex === 0 && rowIndex > 0) return; // Tanggal dilewati dulu agar posisinya bisa diatur di sebelah kanan Nama Staff
+                        if (colIndex === 0 && rowIndex === 0) {
+                            // Header Tanggal ditaruh di sebelah kanan Nama Staff (setelah kolom 2)
+                            return; 
+                        }
+
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
@@ -878,13 +883,15 @@ function togglePasswordVisibilitas() {
                             if (colIndex === 2 && cellText !== "") {
                                 // Nama Staff
                                 cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
+                                
+                                // SISIPKAN TANGGAL TEPAT DI SEBELAH KANAN NAMA STAFF
+                                let tanggalAsli = row[0] !== null ? String(row[0]).trim() : '';
+                                cellText += `</td><td><span class="badge-shift" style="background:#f1f5f9; color:#334155; font-weight:600;">${tanggalAsli}</span>`;
                             }
                             else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
-                                // Jam Masuk / Pulang
                                 cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
                             }
                             else if (colIndex === 5) {
-                                // Status
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -897,60 +904,48 @@ function togglePasswordVisibilitas() {
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
                             else if (colIndex === 6) {
-                                // WiFi
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                                 }
                             }
                             else if (colIndex === 7) {
-                                // FOTO SELFI (Kolom H / Indeks 7)
-                                if (rowIndex === 0) {
-                                    cellText = "Foto Selfie";
-                                } else {
-                                    if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
-                                        let rawVal = cellText.trim();
-                                        let fileId = "";
-
-                                        // Ekstraksi File ID Google Drive
-                                        if (rawVal.includes("id=")) {
-                                            try {
-                                                const urlParams = new URLSearchParams(rawVal.split('?')[1]);
-                                                fileId = urlParams.get('id');
-                                            } catch(e) {}
-                                        } else if (rawVal.includes("/d/")) {
-                                            const parts = rawVal.split('/d/');
-                                            if (parts[1]) fileId = parts[1].split('/')[0];
-                                        } else {
-                                            fileId = rawVal;
-                                        }
-
-                                        if (fileId && fileId.length >= 10) {
-                                            // URL Gambar Resolusi Tinggi untuk Modal Full Screen
-                                            let fullUrl = `https://lh3.googleusercontent.com/d/${fileId}=s1000`;
-                                            let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
-
-                                            cellText = `
-                                                <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
-                                                    <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
-                                                    <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
-                                                </div>`;
-                                        } else {
-                                            cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
-                                        }
+                                // FOTO SELFI
+                                if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
+                                    let rawVal = cellText.trim();
+                                    let fileId = "";
+                                    if (rawVal.includes("id=")) {
+                                        try {
+                                            const urlParams = new URLSearchParams(rawVal.split('?')[1]);
+                                            fileId = urlParams.get('id');
+                                        } catch(e) {}
+                                    } else if (rawVal.includes("/d/")) {
+                                        const parts = rawVal.split('/d/');
+                                        if (parts[1]) fileId = parts[1].split('/')[0];
                                     } else {
-                                        cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
+                                        fileId = rawVal;
                                     }
+
+                                    if (fileId && fileId.length >= 10) {
+                                        let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
+                                        cellText = `
+                                            <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
+                                                <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
+                                                <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
+                                            </div>`;
+                                    } else {
+                                        cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
+                                    }
+                                } else {
+                                    cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
                                 }
                             }
                             else if (colIndex === 8) {
-                                // Keterangan
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("MALAM")) bClass = "shift-s3";
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
                             else if (colIndex === 9) {
-                                // Uang Makan
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -958,6 +953,8 @@ function togglePasswordVisibilitas() {
                         } else if (tag === 'th') {
                             if (colIndex === 2) {
                                 cellText = "Nama Staff";
+                                // Tambahkan header Tanggal tepat setelah Nama Staff
+                                cellText += `</th><th>Tanggal`;
                             } else if (colIndex === 7) {
                                 cellText = "Foto Selfie";
                             }
@@ -1067,24 +1064,29 @@ function jalankanPencarianRiwayat(keyword) {
         let totalData = rows.length - 1;
         let html = '<table class="rekap-table" id="tabelLog">';
         
-        rows.forEach((row, rowIndex) => {
+ rows.forEach((row, rowIndex) => {
             html += '<tr>';
             if (rowIndex === 0) {
                 html += `<th>No</th>`;
             } else {
-                let nomorUrut = rowIndex; // Urutan dari awal bulan ke tanggal sekarang
+                let nomorUrut = rowIndex;
                 html += `<td><b>${nomorUrut}</b></td>`;
             }
 
             row.forEach((cell, colIndex) => {
-                if (colIndex === 0 || colIndex === 1) return; // Lewati Tanggal & ID
-                
+                if (colIndex === 1) return; // Lewati ID
+                if (colIndex === 0) return; // Tanggal disisipkan manual setelah Nama Staff
+
                 let cellText = cell !== null ? String(cell).trim() : '';
                 let tag = rowIndex === 0 ? 'th' : 'td';
 
                 if (tag === 'td') {
                     if (colIndex === 2 && cellText !== "") {
                         cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
+                        
+                        // Sisipkan Tanggal di sebelah kanan Nama Staff
+                        let tanggalAsli = row[0] !== null ? String(row[0]).trim() : '';
+                        cellText += `</td><td><span class="badge-shift" style="background:#f1f5f9; color:#334155; font-weight:600;">${tanggalAsli}</span>`;
                     }
                     else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
                         cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
@@ -1107,38 +1109,34 @@ function jalankanPencarianRiwayat(keyword) {
                         }
                     }
                     else if (colIndex === 7) {
-                        // FOTO SELFI
-                        if (rowIndex === 0) {
-                            cellText = "Foto Selfie";
-                        } else {
-                            if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
-                                let rawVal = cellText.trim();
-                                let fileId = "";
-                                if (rawVal.includes("id=")) {
-                                    try {
-                                        const urlParams = new URLSearchParams(rawVal.split('?')[1]);
-                                        fileId = urlParams.get('id');
-                                    } catch(e) {}
-                                } else if (rawVal.includes("/d/")) {
-                                    const parts = rawVal.split('/d/');
-                                    if (parts[1]) fileId = parts[1].split('/')[0];
-                                } else {
-                                    fileId = rawVal;
-                                }
-
-                                if (fileId && fileId.length >= 10) {
-                                    let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
-                                    cellText = `
-                                        <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
-                                            <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
-                                            <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
-                                        </div>`;
-                                } else {
-                                    cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
-                                }
+                        // Foto Selfie
+                        if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
+                            let rawVal = cellText.trim();
+                            let fileId = "";
+                            if (rawVal.includes("id=")) {
+                                try {
+                                    const urlParams = new URLSearchParams(rawVal.split('?')[1]);
+                                    fileId = urlParams.get('id');
+                                } catch(e) {}
+                            } else if (rawVal.includes("/d/")) {
+                                const parts = rawVal.split('/d/');
+                                if (parts[1]) fileId = parts[1].split('/')[0];
                             } else {
-                                cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
+                                fileId = rawVal;
                             }
+
+                            if (fileId && fileId.length >= 10) {
+                                let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
+                                cellText = `
+                                    <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
+                                        <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
+                                        <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
+                                    </div>`;
+                            } else {
+                                cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
+                            }
+                        } else {
+                            cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
                         }
                     }
                     else if (colIndex === 8) {
@@ -1153,7 +1151,10 @@ function jalankanPencarianRiwayat(keyword) {
                         cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
                     }
                 } else if (tag === 'th') {
-                    if (colIndex === 2) cellText = "Nama Staff";
+                    if (colIndex === 2) {
+                        cellText = "Nama Staff";
+                        cellText += `</th><th>Tanggal`;
+                    }
                     else if (colIndex === 7) cellText = "Foto Selfie";
                 }
 
