@@ -556,7 +556,7 @@
             btn.classList.add('active');
         }
 
-async function cekPasswordAdmin() {
+async function cekPasswordAdmin(retries = 1) {
     let inputUser = document.getElementById("adminUsernameInput").value.trim();
     let inputVal = document.getElementById("adminPassInput").value.trim();
     let errorEl = document.getElementById("authError");
@@ -569,11 +569,10 @@ async function cekPasswordAdmin() {
     }
 
     errorEl.style.display = "none";
-    btnLogin.innerText = "Memeriksa...";
+    btnLogin.innerText = retries === 1 ? "Memeriksa..." : "Menghubungkan ulang...";
     btnLogin.disabled = true;
 
     try {
-        // Menggunakan teknik fetch dengan mode no-cors atau penanganan teks agar lolos pembatasan Google Redirect
         let response = await fetch(API, {
             method: "POST",
             body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
@@ -584,7 +583,6 @@ async function cekPasswordAdmin() {
         try {
             res = JSON.parse(textData);
         } catch(e) {
-            // Jika tertahan HTML/Redirect Google, anggap gagal atau format salah
             throw new Error("Respons server tidak valid.");
         }
 
@@ -613,12 +611,22 @@ async function cekPasswordAdmin() {
             errorEl.innerText = "❌ " + (res && res.pesan ? res.pesan : "Username atau Password Salah!");
         }
     } catch (err) {
-        console.error("Login error:", err);
-        errorEl.style.display = "block";
-        errorEl.innerText = "❌ Gagal terhubung ke server. Periksa koneksi internet Anda.";
+        console.warn("Login attempt failed, remaining retries:", retries);
+        if (retries > 0) {
+            errorEl.style.display = "block";
+            errorEl.innerText = "⏳ Server sedang merespons (cold start), mencoba ulang otomatis...";
+            // Tunggu 2 detik lalu coba sekali lagi secara otomatis
+            setTimeout(() => cekPasswordAdmin(retries - 1), 2000);
+            return; // Jangan kembalikan tombol ke kondisi semula sebelum retry selesai
+        } else {
+            errorEl.style.display = "block";
+            errorEl.innerText = "❌ Gagal terhubung ke server. Periksa koneksi internet Anda.";
+        }
     } finally {
-        btnLogin.innerText = "Masuk";
-        btnLogin.disabled = false;
+        if (retries <= 0) {
+            btnLogin.innerText = "Masuk";
+            btnLogin.disabled = false;
+        }
     }
 }
         function muatIpAdmin() {
