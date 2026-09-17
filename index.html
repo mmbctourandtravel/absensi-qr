@@ -330,10 +330,13 @@
 </head>
 <body>
 
-    <!-- MODAL ZOOM FOTO SELFIE -->
-    <div id="imageModal" onclick="closeImageModal()">
-        <img id="modalImg" src="" alt="Foto Selfie Full">
+    <!-- POP-UP MODAL FULL SCREEN FOTO SELFI -->
+<div id="imageModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center;" onclick="closeImageModal()">
+    <div style="position: relative; max-width: 90%; max-height: 90%; text-align: center;" onclick="event.stopPropagation()">
+        <span onclick="closeImageModal()" style="position: absolute; top: -40px; right: 0; color: #fff; font-size: 35px; font-weight: bold; cursor: pointer; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</span>
+        <img id="modalImg" src="" style="max-width: 100%; max-height: 85vh; border-radius: 12px; border: 3px solid #38bdf8; box-shadow: 0 10px 25px rgba(0,0,0,0.5);" alt="Foto Selfie Full">
     </div>
+</div>
 
 <!-- NAVIGASI TAB (Scanner, Peraturan, dan Dashboard) -->
 <div class="nav-tabs">
@@ -901,31 +904,27 @@ function togglePasswordVisibilitas() {
                                         let rawVal = cellText.trim();
                                         let fileId = "";
 
-                                        // 1. Jika berupa URL Google Drive lengkap
+                                        // Ekstraksi File ID Google Drive
                                         if (rawVal.includes("id=")) {
                                             try {
                                                 const urlParams = new URLSearchParams(rawVal.split('?')[1]);
                                                 fileId = urlParams.get('id');
                                             } catch(e) {}
-                                        } 
-                                        if (!fileId && rawVal.includes("/d/")) {
+                                        } else if (rawVal.includes("/d/")) {
                                             const parts = rawVal.split('/d/');
                                             if (parts[1]) fileId = parts[1].split('/')[0];
-                                        }
-                                        
-                                        // 2. Jika isinya berupa File ID murni (seperti yang terlihat di Spreadsheet Anda)
-                                        if (!fileId && rawVal.length >= 10) {
+                                        } else {
                                             fileId = rawVal;
                                         }
 
-                                        if (fileId) {
-                                            // Menggunakan endpoint langsung Google Drive Thumbnail / Content View yang stabil
-                                            let fotoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-                                            let lh3Url = `https://lh3.googleusercontent.com/d/${fileId}=s220`; // Cadangan yang sangat stabil untuk render gambar
-                                            
+                                        if (fileId && fileId.length >= 10) {
+                                            // URL Gambar Resolusi Tinggi untuk Modal Full Screen
+                                            let fullUrl = `https://lh3.googleusercontent.com/d/${fileId}=s1000`;
+                                            let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
+
                                             cellText = `
-                                                <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fotoUrl}')" title="Klik untuk memperbesar foto">
-                                                    <img src="${lh3Url}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='${fotoUrl}';">
+                                                <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
+                                                    <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
                                                     <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
                                                 </div>`;
                                         } else {
@@ -973,35 +972,36 @@ function togglePasswordVisibilitas() {
                 }
             });
         }
-        function openImageModal(imgUrl) {
+        function openImageModal(fileIdOrUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
             
-            // Ubah link view Google Drive menjadi format ekspor thumbnail ukuran besar (preview)
-            let finalUrl = imgUrl;
-            if (imgUrl.includes("drive.google.com")) {
-                let fileId = "";
-                if (imgUrl.includes("id=")) {
-                    const urlParams = new URLSearchParams(imgUrl.split('?')[1]);
+            if (!fileIdOrUrl) return;
+
+            let fileId = String(fileIdOrUrl).trim();
+            if (fileId.includes("id=")) {
+                try {
+                    const urlParams = new URLSearchParams(fileId.split('?')[1]);
                     fileId = urlParams.get('id');
-                } else if (imgUrl.includes("/d/")) {
-                    const parts = imgUrl.split('/d/');
-                    if (parts[1]) fileId = parts[1].split('/')[0];
-                }
-                
-                if (fileId) {
-                    // Menggunakan endpoint preview Google Drive agar langsung tampil normal tanpa blokir
-                    finalUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-                }
+                } catch(e) {}
+            } else if (fileId.includes("/d/")) {
+                const parts = fileId.split('/d/');
+                if (parts[1]) fileId = parts[1].split('/')[0];
             }
+
+            // Gunakan URL resolusi tinggi Google User Content agar gambar tampil tajam & tidak pecah
+            let finalUrl = fileId.length >= 10 && !fileId.startsWith("http")
+                ? `https://lh3.googleusercontent.com/d/${fileId}=s1000`
+                : fileId;
 
             modalImg.src = finalUrl;
             modal.style.display = 'flex';
         }
-        function closeImageModal() {
-            document.getElementById('imageModal').style.display = 'none';
-        }
 
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            if (modal) modal.style.display = 'none';
+        }
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
