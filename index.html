@@ -817,6 +817,7 @@ function togglePasswordVisibilitas() {
         }
 
         // TAB 3: LOG HARI INI DENGAN FITUR AUTO-RETRY
+        // TAB 3: LOG HARI INI DENGAN KOLOM FOTO SELFI
         function loadLogHariIni(retries = 1) {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -849,19 +850,23 @@ function togglePasswordVisibilitas() {
                     }
 
                     row.forEach((cell, colIndex) => {
-                        if (colIndex === 0 || colIndex === 1 || colIndex === 7) return; 
+                        // Lewati kolom Tanggal (0), ID Staff (1)
+                        if (colIndex === 0 || colIndex === 1) return; 
                         
                         let cellText = cell !== null ? String(cell).trim() : '';
                         let tag = rowIndex === 0 ? 'th' : 'td';
 
                         if (tag === 'td') {
                             if (colIndex === 2 && cellText !== "") {
+                                // Nama Staff
                                 cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
                             }
                             else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
+                                // Jam Masuk / Pulang
                                 cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
                             }
                             else if (colIndex === 5) {
+                                // Status
                                 let upperVal = cellText.toUpperCase();
                                 let badgeClass = "badge-shift ";
                                 if (upperVal.includes("TERLAMBAT")) {
@@ -874,17 +879,43 @@ function togglePasswordVisibilitas() {
                                 cellText = `<span class="${badgeClass}">${cellText}</span>`;
                             }
                             else if (colIndex === 6) {
+                                // WiFi
                                 if (cellText !== "") {
                                     cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
                                 }
                             }
+                            else if (colIndex === 7) {
+                                // FOTO SELFI (Kolom H / Indeks 7)
+                                if (rowIndex === 0) {
+                                    cellText = "Foto Selfie";
+                                } else {
+                                    if (cellText !== "") {
+                                        // Ubah ID/Link Google Drive menjadi thumbnail link langsung
+                                        let fileId = cellText;
+                                        if (cellText.includes("id=")) {
+                                            const urlParams = new URLSearchParams(cellText.split('?')[1]);
+                                            fileId = urlParams.get('id') || cellText;
+                                        } else if (cellText.includes("/d/")) {
+                                            const parts = cellText.split('/d/');
+                                            if (parts[1]) fileId = parts[1].split('/')[0];
+                                        }
+                                        let fotoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+                                        
+                                        cellText = `<img src="${fotoUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; cursor: pointer; border: 2px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="openImageModal('${fotoUrl}')" onerror="this.onerror=null; this.src='https://via.placeholder.com/40?text=No+Foto';">`;
+                                    } else {
+                                        cellText = `<span style="color: #94a3b8; font-size: 11px;">Tanpa Foto</span>`;
+                                    }
+                                }
+                            }
                             else if (colIndex === 8) {
+                                // Keterangan
                                 let upperVal = cellText.toUpperCase();
                                 let bClass = "shift-s1";
                                 if (upperVal.includes("MALAM")) bClass = "shift-s3";
                                 cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
                             }
                             else if (colIndex === 9) {
+                                // Uang Makan
                                 let num = Number(cellText.replace(/[^0-9]/g, ''));
                                 let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
                                 cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
@@ -892,10 +923,12 @@ function togglePasswordVisibilitas() {
                         } else if (tag === 'th') {
                             if (colIndex === 2) {
                                 cellText = "Nama Staff";
+                            } else if (colIndex === 7) {
+                                cellText = "Foto Selfie";
                             }
                         }
 
-                        html += `<${tag} style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</${tag}>`;
+                        html += `<tag style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</tag>`.replace('<tag', `<${tag}`).replace('</tag>', `</${tag}>`);
                     });
                     html += '</tr>';
                 });
@@ -911,7 +944,6 @@ function togglePasswordVisibilitas() {
                 }
             });
         }
-
         function openImageModal(imgUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
