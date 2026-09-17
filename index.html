@@ -570,13 +570,22 @@ async function cekPasswordAdmin() {
     btnLogin.disabled = true;
 
     try {
+        // Menggunakan teknik fetch dengan mode no-cors atau penanganan teks agar lolos pembatasan Google Redirect
         let response = await fetch(API, {
             method: "POST",
             body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
         });
-        let res = await response.json();
+        
+        let textData = await response.text();
+        let res;
+        try {
+            res = JSON.parse(textData);
+        } catch(e) {
+            // Jika tertahan HTML/Redirect Google, anggap gagal atau format salah
+            throw new Error("Respons server tidak valid.");
+        }
 
-        if (res.sukses) {
+        if (res && res.sukses) {
             window.adminLoginNama = inputUser;
             
             let elSalam = document.getElementById("salamNamaAdmin");
@@ -587,7 +596,6 @@ async function cekPasswordAdmin() {
             document.getElementById("authOverlay").style.display = "none";
             document.getElementById("adminContentBody").style.display = "block";
             
-            // Logika pemunculan kotak update IP khusus 4 admin utama
             const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
             const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
             
@@ -599,11 +607,12 @@ async function cekPasswordAdmin() {
             }
         } else {
             errorEl.style.display = "block";
-            errorEl.innerText = "❌ " + (res.pesan || "Username atau Password Salah!");
+            errorEl.innerText = "❌ " + (res && res.pesan ? res.pesan : "Username atau Password Salah!");
         }
     } catch (err) {
+        console.error("Login error:", err);
         errorEl.style.display = "block";
-        errorEl.innerText = "❌ Gagal terhubung ke server.";
+        errorEl.innerText = "❌ Gagal terhubung ke server. Periksa koneksi internet Anda.";
     } finally {
         btnLogin.innerText = "Masuk";
         btnLogin.disabled = false;
