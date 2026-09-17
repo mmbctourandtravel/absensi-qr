@@ -947,10 +947,28 @@ function togglePasswordVisibilitas() {
         function openImageModal(imgUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
-            modalImg.src = imgUrl;
+            
+            // Ubah link view Google Drive menjadi format ekspor thumbnail ukuran besar (preview)
+            let finalUrl = imgUrl;
+            if (imgUrl.includes("drive.google.com")) {
+                let fileId = "";
+                if (imgUrl.includes("id=")) {
+                    const urlParams = new URLSearchParams(imgUrl.split('?')[1]);
+                    fileId = urlParams.get('id');
+                } else if (imgUrl.includes("/d/")) {
+                    const parts = imgUrl.split('/d/');
+                    if (parts[1]) fileId = parts[1].split('/')[0];
+                }
+                
+                if (fileId) {
+                    // Menggunakan endpoint preview Google Drive agar langsung tampil normal tanpa blokir
+                    finalUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+                }
+            }
+
+            modalImg.src = finalUrl;
             modal.style.display = 'flex';
         }
-
         function closeImageModal() {
             document.getElementById('imageModal').style.display = 'none';
         }
