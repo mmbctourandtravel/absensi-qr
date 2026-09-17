@@ -1023,20 +1023,151 @@ function togglePasswordVisibilitas() {
             }
         }
 
-        function filterTabelLog() {
-            let input = document.getElementById('searchLog').value.toLowerCase();
-            let table = document.getElementById('tabelLog');
-            if(!table) return;
-            let tr = table.getElementsByTagName('tr');
-            for (let i = 1; i < tr.length; i++) {
-                let tdNama = tr[i].getElementsByTagName('td')[1];
-                if (tdNama) {
-                    let txt = tdNama.textContent || tdNama.innerText;
-                    tr[i].style.display = txt.toLowerCase().indexOf(input) > -1 ? "" : "none";
-                }
-            }
+        // VARIABEL PENAHAN SUPAYA TIDAK SPAM REQUEST (DEBOUNCE)
+let searchTimeout = null;
+
+function filterTabelLog() {
+    let input = document.getElementById('searchLog').value.trim();
+    
+    // Batalkan timeout sebelumnya agar tidak numpuk
+    clearTimeout(searchTimeout);
+
+    // Jika kotak pencarian dikosongkan, kembalikan ke tampilkan log hari ini seperti biasa
+    if (input === "") {
+        loadLogHariIni();
+        return;
+    }
+
+    // Jika diketik, tunggu 400ms setelah selesai mengetik baru kirim request ke server (Cari riwayat bulan berjalan)
+    searchTimeout = setTimeout(() => {
+        jalankanPencarianRiwayat(input);
+    }, 400);
+}
+
+function jalankanPencarianRiwayat(keyword) {
+    const container = document.getElementById('logContent');
+    container.innerHTML = `<div style='text-align:center; padding:20px; color:#64748b;'>🔍 Mencari riwayat untuk "${keyword}"...</div>`;
+
+    fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ action: "cariRiwayatStaff", keyword: keyword })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if(!res.sukses) {
+            throw new Error(res.pesan || "Gagal mencari riwayat.");
+        }
+        let rows = res.data;
+        if(!rows || rows.length <= 1) {
+            container.innerHTML = `<div style='text-align:center; padding:20px; color:#64748b;'>Tidak ditemukan riwayat absensi untuk "${keyword}" di bulan ini.</div>`;
+            return;
         }
 
+        // Render tabel riwayat (sama persis dengan format loadLogHariIni)
+        let totalData = rows.length - 1;
+        let html = '<table class="rekap-table" id="tabelLog">';
+        
+        rows.forEach((row, rowIndex) => {
+            html += '<tr>';
+            if (rowIndex === 0) {
+                html += `<th>No</th>`;
+            } else {
+                let nomorUrut = rowIndex; // Urutan dari awal bulan ke tanggal sekarang
+                html += `<td><b>${nomorUrut}</b></td>`;
+            }
+
+            row.forEach((cell, colIndex) => {
+                if (colIndex === 0 || colIndex === 1) return; // Lewati Tanggal & ID
+                
+                let cellText = cell !== null ? String(cell).trim() : '';
+                let tag = rowIndex === 0 ? 'th' : 'td';
+
+                if (tag === 'td') {
+                    if (colIndex === 2 && cellText !== "") {
+                        cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
+                    }
+                    else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
+                        cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
+                    }
+                    else if (colIndex === 5) {
+                        let upperVal = cellText.toUpperCase();
+                        let badgeClass = "badge-shift ";
+                        if (upperVal.includes("TERLAMBAT")) {
+                            badgeClass += "shift-off";
+                        } else if (upperVal.includes("MALAM")) {
+                            badgeClass += "shift-s3";
+                        } else {
+                            badgeClass += "badge-hadir";
+                        }
+                        cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                    }
+                    else if (colIndex === 6) {
+                        if (cellText !== "") {
+                            cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
+                        }
+                    }
+                    else if (colIndex === 7) {
+                        // FOTO SELFI
+                        if (rowIndex === 0) {
+                            cellText = "Foto Selfie";
+                        } else {
+                            if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
+                                let rawVal = cellText.trim();
+                                let fileId = "";
+                                if (rawVal.includes("id=")) {
+                                    try {
+                                        const urlParams = new URLSearchParams(rawVal.split('?')[1]);
+                                        fileId = urlParams.get('id');
+                                    } catch(e) {}
+                                } else if (rawVal.includes("/d/")) {
+                                    const parts = rawVal.split('/d/');
+                                    if (parts[1]) fileId = parts[1].split('/')[0];
+                                } else {
+                                    fileId = rawVal;
+                                }
+
+                                if (fileId && fileId.length >= 10) {
+                                    let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
+                                    cellText = `
+                                        <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
+                                            <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
+                                            <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
+                                        </div>`;
+                                } else {
+                                    cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
+                                }
+                            } else {
+                                cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
+                            }
+                        }
+                    }
+                    else if (colIndex === 8) {
+                        let upperVal = cellText.toUpperCase();
+                        let bClass = "shift-s1";
+                        if (upperVal.includes("MALAM")) bClass = "shift-s3";
+                        cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                    }
+                    else if (colIndex === 9) {
+                        let num = Number(cellText.replace(/[^0-9]/g, ''));
+                        let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                        cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                    }
+                } else if (tag === 'th') {
+                    if (colIndex === 2) cellText = "Nama Staff";
+                    else if (colIndex === 7) cellText = "Foto Selfie";
+                }
+
+                html += `<tag style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</tag>`.replace('<tag', `<${tag}`).replace('</tag>', `</${tag}>`);
+            });
+            html += '</tr>';
+        });
+        html += '</table>';
+        container.innerHTML = html;
+    })
+    .catch(err => {
+        container.innerHTML = `<div style='text-align:center; padding:20px; color:#dc2626;'>❌ Gagal memuat riwayat: ${err.message}</div>`;
+    });
+}
         function updateClock(){
             const now = new Date();
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
