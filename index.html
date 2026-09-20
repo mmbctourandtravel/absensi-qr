@@ -1201,57 +1201,64 @@ async function cekPasswordAdmin(retries = 1) {
         setInterval(updateClock, 1000);
         updateClock();
 
-        async function deteksiIPDanWifi() {
-            const wifiTextEl = document.getElementById("namaWifiText");
-            if (!wifiTextEl) return;
+       async function deteksiIPDanWifi() {
+    const wifiTextEl = document.getElementById("namaWifiText");
+    if (!wifiTextEl) return;
+    
+    wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
+    
+    // Daftar API IP publik yang super cepat
+    const services = [
+        "https://api.ipify.org?format=json",
+        "https://api.myip.com",
+        "https://ipapi.co/json/"
+    ];
+
+    let ipTerdeteksi = "";
+    
+    // Gunakan Promise.any atau perulangan cepat dengan timeout ketat (1.5 detik)
+    for (let url of services) {
+        try {
+            let controller = new AbortController();
+            let timeoutId = setTimeout(() => controller.abort(), 1500); // Timeout 1.5 detik per server
             
-            wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
+            let res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
             
-            const services = [
-                "https://api.ipify.org?format=json",
-                "https://ipapi.co/json/",
-                "https://api.myip.com"
-            ];
-
-            let ipTerdeteksi = "";
-            for (let url of services) {
-                try {
-                    let controller = new AbortController();
-                    let timeoutId = setTimeout(() => controller.abort(), 2500);
-                    let res = await fetch(url, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    let data = await res.json();
-                    ipTerdeteksi = data.ip || data.query;
-                    if (ipTerdeteksi) break;
-                } catch (e) {
-                    continue;
-                }
-            }
-
-            if (!ipTerdeteksi) {
-                wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
-                return;
-            }
-
-            userIP = ipTerdeteksi;
-
-            try {
-                let wifiRes = await fetch(API, { 
-                    method: "POST", 
-                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-                });
-                let wifiJson = await wifiRes.json();
-                
-                if (wifiJson && wifiJson.wifi) {
-                    wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
-                } else {
-                    wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
-                }
-            } catch (e) {
-                wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
-            }
+            let data = await res.json();
+            ipTerdeteksi = data.ip || data.query;
+            
+            if (ipTerdeteksi) break; // Langsung keluar loop begitu dapat IP
+        } catch (e) {
+            continue; // Lanjut ke server berikutnya jika timeout
         }
+    }
 
+    if (!ipTerdeteksi) {
+        wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
+        // Tetap izinkan buka kamera atau hentikan sesuai kebutuhan alur bro
+        return;
+    }
+
+    userIP = ipTerdeteksi;
+
+    try {
+        // Cek pencocokan IP ke Google Apps Script Sheet "Master wifi"
+        let wifiRes = await fetch(API, { 
+            method: "POST", 
+            body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+        });
+        let wifiJson = await wifiRes.json();
+        
+        if (wifiJson && wifiJson.wifi) {
+            wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
+        } else {
+            wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
+        }
+    } catch (e) {
+        wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
+    }
+}
         function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
 
