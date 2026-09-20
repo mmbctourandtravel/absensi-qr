@@ -170,6 +170,20 @@
 
         .clock-box { background: #eff6ff; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; color: #1d4ed8; border-bottom: 1px solid #dbeafe; }
         .wifi-info-box { background: #f0fdf4; color: #15803d; padding: 8px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid #dcfce7; }
+        .refresh-text-action {
+    color: #0b5329 !important;
+    font-weight: 700 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.refresh-icon-custom {
+    width: 13px;
+    height: 13px;
+    stroke: #0b5329;
+    stroke-width: 2.5;
+    vertical-align: middle;
+}
         .instruction-sub { font-size: 13px; color: #475569; font-weight: 600; background: #f1f5f9; padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
         .marquee-box { background: #fffbeb; color: #b45309; padding: 8px 12px; font-size: 12px; font-weight: 700; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
@@ -381,7 +395,16 @@
             <h1>ABSENSI QR</h1>
         </div>
         <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
-       <div class="wifi-info-box" onclick="deteksiIPDanWifi()" style="cursor: pointer;" title="Ketuk untuk refresh jaringan">📡 Jaringan: <b id="namaWifiText">Mendeteksi wifi kantor... (Ketuk untuk refresh)</b></div>
+       <div class="wifi-info-box" onclick="deteksiIPDanWifi()" style="cursor: pointer;" title="Ketuk untuk refresh jaringan">
+    <span>📡 Jaringan: <b id="namaWifiText">Mendeteksi wifi kantor...</b></span>
+    <span class="refresh-text-action">
+        <svg class="refresh-icon-custom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        (Ketuk untuk refresh)
+    </span>
+</div>
         
         <div class="marquee-box">
             <marquee behavior="scroll" direction="left" scrollamount="5">
