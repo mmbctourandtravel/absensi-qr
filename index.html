@@ -535,6 +535,14 @@
 
         document.getElementById("judulBulanHeader").innerText = "JADWAL " + bulanBerjalan.toUpperCase();
 
+        // Variabel Global untuk Scanner & Status
+        let qr = null;
+        let sedangProses = false;
+        let lastScanTime = 0;
+        let streamSelfie = null;
+        let activeStaffId = "";
+        let userIP = "";
+
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -586,7 +594,6 @@ async function cekPasswordAdmin(retries = 1) {
         }
 
         if (res && res.sukses) {
-            // SIMPAN SESI KE LOCALSTORAGE BROWSER ADMIN (Berlaku selamanya sampai logout/clear data)
             localStorage.setItem("adminLoggedIn", "true");
             localStorage.setItem("adminNama", res.nama || inputUser);
             localStorage.setItem("adminUsername", inputUser);
@@ -597,7 +604,6 @@ async function cekPasswordAdmin(retries = 1) {
             errorEl.innerText = "❌ " + (res && res.pesan ? res.pesan : "Username atau Password Salah!");
         }
     } catch (err) {
-        console.warn("Login attempt failed, remaining retries:", retries);
         if (retries > 0) {
             errorEl.style.display = "block";
             errorEl.innerText = "⏳ Server sedang merespons (cold start), mencoba ulang otomatis...";
@@ -614,38 +620,39 @@ async function cekPasswordAdmin(retries = 1) {
         }
     }
 }
+
         function terapkanTampilanAdmin(namaLengkap, username) {
-    window.adminLoginNama = username;
-    
-    let elSalam = document.getElementById("salamNamaAdmin");
-    if (elSalam) {
-        elSalam.innerText = namaLengkap;
-    }
+            window.adminLoginNama = username;
+            
+            let elSalam = document.getElementById("salamNamaAdmin");
+            if (elSalam) {
+                elSalam.innerText = namaLengkap;
+            }
 
-    document.getElementById("authOverlay").style.display = "none";
-    document.getElementById("adminContentBody").style.display = "block";
-    
-    const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
-    const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
-    
-    if (daftarAdminUtama.includes(username.toLowerCase())) {
-        if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
-        muatIpAdmin();
-    } else {
-        if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
-    }
-}
+            document.getElementById("authOverlay").style.display = "none";
+            document.getElementById("adminContentBody").style.display = "block";
+            
+            const daftarAdminUtama = ["rifai", "andri", "fadil", "yasin"];
+            const kotakUpdateIp = document.getElementById("kotakUpdateIpWifi");
+            
+            if (daftarAdminUtama.includes(username.toLowerCase())) {
+                if (kotakUpdateIp) kotakUpdateIp.style.display = "block";
+                muatIpAdmin();
+            } else {
+                if (kotakUpdateIp) kotakUpdateIp.style.display = "none";
+            }
+        }
 
-// Tambahkan fungsi Logout jika sewaktu-waktu admin ingin keluar
-function logoutAdmin() {
-    localStorage.removeItem("adminLoggedIn");
-    localStorage.removeItem("adminNama");
-    localStorage.removeItem("adminUsername");
-    
-    document.getElementById("authOverlay").style.display = "block";
-    document.getElementById("adminContentBody").style.display = "none";
-    document.getElementById("adminPassInput").value = "";
-}
+        function logoutAdmin() {
+            localStorage.removeItem("adminLoggedIn");
+            localStorage.removeItem("adminNama");
+            localStorage.removeItem("adminUsername");
+            
+            document.getElementById("authOverlay").style.display = "block";
+            document.getElementById("adminContentBody").style.display = "none";
+            document.getElementById("adminPassInput").value = "";
+        }
+
         function muatIpAdmin() {
             fetch("https://api.ipify.org?format=json")
                 .then(r => r.json())
@@ -657,17 +664,19 @@ function logoutAdmin() {
                     document.getElementById("adminCurrentIp").innerText = "Gagal mendeteksi IP";
                 });
         }
-function togglePasswordVisibilitas() {
+
+        function togglePasswordVisibilitas() {
             const passInput = document.getElementById("adminPassInput");
             const iconMata = event.target;
             if (passInput.type === "password") {
                 passInput.type = "text";
-                iconMata.innerText = "🙈"; // Berubah jadi mata tertutup saat teks terlihat
+                iconMata.innerText = "🙈";
             } else {
                 passInput.type = "password";
-                iconMata.innerText = "👁️"; // Berubah jadi mata terbuka saat teks disembunyikan
+                iconMata.innerText = "👁️";
             }
         }
+
         function updateIpKantorDariTab() {
             if (!window.adminMyIp) {
                 alert("IP belum terdeteksi, mohon tunggu sebentar...");
@@ -714,7 +723,7 @@ function togglePasswordVisibilitas() {
                 btnUpdate.style.opacity = "1";
             });
         }
-// TAB 2: JADWAL DENGAN FITUR AUTO-RETRY
+
         function loadRekapBulanan(retries = 1) {
             const container = document.getElementById('rekapContent');
             if (!container) return;
@@ -843,17 +852,15 @@ function togglePasswordVisibilitas() {
                 container.innerHTML = html;
             })
             .catch(err => { 
-                console.warn("Gagal memuat jadwal, sisa percobaan:", retries);
                 if (retries > 0) {
                     container.innerHTML = `<div style="text-align:center; padding:25px; color:#475569;">⚠️ Koneksi lambat, mencoba memuat ulang otomatis...</div>`;
-                    setTimeout(() => loadRekapBulanan(retries - 1), 2000); // Coba ulang setelah 2 detik
+                    setTimeout(() => loadRekapBulanan(retries - 1), 2000);
                 } else {
                     container.innerHTML = `<div style="text-align:center; padding:25px; color:#dc2626;">❌ Terjadi kesalahan koneksi ke server.<br><br><button onclick="loadRekapBulanan(1)" style="background:#2563eb; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">🔄 Coba Muat Ulang Jadwal</button></div>`; 
                 }
             });
         }
 
-                // TAB 3: LOG HARI INI DENGAN KOLOM FOTO SELFI
         function loadLogHariIni(retries = 1) {
             const container = document.getElementById('logContent');
             container.innerHTML = "Memuat log absensi hari ini...";
@@ -886,11 +893,9 @@ function togglePasswordVisibilitas() {
                     }
 
                     row.forEach((cell, colIndex) => {
-                        // Perhatikan urutan: kita skip dulu colIndex 0 (Tanggal) di awal, nanti kita render setelah Nama Staff (colIndex 2)
-                        if (colIndex === 1) return; // Lewati ID Staff (1)
-                        if (colIndex === 0 && rowIndex > 0) return; // Tanggal dilewati dulu agar posisinya bisa diatur di sebelah kanan Nama Staff
+                        if (colIndex === 1) return; 
+                        if (colIndex === 0 && rowIndex > 0) return; 
                         if (colIndex === 0 && rowIndex === 0) {
-                            // Header Tanggal ditaruh di sebelah kanan Nama Staff (setelah kolom 2)
                             return; 
                         }
 
@@ -899,10 +904,8 @@ function togglePasswordVisibilitas() {
 
                         if (tag === 'td') {
                             if (colIndex === 2 && cellText !== "") {
-                                // Nama Staff
                                 cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
                                 
-                                // SISIPKAN TANGGAL TEPAT DI SEBELAH KANAN NAMA STAFF
                                 let tanggalAsli = row[0] !== null ? String(row[0]).trim() : '';
                                 cellText += `</td><td><span class="badge-shift" style="background:#f1f5f9; color:#334155; font-weight:600;">${tanggalAsli}</span>`;
                             }
@@ -927,7 +930,6 @@ function togglePasswordVisibilitas() {
                                 }
                             }
                             else if (colIndex === 7) {
-                                // FOTO SELFI
                                 if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
                                     let rawVal = cellText.trim();
                                     let fileId = "";
@@ -971,7 +973,6 @@ function togglePasswordVisibilitas() {
                         } else if (tag === 'th') {
                             if (colIndex === 2) {
                                 cellText = "Nama Staff";
-                                // Tambahkan header Tanggal tepat setelah Nama Staff
                                 cellText += `</th><th>Tanggal`;
                             } else if (colIndex === 7) {
                                 cellText = "Foto Selfie";
@@ -994,6 +995,7 @@ function togglePasswordVisibilitas() {
                 }
             });
         }
+
         function openImageModal(fileIdOrUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImg');
@@ -1011,7 +1013,6 @@ function togglePasswordVisibilitas() {
                 if (parts[1]) fileId = parts[1].split('/')[0];
             }
 
-            // Gunakan URL resolusi tinggi Google User Content agar gambar tampil tajam & tidak pecah
             let finalUrl = fileId.length >= 10 && !fileId.startsWith("http")
                 ? `https://lh3.googleusercontent.com/d/${fileId}=s1000`
                 : fileId;
@@ -1024,6 +1025,7 @@ function togglePasswordVisibilitas() {
             const modal = document.getElementById('imageModal');
             if (modal) modal.style.display = 'none';
         }
+
         function filterTabelJadwal() {
             let input = document.getElementById('searchNamaJadwal').value.toLowerCase();
             let table = document.getElementById('tabelJadwal');
@@ -1038,155 +1040,148 @@ function togglePasswordVisibilitas() {
             }
         }
 
-        // VARIABEL PENAHAN SUPAYA TIDAK SPAM REQUEST (DEBOUNCE)
-let searchTimeout = null;
+        let searchTimeout = null;
 
-function filterTabelLog() {
-    let input = document.getElementById('searchLog').value.trim();
-    
-    // Batalkan timeout sebelumnya agar tidak numpuk
-    clearTimeout(searchTimeout);
+        function filterTabelLog() {
+            let input = document.getElementById('searchLog').value.trim();
+            clearTimeout(searchTimeout);
 
-    // Jika kotak pencarian dikosongkan, kembalikan ke tampilkan log hari ini seperti biasa
-    if (input === "") {
-        loadLogHariIni();
-        return;
-    }
-
-    // Jika diketik, tunggu 400ms setelah selesai mengetik baru kirim request ke server (Cari riwayat bulan berjalan)
-    searchTimeout = setTimeout(() => {
-        jalankanPencarianRiwayat(input);
-    }, 400);
-}
-
-function jalankanPencarianRiwayat(keyword) {
-    const container = document.getElementById('logContent');
-    container.innerHTML = `<div style='text-align:center; padding:20px; color:#64748b;'>🔍 Mencari riwayat untuk "${keyword}"...</div>`;
-
-    fetch(API, {
-        method: "POST",
-        body: JSON.stringify({ action: "cariRiwayatStaff", keyword: keyword })
-    })
-    .then(r => r.json())
-    .then(res => {
-        if(!res.sukses) {
-            throw new Error(res.pesan || "Gagal mencari riwayat.");
-        }
-        let rows = res.data;
-        if(!rows || rows.length <= 1) {
-            container.innerHTML = `<div style='text-align:center; padding:20px; color:#64748b;'>Tidak ditemukan riwayat absensi untuk "${keyword}" di bulan ini.</div>`;
-            return;
-        }
-
-        // Render tabel riwayat (sama persis dengan format loadLogHariIni)
-        let totalData = rows.length - 1;
-        let html = '<table class="rekap-table" id="tabelLog">';
-        
- rows.forEach((row, rowIndex) => {
-            html += '<tr>';
-            if (rowIndex === 0) {
-                html += `<th>No</th>`;
-            } else {
-                let nomorUrut = rowIndex;
-                html += `<td><b>${nomorUrut}</b></td>`;
+            if (input === "") {
+                loadLogHariIni();
+                return;
             }
 
-            row.forEach((cell, colIndex) => {
-                if (colIndex === 1) return; // Lewati ID
-                if (colIndex === 0) return; // Tanggal disisipkan manual setelah Nama Staff
+            searchTimeout = setTimeout(() => {
+                jalankanPencarianRiwayat(input);
+            }, 400);
+        }
 
-                let cellText = cell !== null ? String(cell).trim() : '';
-                let tag = rowIndex === 0 ? 'th' : 'td';
+        function jalankanPencarianRiwayat(keyword) {
+            const container = document.getElementById('logContent');
+            container.innerHTML = `<div style='text-align:center; padding:20px; color:#64748b;'>🔍 Mencari riwayat untuk "${keyword}"...</div>`;
 
-                if (tag === 'td') {
-                    if (colIndex === 2 && cellText !== "") {
-                        cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
-                        
-                        // Sisipkan Tanggal di sebelah kanan Nama Staff
-                        let tanggalAsli = row[0] !== null ? String(row[0]).trim() : '';
-                        cellText += `</td><td><span class="badge-shift" style="background:#f1f5f9; color:#334155; font-weight:600;">${tanggalAsli}</span>`;
-                    }
-                    else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
-                        cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
-                    }
-                    else if (colIndex === 5) {
-                        let upperVal = cellText.toUpperCase();
-                        let badgeClass = "badge-shift ";
-                        if (upperVal.includes("TERLAMBAT")) {
-                            badgeClass += "shift-off";
-                        } else if (upperVal.includes("MALAM")) {
-                            badgeClass += "shift-s3";
-                        } else {
-                            badgeClass += "badge-hadir";
-                        }
-                        cellText = `<span class="${badgeClass}">${cellText}</span>`;
-                    }
-                    else if (colIndex === 6) {
-                        if (cellText !== "") {
-                            cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
-                        }
-                    }
-                    else if (colIndex === 7) {
-                        // Foto Selfie
-                        if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
-                            let rawVal = cellText.trim();
-                            let fileId = "";
-                            if (rawVal.includes("id=")) {
-                                try {
-                                    const urlParams = new URLSearchParams(rawVal.split('?')[1]);
-                                    fileId = urlParams.get('id');
-                                } catch(e) {}
-                            } else if (rawVal.includes("/d/")) {
-                                const parts = rawVal.split('/d/');
-                                if (parts[1]) fileId = parts[1].split('/')[0];
-                            } else {
-                                fileId = rawVal;
-                            }
-
-                            if (fileId && fileId.length >= 10) {
-                                let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
-                                cellText = `
-                                    <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
-                                        <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
-                                        <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
-                                    </div>`;
-                            } else {
-                                cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
-                            }
-                        } else {
-                            cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
-                        }
-                    }
-                    else if (colIndex === 8) {
-                        let upperVal = cellText.toUpperCase();
-                        let bClass = "shift-s1";
-                        if (upperVal.includes("MALAM")) bClass = "shift-s3";
-                        cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
-                    }
-                    else if (colIndex === 9) {
-                        let num = Number(cellText.replace(/[^0-9]/g, ''));
-                        let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
-                        cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
-                    }
-                } else if (tag === 'th') {
-                    if (colIndex === 2) {
-                        cellText = "Nama Staff";
-                        cellText += `</th><th>Tanggal`;
-                    }
-                    else if (colIndex === 7) cellText = "Foto Selfie";
+            fetch(API, {
+                method: "POST",
+                body: JSON.stringify({ action: "cariRiwayatStaff", keyword: keyword })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(!res.sukses) {
+                    throw new Error(res.pesan || "Gagal mencari riwayat.");
+                }
+                let rows = res.data;
+                if(!rows || rows.length <= 1) {
+                    container.innerHTML = `<div style='text-align:center; padding:20px; color:#64748b;'>Tidak ditemukan riwayat absensi untuk "${keyword}" di bulan ini.</div>`;
+                    return;
                 }
 
-                html += `<tag style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</tag>`.replace('<tag', `<${tag}`).replace('</tag>', `</${tag}>`);
+                let totalData = rows.length - 1;
+                let html = '<table class="rekap-table" id="tabelLog">';
+                
+             rows.forEach((row, rowIndex) => {
+                    html += '<tr>';
+                    if (rowIndex === 0) {
+                        html += `<th>No</th>`;
+                    } else {
+                        let nomorUrut = rowIndex;
+                        html += `<td><b>${nomorUrut}</b></td>`;
+                    }
+
+                    row.forEach((cell, colIndex) => {
+                        if (colIndex === 1) return; 
+                        if (colIndex === 0) return; 
+
+                        let cellText = cell !== null ? String(cell).trim() : '';
+                        let tag = rowIndex === 0 ? 'th' : 'td';
+
+                        if (tag === 'td') {
+                            if (colIndex === 2 && cellText !== "") {
+                                cellText = `<span class="badge-nama-kapsul" style="display:block; text-align:center;">${cellText}</span>`;
+                                
+                                let tanggalAsli = row[0] !== null ? String(row[0]).trim() : '';
+                                cellText += `</td><td><span class="badge-shift" style="background:#f1f5f9; color:#334155; font-weight:600;">${tanggalAsli}</span>`;
+                            }
+                            else if ((colIndex === 3 || colIndex === 4) && cellText !== "") {
+                                cellText = `<span class="badge-kapsul time-text">${cellText}</span>`;
+                            }
+                            else if (colIndex === 5) {
+                                let upperVal = cellText.toUpperCase();
+                                let badgeClass = "badge-shift ";
+                                if (upperVal.includes("TERLAMBAT")) {
+                                    badgeClass += "shift-off";
+                                } else if (upperVal.includes("MALAM")) {
+                                    badgeClass += "shift-s3";
+                                } else {
+                                    badgeClass += "badge-hadir";
+                                }
+                                cellText = `<span class="${badgeClass}">${cellText}</span>`;
+                            }
+                            else if (colIndex === 6) {
+                                if (cellText !== "") {
+                                    cellText = `<span class="badge-shift badge-wifi">📶 ${cellText}</span>`;
+                                }
+                            }
+                            else if (colIndex === 7) {
+                                if (cellText && cellText.trim() !== "" && cellText !== "Tanpa Foto") {
+                                    let rawVal = cellText.trim();
+                                    let fileId = "";
+                                    if (rawVal.includes("id=")) {
+                                        try {
+                                            const urlParams = new URLSearchParams(rawVal.split('?')[1]);
+                                            fileId = urlParams.get('id');
+                                        } catch(e) {}
+                                    } else if (rawVal.includes("/d/")) {
+                                        const parts = rawVal.split('/d/');
+                                        if (parts[1]) fileId = parts[1].split('/')[0];
+                                    } else {
+                                        fileId = rawVal;
+                                    }
+
+                                    if (fileId && fileId.length >= 10) {
+                                        let thumbUrl = `https://lh3.googleusercontent.com/d/${fileId}=s220`;
+                                        cellText = `
+                                            <div style="position: relative; display: inline-block; cursor: pointer;" onclick="openImageModal('${fileId}')" title="Klik untuk memperbesar foto">
+                                                <img src="${thumbUrl}" alt="Selfie" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #38bdf8; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=${fileId}';">
+                                                <span style="position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid white;">📷</span>
+                                            </div>`;
+                                    } else {
+                                        cellText = `<span class="badge-shift" style="background-color: #f1f5f9; color: #475569;">📷 Ada</span>`;
+                                    }
+                                } else {
+                                    cellText = `<span class="badge-shift" style="background-color: #f8fafc; color: #94a3b8;">Tanpa Foto</span>`;
+                                }
+                            }
+                            else if (colIndex === 8) {
+                                let upperVal = cellText.toUpperCase();
+                                let bClass = "shift-s1";
+                                if (upperVal.includes("MALAM")) bClass = "shift-s3";
+                                cellText = `<span class="badge-shift ${bClass}">${cellText}</span>`;
+                            }
+                            else if (colIndex === 9) {
+                                let num = Number(cellText.replace(/[^0-9]/g, ''));
+                                let rpText = (!isNaN(num) && num > 0) ? "Rp " + num.toLocaleString('id-ID') : "Rp 0";
+                                cellText = `<span class="badge-shift badge-uangmakan">${rpText}</span>`;
+                            }
+                        } else if (tag === 'th') {
+                            if (colIndex === 2) {
+                                cellText = "Nama Staff";
+                                cellText += `</th><th>Tanggal`;
+                            }
+                            else if (colIndex === 7) cellText = "Foto Selfie";
+                        }
+
+                        html += `<tag style="${colIndex === 2 ? 'text-align:center;' : ''}">${cellText}</tag>`.replace('<tag', `<${tag}`).replace('</tag>', `</${tag}>`);
+                    });
+                    html += '</tr>';
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                container.innerHTML = `<div style='text-align:center; padding:20px; color:#dc2626;'>❌ Gagal memuat riwayat: ${err.message}</div>`;
             });
-            html += '</tr>';
-        });
-        html += '</table>';
-        container.innerHTML = html;
-    })
-    .catch(err => {
-        container.innerHTML = `<div style='text-align:center; padding:20px; color:#dc2626;'>❌ Gagal memuat riwayat: ${err.message}</div>`;
-    });
-}
+        }
+
         function updateClock(){
             const now = new Date();
             const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -1206,62 +1201,56 @@ function jalankanPencarianRiwayat(keyword) {
         setInterval(updateClock, 1000);
         updateClock();
 
- let userIP = "";
+        async function deteksiIPDanWifi() {
+            const wifiTextEl = document.getElementById("namaWifiText");
+            if (!wifiTextEl) return;
+            
+            wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
+            
+            const services = [
+                "https://api.ipify.org?format=json",
+                "https://ipapi.co/json/",
+                "https://api.myip.com"
+            ];
 
-async function deteksiIPDanWifi() {
-    const wifiTextEl = document.getElementById("namaWifiText");
-    if (!wifiTextEl) return;
-    
-    wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
-    
-    // Daftar API IP publik yang cepat dan stabil
-    const services = [
-        "https://api.ipify.org?format=json",
-        "https://ipapi.co/json/",
-        "https://api.myip.com"
-    ];
+            let ipTerdeteksi = "";
+            for (let url of services) {
+                try {
+                    let controller = new AbortController();
+                    let timeoutId = setTimeout(() => controller.abort(), 2500);
+                    let res = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    let data = await res.json();
+                    ipTerdeteksi = data.ip || data.query;
+                    if (ipTerdeteksi) break;
+                } catch (e) {
+                    continue;
+                }
+            }
 
-    let ipTerdeteksi = "";
-    for (let url of services) {
-        try {
-            let controller = new AbortController();
-            let timeoutId = setTimeout(() => controller.abort(), 2500); // Batas 2.5 detik
-            let res = await fetch(url, { signal: controller.signal });
-            clearTimeout(timeoutId);
-            let data = await res.json();
-            ipTerdeteksi = data.ip || data.query;
-            if (ipTerdeteksi) break;
-        } catch (e) {
-            continue; // Coba server lain jika timeout
+            if (!ipTerdeteksi) {
+                wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
+                return;
+            }
+
+            userIP = ipTerdeteksi;
+
+            try {
+                let wifiRes = await fetch(API, { 
+                    method: "POST", 
+                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+                });
+                let wifiJson = await wifiRes.json();
+                
+                if (wifiJson && wifiJson.wifi) {
+                    wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
+                } else {
+                    wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
+                }
+            } catch (e) {
+                wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
+            }
         }
-    }
-
-    if (!ipTerdeteksi) {
-        wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
-        return;
-    }
-
-    userIP = ipTerdeteksi;
-
-    try {
-        // Kirim IP ke Google Apps Script untuk dicocokkan dengan Sheet "Master wifi"
-        let wifiRes = await fetch(API, { 
-            method: "POST", 
-            body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-        });
-        let wifiJson = await wifiRes.json();
-        
-        if (wifiJson && wifiJson.wifi) {
-            // Jika terdaftar di Master Wifi, langsung tampilkan nama wifinya (Contoh: Basecamp / Megavision)
-            wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
-        } else {
-            // Jika tidak terdaftar, tampilkan IP-nya
-            wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
-        }
-    } catch (e) {
-        wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
-    }
-}
 
         function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
@@ -1489,9 +1478,7 @@ async function deteksiIPDanWifi() {
                             window.speechSynthesis.speak(utterance);
                         }, 300);
                     }
-                } catch(e) {
-                    console.log("Audio/Speech error:", e);
-                }
+                } catch(e) {}
 
             } else {
                 tampilkanPesanError(res.pesan);
@@ -1524,7 +1511,16 @@ async function deteksiIPDanWifi() {
         function resetScannerKamera() {
             setTimeout(() => {
                 sedangProses = false;
-                try { qr.clear(); } catch(e) {}
+                try {
+                    if (qr) {
+                        qr.clear();
+                    }
+                } catch(e) {}
+
+                if (!qr) {
+                    qr = new Html5Qrcode("reader");
+                }
+
                 qr.start(
                     { facingMode: "environment" },
                     { fps: 10, qrbox: 230 },
@@ -1559,8 +1555,8 @@ async function deteksiIPDanWifi() {
             }
             return strVal;
         }
+
         function bukaMenuAdminTab(menu) {
-            // Langsung aktifkan container tab yang dituju secara manual
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
@@ -1572,19 +1568,52 @@ async function deteksiIPDanWifi() {
                 if(!window.loadedJadwal) { loadRekapBulanan(); }
             }
             
-            // Opsional: Gulir ke atas agar tampilan langsung pas di bagian atas
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        // CEK CACHE LOGIN SAAT HALAMAN DIBUKA
-window.addEventListener("DOMContentLoaded", () => {
-    let isLogged = localStorage.getItem("adminLoggedIn");
-    let savedNama = localStorage.getItem("adminNama");
-    let savedUser = localStorage.getItem("adminUsername");
 
-    if (isLogged === "true" && savedUser) {
-        terapkanTampilanAdmin(savedNama, savedUser);
-    }
-});
+        // INISIALISASI SAAT HALAMAN DIBUKA
+        window.addEventListener("DOMContentLoaded", () => {
+            // 1. Cek Sesi Login Admin
+            let isLogged = localStorage.getItem("adminLoggedIn");
+            let savedNama = localStorage.getItem("adminNama");
+            let savedUser = localStorage.getItem("adminUsername");
+
+            if (isLogged === "true" && savedUser) {
+                terapkanTampilanAdmin(savedNama, savedUser);
+            }
+
+            // 2. Deteksi IP & Wi-Fi Kantor saat halaman pertama kali termuat
+            deteksiIPDanWifi();
+
+            // 3. Inisialisasi & Buka Kamera Scanner QR Code
+            setTimeout(() => {
+                try {
+                    qr = new Html5Qrcode("reader");
+                    qr.start(
+                        { facingMode: "environment" },
+                        { fps: 10, qrbox: 230 },
+                        (decodedText) => {
+                            let currentTime = new Date().getTime();
+                            if (sedangProses || (currentTime - lastScanTime < 20000)) return;
+                            
+                            sedangProses = true;
+                            lastScanTime = currentTime;
+                            
+                            qr.stop().then(() => {
+                                jalankanProsesAbsen(decodedText);
+                            }).catch(err => {
+                                jalankanProsesAbsen(decodedTest);
+                            });
+                        },
+                        (err) => {}
+                    ).catch(err => {
+                        console.log("Inisialisasi kamera gagal:", err);
+                    });
+                } catch(e) {
+                    console.log("Error setup QR Scanner:", e);
+                }
+            }, 500);
+        });
     </script>
 </body>
 </html>
