@@ -1274,9 +1274,9 @@ async function cekPasswordAdmin(retries = 1) {
         let wifiJson = await wifiRes.json();
         
         if (wifiJson && wifiJson.wifi) {
-            wifiTextEl.innerText = wifiJson.wifi + " (Ketuk untuk refresh)";
+            wifiTextEl.innerText = wifiJson.wifi;
         } else {
-            wifiTextEl.innerText = userIP + " (Ketuk untuk refresh)";
+            wifiTextEl.innerText = userIP;
         }
     } catch (e) {
         wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
