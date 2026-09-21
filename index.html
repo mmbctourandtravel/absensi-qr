@@ -9,7 +9,28 @@
     <meta name="theme-color" content="#0f172a">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        /* WADAH UTAMA LOGIN */
+        /* Letakkan kode CSS baru di sini */
+    .wifi-info-box { 
+        background: #f0fdf4; 
+        color: #15803d; 
+        padding: 10px 15px; 
+        font-size: 13px; 
+        font-weight: 600; 
+        text-align: center; 
+        border-bottom: 1px solid #dcfce7;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .wifi-info-box * {
+        pointer-events: none; 
+    }
+
+/* WADAH UTAMA LOGIN */
 .login-wrapper {
     max-width: 420px;
     margin: 20px auto;
@@ -395,7 +416,7 @@
             <h1>ABSENSI QR</h1>
         </div>
         <div class="clock-box" id="clock"><span id="tanggal">Memuat...</span> | <span id="jam">00:00:00</span></div>
-       <div class="wifi-info-box" onclick="deteksiIPDanWifi()" style="cursor: pointer;" title="Ketuk untuk refresh jaringan">
+       <div class="wifi-info-box" onclick="deteksiIPDanWifi()" title="Ketuk untuk refresh jaringan">
     <span>📡 Jaringan: <b id="namaWifiText">Mendeteksi wifi kantor...</b></span>
     <span class="refresh-text-action">
         <svg class="refresh-icon-custom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
