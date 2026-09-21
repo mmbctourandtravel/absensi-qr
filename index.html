@@ -1247,15 +1247,22 @@
         updateClock();
 
         // DIPERBAIKI: Menggunakan sessionStorage agar tidak mendeteksi ulang IP terus menerus (Anti-Lag & Menghemat Kuota Request)
-        async function deteksiIPDanWifi() {
+        async function deteksiIPDanWifi(isManualRefresh = false) {
             const wifiTextEl = document.getElementById("namaWifiText");
             if (!wifiTextEl) return;
+
+            // Jika tombol refresh diketuk manual, hapus cache agar memaksa cek IP baru!
+            if (isManualRefresh) {
+                sessionStorage.removeItem("cached_user_ip");
+                sessionStorage.removeItem("cached_wifi_name");
+                wifiTextEl.innerText = "Memperbarui jaringan...";
+            }
 
             // Cek apakah dalam sesi ini IP sudah pernah dicek sebelumnya (Cache Session)
             let cachedIp = sessionStorage.getItem("cached_user_ip");
             let cachedWifi = sessionStorage.getItem("cached_wifi_name");
 
-            if (cachedIp && cachedWifi) {
+            if (!isManualRefresh && cachedIp && cachedWifi) {
                 userIP = cachedIp;
                 wifiTextEl.innerText = cachedWifi;
                 return;
@@ -1308,7 +1315,7 @@
                 let namaJaringanFinal = (wifiJson && wifiJson.wifi) ? wifiJson.wifi : userIP;
                 wifiTextEl.innerText = namaJaringanFinal;
 
-                // Simpan ke session browser agar tidak fetch berulang kali
+                // Simpan ke session browser
                 sessionStorage.setItem("cached_user_ip", userIP);
                 sessionStorage.setItem("cached_wifi_name", namaJaringanFinal);
 
