@@ -586,6 +586,7 @@
         let streamSelfie = null;
         let activeStaffId = "";
         let userIP = "";
+        let isCheckingWifi = false; // Mencegah fungsi deteksi berjalan bertubi-tubi (Anti-Spam)
 
         function switchTab(tabName, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
@@ -607,63 +608,63 @@
             btn.classList.add('active');
         }
 
-async function cekPasswordAdmin(retries = 1) {
-    let inputUser = document.getElementById("adminUsernameInput").value.trim();
-    let inputVal = document.getElementById("adminPassInput").value.trim();
-    let errorEl = document.getElementById("authError");
-    let btnLogin = document.getElementById("btnLoginAdmin");
-    
-    if (!inputUser || !inputVal) {
-        errorEl.style.display = "block";
-        errorEl.innerText = "Username dan Password tidak boleh kosong!";
-        return;
-    }
+        async function cekPasswordAdmin(retries = 1) {
+            let inputUser = document.getElementById("adminUsernameInput").value.trim();
+            let inputVal = document.getElementById("adminPassInput").value.trim();
+            let errorEl = document.getElementById("authError");
+            let btnLogin = document.getElementById("btnLoginAdmin");
+            
+            if (!inputUser || !inputVal) {
+                errorEl.style.display = "block";
+                errorEl.innerText = "Username dan Password tidak boleh kosong!";
+                return;
+            }
 
-    errorEl.style.display = "none";
-    btnLogin.innerText = retries === 1 ? "Memeriksa..." : "Menghubungkan ulang...";
-    btnLogin.disabled = true;
+            errorEl.style.display = "none";
+            btnLogin.innerText = retries === 1 ? "Memeriksa..." : "Menghubungkan ulang...";
+            btnLogin.disabled = true;
 
-    try {
-        let response = await fetch(API, {
-            method: "POST",
-            body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
-        });
-        
-        let textData = await response.text();
-        let res;
-        try {
-            res = JSON.parse(textData);
-        } catch(e) {
-            throw new Error("Respons server tidak valid.");
-        }
+            try {
+                let response = await fetch(API, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "login", username: inputUser, password: inputVal })
+                });
+                
+                let textData = await response.text();
+                let res;
+                try {
+                    res = JSON.parse(textData);
+                } catch(e) {
+                    throw new Error("Respons server tidak valid.");
+                }
 
-        if (res && res.sukses) {
-            localStorage.setItem("adminLoggedIn", "true");
-            localStorage.setItem("adminNama", res.nama || inputUser);
-            localStorage.setItem("adminUsername", inputUser);
+                if (res && res.sukses) {
+                    localStorage.setItem("adminLoggedIn", "true");
+                    localStorage.setItem("adminNama", res.nama || inputUser);
+                    localStorage.setItem("adminUsername", inputUser);
 
-            terapkanTampilanAdmin(res.nama || inputUser, inputUser);
-        } else {
-            errorEl.style.display = "block";
-            errorEl.innerText = "❌ " + (res && res.pesan ? res.pesan : "Username atau Password Salah!");
+                    terapkanTampilanAdmin(res.nama || inputUser, inputUser);
+                } else {
+                    errorEl.style.display = "block";
+                    errorEl.innerText = "❌ " + (res && res.pesan ? res.pesan : "Username atau Password Salah!");
+                }
+            } catch (err) {
+                if (retries > 0) {
+                    errorEl.style.display = "block";
+                    errorEl.innerText = "⏳ Server sedang merespons (cold start), mencoba ulang otomatis...";
+                    setTimeout(() => cekPasswordAdmin(retries - 1), 2000);
+                    return;
+                } else {
+                    errorEl.style.display = "block";
+                    errorEl.innerText = "❌ Gagal terhubung ke server. Periksa koneksi internet Anda.";
+                }
+            } finally {
+                if (retries <= 0) {
+                    btnLogin.innerText = "Masuk";
+                    btnLogin.disabled = false;
+                }
+            }
         }
-    } catch (err) {
-        if (retries > 0) {
-            errorEl.style.display = "block";
-            errorEl.innerText = "⏳ Server sedang merespons (cold start), mencoba ulang otomatis...";
-            setTimeout(() => cekPasswordAdmin(retries - 1), 2000);
-            return;
-        } else {
-            errorEl.style.display = "block";
-            errorEl.innerText = "❌ Gagal terhubung ke server. Periksa koneksi internet Anda.";
-        }
-    } finally {
-        if (retries <= 0) {
-            btnLogin.innerText = "Masuk";
-            btnLogin.disabled = false;
-        }
-    }
-}
 
         function terapkanTampilanAdmin(namaLengkap, username) {
             window.adminLoginNama = username;
@@ -1245,64 +1246,79 @@ async function cekPasswordAdmin(retries = 1) {
         setInterval(updateClock, 1000);
         updateClock();
 
-       async function deteksiIPDanWifi() {
-    const wifiTextEl = document.getElementById("namaWifiText");
-    if (!wifiTextEl) return;
-    
-    wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
-    
-    // Daftar API IP publik yang super cepat
-    const services = [
-        "https://api.ipify.org?format=json",
-        "https://api.myip.com",
-        "https://ipapi.co/json/"
-    ];
+        // DIPERBAIKI: Menggunakan sessionStorage agar tidak mendeteksi ulang IP terus menerus (Anti-Lag & Menghemat Kuota Request)
+        async function deteksiIPDanWifi() {
+            const wifiTextEl = document.getElementById("namaWifiText");
+            if (!wifiTextEl) return;
 
-    let ipTerdeteksi = "";
-    
-    // Gunakan Promise.any atau perulangan cepat dengan timeout ketat (1.5 detik)
-    for (let url of services) {
-        try {
-            let controller = new AbortController();
-            let timeoutId = setTimeout(() => controller.abort(), 1500); // Timeout 1.5 detik per server
+            // Cek apakah dalam sesi ini IP sudah pernah dicek sebelumnya (Cache Session)
+            let cachedIp = sessionStorage.getItem("cached_user_ip");
+            let cachedWifi = sessionStorage.getItem("cached_wifi_name");
+
+            if (cachedIp && cachedWifi) {
+                userIP = cachedIp;
+                wifiTextEl.innerText = cachedWifi;
+                return;
+            }
+
+            if (isCheckingWifi) return; // Mencegah double-request bersamaan
+            isCheckingWifi = true;
+            wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
             
-            let res = await fetch(url, { signal: controller.signal });
-            clearTimeout(timeoutId);
+            const services = [
+                "https://api.ipify.org?format=json",
+                "https://api.myip.com",
+                "https://ipapi.co/json/"
+            ];
+
+            let ipTerdeteksi = "";
             
-            let data = await res.json();
-            ipTerdeteksi = data.ip || data.query;
-            
-            if (ipTerdeteksi) break; // Langsung keluar loop begitu dapat IP
-        } catch (e) {
-            continue; // Lanjut ke server berikutnya jika timeout
+            for (let url of services) {
+                try {
+                    let controller = new AbortController();
+                    let timeoutId = setTimeout(() => controller.abort(), 1500); 
+                    
+                    let res = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    
+                    let data = await res.json();
+                    ipTerdeteksi = data.ip || data.query;
+                    
+                    if (ipTerdeteksi) break; 
+                } catch (e) {
+                    continue; 
+                }
+            }
+
+            if (!ipTerdeteksi) {
+                wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
+                isCheckingWifi = false;
+                return;
+            }
+
+            userIP = ipTerdeteksi;
+
+            try {
+                let wifiRes = await fetch(API, { 
+                    method: "POST", 
+                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+                });
+                let wifiJson = await wifiRes.json();
+                
+                let namaJaringanFinal = (wifiJson && wifiJson.wifi) ? wifiJson.wifi : userIP;
+                wifiTextEl.innerText = namaJaringanFinal;
+
+                // Simpan ke session browser agar tidak fetch berulang kali
+                sessionStorage.setItem("cached_user_ip", userIP);
+                sessionStorage.setItem("cached_wifi_name", namaJaringanFinal);
+
+            } catch (e) {
+                wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
+            } finally {
+                isCheckingWifi = false;
+            }
         }
-    }
 
-    if (!ipTerdeteksi) {
-        wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
-        // Tetap izinkan buka kamera atau hentikan sesuai kebutuhan alur bro
-        return;
-    }
-
-    userIP = ipTerdeteksi;
-
-    try {
-        // Cek pencocokan IP ke Google Apps Script Sheet "Master wifi"
-        let wifiRes = await fetch(API, { 
-            method: "POST", 
-            body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-        });
-        let wifiJson = await wifiRes.json();
-        
-        if (wifiJson && wifiJson.wifi) {
-            wifiTextEl.innerText = wifiJson.wifi;
-        } else {
-            wifiTextEl.innerText = userIP;
-        }
-    } catch (e) {
-        wifiTextEl.innerText = userIP + " (Gagal memuat nama Wi-Fi)";
-    }
-}
         function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
 
@@ -1653,7 +1669,7 @@ async function cekPasswordAdmin(retries = 1) {
                             qr.stop().then(() => {
                                 jalankanProsesAbsen(decodedText);
                             }).catch(err => {
-                                jalankanProsesAbsen(decodedTest);
+                                jalankanProsesAbsen(decodedText);
                             });
                         },
                         (err) => {}
