@@ -546,6 +546,7 @@
         <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px;">
             <button onclick="bukaMenuAdminTab('log')" style="background: #334155; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(51, 65, 85, 0.25); transition: all 0.2s;">📋 Lihat Log Absensi</button>
             <button onclick="bukaMenuAdminTab('rekap')" style="background: #1e293b; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25); transition: all 0.2s;">📊 Lihat Jadwal Bulanan</button>
+            <button onclick="logoutAdmin()" style="background: #dc2626; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); transition: all 0.2s;">🚪 Logout</button>
         </div>
 
         <!-- KOTAK UPDATE IP (Hanya muncul jika yang login Admin Utama: Rifai, Andri, Yasin, Fadil) -->
@@ -689,13 +690,16 @@
         }
 
         function logoutAdmin() {
-            localStorage.removeItem("adminLoggedIn");
-            localStorage.removeItem("adminNama");
-            localStorage.removeItem("adminUsername");
-            
-            document.getElementById("authOverlay").style.display = "block";
-            document.getElementById("adminContentBody").style.display = "none";
-            document.getElementById("adminPassInput").value = "";
+            if (confirm("Apakah Anda yakin ingin keluar dari akun admin?")) {
+                localStorage.removeItem("adminLoggedIn");
+                localStorage.removeItem("adminNama");
+                localStorage.removeItem("adminUsername");
+                
+                document.getElementById("authOverlay").style.display = "block";
+                document.getElementById("adminContentBody").style.display = "none";
+                document.getElementById("adminPassInput").value = "";
+                document.getElementById("adminUsernameInput").value = "";
+            }
         }
 
         function muatIpAdmin() {
