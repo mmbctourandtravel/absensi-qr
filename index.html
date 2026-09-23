@@ -1250,85 +1250,66 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // DIPERBAIKI: Menggunakan sessionStorage agar tidak mendeteksi ulang IP terus menerus (Anti-Lag & Menghemat Kuota Request)
         async function deteksiIPDanWifi(isManualRefresh = false) {
-            const wifiTextEl = document.getElementById("namaWifiText");
-            if (!wifiTextEl) return;
+    const wifiTextEl = document.getElementById("namaWifiText");
+    if (!wifiTextEl) return;
 
-            // Jika tombol refresh diketuk manual, hapus cache agar memaksa cek IP baru!
-            if (isManualRefresh) {
-                sessionStorage.removeItem("cached_user_ip");
-                sessionStorage.removeItem("cached_wifi_name");
-                wifiTextEl.innerText = "Memperbarui jaringan...";
-            }
+    // Jika tombol refresh diketuk manual, hapus cache
+    if (isManualRefresh) {
+        sessionStorage.removeItem("cached_user_ip");
+        sessionStorage.removeItem("cached_wifi_name");
+        wifiTextEl.innerText = "Memperbarui jaringan...";
+    }
 
-            // Cek apakah dalam sesi ini IP sudah pernah dicek sebelumnya (Cache Session)
-            let cachedIp = sessionStorage.getItem("cached_user_ip");
-            let cachedWifi = sessionStorage.getItem("cached_wifi_name");
+    // Cek apakah dalam sesi ini IP sudah ada (Instan Load)
+    let cachedIp = sessionStorage.getItem("cached_user_ip");
+    let cachedWifi = sessionStorage.getItem("cached_wifi_name");
 
-            if (!isManualRefresh && cachedIp && cachedWifi) {
-                userIP = cachedIp;
-                wifiTextEl.innerText = cachedWifi;
-                return;
-            }
+    if (!isManualRefresh && cachedIp && cachedWifi) {
+        userIP = cachedIp;
+        wifiTextEl.innerText = cachedWifi;
+        return;
+    }
 
-            if (isCheckingWifi) return; // Mencegah double-request bersamaan
-            isCheckingWifi = true;
-            wifiTextEl.innerText = "Mendeteksi jaringan kantor...";
-            
-            const services = [
-                "https://api.ipify.org?format=json",
-                "https://api.myip.com",
-                "https://ipapi.co/json/"
-            ];
+    if (isCheckingWifi) return;
+    isCheckingWifi = true;
+    wifiTextEl.innerText = "Mendeteksi jaringan...";
+    
+    try {
+        // Cukup gunakan 1 layanan utama yang paling cepat (ipify) dengan batas timeout ketat (1 detik)
+        let controller = new AbortController();
+        let timeoutId = setTimeout(() => controller.abort(), 1000); 
+        
+        let res = await fetch("https://api.ipify.org?format=json", { signal: controller.signal });
+        clearTimeout(timeoutId);
+        
+        let data = await res.json();
+        userIP = data.ip;
 
-            let ipTerdeteksi = "";
-            
-            for (let url of services) {
-                try {
-                    let controller = new AbortController();
-                    let timeoutId = setTimeout(() => controller.abort(), 1500); 
-                    
-                    let res = await fetch(url, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    
-                    let data = await res.json();
-                    ipTerdeteksi = data.ip || data.query;
-                    
-                    if (ipTerdeteksi) break; 
-                } catch (e) {
-                    continue; 
-                }
-            }
+        if (!userIP) throw new Error("IP tidak ditemukan");
 
-            if (!ipTerdeteksi) {
-                wifiTextEl.innerText = "Gagal mendeteksi IP (Ketuk untuk refresh)";
-                isCheckingWifi = false;
-                return;
-            }
+        // Request ke backend Apps Script untuk mencocokkan nama Wi-Fi
+        let wifiRes = await fetch(API, { 
+            method: "POST", 
+            body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
+        });
+        let wifiJson = await wifiRes.json();
+        
+        let namaJaringanFinal = (wifiJson && wifiJson.wifi) ? wifiJson.wifi : userIP;
+        wifiTextEl.innerText = namaJaringanFinal;
 
-            userIP = ipTerdeteksi;
+        // Simpan ke session browser agar selanjutnya instan
+        sessionStorage.setItem("cached_user_ip", userIP);
+        sessionStorage.setItem("cached_wifi_name", namaJaringanFinal);
 
-            try {
-                let wifiRes = await fetch(API, { 
-                    method: "POST", 
-                    body: JSON.stringify({ action: "getWifiInfo", ip: userIP }) 
-                });
-                let wifiJson = await wifiRes.json();
-                
-                let namaJaringanFinal = (wifiJson && wifiJson.wifi) ? wifiJson.wifi : userIP;
-                wifiTextEl.innerText = namaJaringanFinal;
-
-                // Simpan ke session browser
-                sessionStorage.setItem("cached_user_ip", userIP);
-                sessionStorage.setItem("cached_wifi_name", namaJaringanFinal);
-
-            } catch (e) {
-                wifiTextEl.innerText = userIP + " (Bukan Wifi kantor)";
-            } finally {
-                isCheckingWifi = false;
-            }
-        }
+    } catch (e) {
+        // Fallback jika gagal mendeteksi IP publik
+        wifiTextEl.innerText = "Jaringan Lokal / Tanpa Koneksi Luar";
+        userIP = "127.0.0.1";
+    } finally {
+        isCheckingWifi = false;
+    }
+}
 
         function jalankanProsesAbsen(decodedText) {
             activeStaffId = decodedText;
