@@ -1463,7 +1463,7 @@
         function eksekusiAbsenFinal(fotoUrl) {
             fetch(API, {
                 method: "POST",
-                body: JSON.stringify({ action: "absen", id: activeStaffId, ip: userIP, foto: fotoUrl })
+                body: JSON.stringify({ action: "absenPulang", id: activeStaffId, ip: userIP }) // Ubah jadi absenPulang
             })
             .then(r => r.json())
             .then(res => {
