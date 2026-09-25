@@ -241,15 +241,97 @@
         }
         #modalImg { max-width: 90%; max-height: 85vh; border-radius: 16px; border: 3px solid #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        #selfieModal {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000000;
-            display: none; flex-direction: column; align-items: center; justify-content: space-between;
-            z-index: 9999; padding: 25px 20px; color: white; text-align: center;
-        }
-        #selfieVideo { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; background: #000; }
-        .selfie-header, .selfie-footer { position: relative; z-index: 2; width: 100%; max-width: 420px; background: rgba(15, 23, 42, 0.7); padding: 14px; border-radius: 16px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); }
-        .btn-capture { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 14px 28px; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); }
+        /* MODAL KAMERA SELFIE YANG LEBIH KEREN & PROFESIONAL */
+#selfieModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 9999;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    box-sizing: border-box;
+}
 
+#selfieVideo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+    background: #000;
+}
+
+/* Bingkai Pemandu Wajah (Face Guide Oval) */
+.selfie-guide-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    width: 240px;
+    height: 320px;
+    border: 3px dashed rgba(56, 189, 248, 0.7);
+    border-radius: 50% / 40%;
+    z-index: 2;
+    pointer-events: none;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+}
+
+.selfie-header, .selfie-footer {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 400px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.selfie-header {
+    padding: 12px 18px;
+    border-radius: 16px;
+    margin-top: 10px;
+}
+
+.selfie-footer {
+    padding: 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.btn-capture {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    transition: all 0.2s ease;
+}
+
+.btn-capture:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-2px);
+}
         @keyframes bounceIcon { from { transform: translateY(0); } to { transform: translateY(-6px); } }
         @keyframes wave { 0% { transform: rotate(0deg); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(14deg); } 80% { transform: rotate(-4deg); } 100% { transform: rotate(0deg); } }
         @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -381,18 +463,23 @@
 </div>
     
     <!-- MODAL KAMERA SELFIE -->
-    <div id="selfieModal">
-        <video id="selfieVideo" autoplay playsinline></video>
-        <div class="selfie-header">
-            <h3 style="font-size: 16px; color: #38bdf8;">📸 Ambil Foto Selfie</h3>
-            <p id="selfieStaffName" style="font-size: 13px; color: #e2e8f0; margin-top: 2px;"></p>
-        </div>
-        <div class="selfie-footer">
-            <button class="btn-capture" onclick="ambilFotoDanKirim()">
-                <span>📸</span> Ambil & Kirim Absen Masuk
-            </button>
-        </div>
+<div id="selfieModal">
+    <video id="selfieVideo" autoplay playsinline></video>
+    
+    <!-- Bingkai Panduan Wajah -->
+    <div class="selfie-guide-overlay"></div>
+
+    <div class="selfie-header">
+        <h3 style="font-size: 15px; color: #38bdf8; font-weight: 700; margin: 0;">📸 Ambil Foto Selfie</h3>
+        <p id="selfieStaffName" style="font-size: 13px; color: #e2e8f0; margin-top: 3px; font-weight: 500;"></p>
     </div>
+    
+    <div class="selfie-footer">
+        <button class="btn-capture" onclick="ambilFotoDanKirim()">
+            <span style="font-size: 18px;">📸</span> Ambil & Kirim Absen Masuk
+        </button>
+    </div>
+</div>
 
     <!-- FULL SCREEN OVERLAY -->
     <div id="fullScreenOverlay">
