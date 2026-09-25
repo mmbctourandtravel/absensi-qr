@@ -140,7 +140,18 @@
     background: #1d4ed8;
 }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0f172a; color: #333; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        
+        /* UPDATE BACKGROUND FOTO KANTOR PADA BODY */
+        body { 
+            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('URL_FOTO_KANTOR_ANDA.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            color: #333; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 15px; 
+        }
         
         .nav-tabs { 
             display: flex; 
@@ -212,15 +223,19 @@
         .scanner-wrapper { padding: 15px; text-align: center; }
         #reader { width: 100% !important; border: none !important; border-radius: 12px; overflow: hidden; background: #000; }
         
+        /* UPDATE BACKGROUND FOTO KANTOR PADA OVERLAY PROSES & SUKSES */
         #fullScreenOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #0f172a; display: none; flex-direction: column; align-items: center; justify-content: center;
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('URL_FOTO_KANTOR_ANDA.jpg') no-repeat center center fixed !important;
+            background-size: cover !important;
+            backdrop-filter: blur(8px);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
             z-index: 99999; padding: 25px; text-align: center; transition: background 0.4s ease;
         }
-        #fullScreenOverlay.theme-masuk { background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 100%) !important; }
-        #fullScreenOverlay.theme-pulang { background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%) !important; }
+        #fullScreenOverlay.theme-masuk { background: linear-gradient(135deg, rgba(186, 230, 253, 0.85) 0%, rgba(56, 189, 248, 0.85) 100%) !important; }
+        #fullScreenOverlay.theme-pulang { background: linear-gradient(135deg, rgba(167, 243, 208, 0.85) 0%, rgba(52, 211, 153, 0.85) 100%) !important; }
         #fullScreenOverlay.theme-loading { background: rgba(15, 23, 42, 0.9) !important; backdrop-filter: blur(10px); }
-        #fullScreenOverlay.error-bg { background: linear-gradient(135deg, #fecaca 0%, #f87171 100%) !important; }
+        #fullScreenOverlay.error-bg { background: linear-gradient(135deg, rgba(254, 202, 202, 0.85) 0%, rgba(248, 113, 113, 0.85) 100%) !important; }
 
         .overlay-card {
             background: #ffffff; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 24px;
@@ -329,7 +344,7 @@
 }
 
 .btn-capture:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #1d4ed8 100%, #1e40af 100%);
     transform: translateY(-2px);
 }
         @keyframes bounceIcon { from { transform: translateY(0); } to { transform: translateY(-6px); } }
