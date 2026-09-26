@@ -9,6 +9,13 @@
     <meta name="theme-color" content="#0f172a">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
+        /* ==========================================
+       TAMBAHKAN CSS BACKGROUND SCANNER DI SINI
+       ========================================== */
+    body.scanner-active {
+        background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('scanner-bg.jpg') no-repeat center center fixed !important;
+        background-size: cover !important;
+        
         .wifi-info-box { 
             background: #f0fdf4; 
             color: #15803d; 
@@ -677,12 +684,18 @@
     let isCheckingWifi = false;
 
     function switchTab(tabName, btn) {
-        document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    const bodyEl = document.body;
+
+    if(tabName === 'scanner') {
+        document.getElementById('tab-scanner').classList.add('active');
+        bodyEl.classList.add('scanner-active'); // Ganti background khusus scanner
+    } else {
+        bodyEl.classList.remove('scanner-active'); // Kembali ke kantor.jpg untuk menu lain
         
-        if(tabName === 'scanner') {
-            document.getElementById('tab-scanner').classList.add('active');
-        } else if(tabName === 'rekap') {
+        if(tabName === 'rekap') {
             document.getElementById('tab-rekap').classList.add('active');
             if(!window.loadedJadwal) { loadRekapBulanan(); }
         } else if(tabName === 'log') {
@@ -693,8 +706,9 @@
         } else if(tabName === 'admin') {
             document.getElementById('tab-admin').classList.add('active');
         }
-        btn.classList.add('active');
     }
+    btn.classList.add('active');
+}
 
     async function cekPasswordAdmin(retries = 1) {
         let inputUser = document.getElementById("adminUsernameInput").value.trim();
@@ -1712,15 +1726,19 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-        let isLogged = localStorage.getItem("adminLoggedIn");
-        let savedNama = localStorage.getItem("adminNama");
-        let savedUser = localStorage.getItem("adminUsername");
+    document.body.classList.add('scanner-active'); // <-- Tambahkan baris ini di paling atas event listener
 
-        if (isLogged === "true" && savedUser) {
-            terapkanTampilanAdmin(savedNama, savedUser);
-        }
+    let isLogged = localStorage.getItem("adminLoggedIn");
+    let savedNama = localStorage.getItem("adminNama");
+    let savedUser = localStorage.getItem("adminUsername");
 
-        deteksiIPDanWifi();
+    if (isLogged === "true" && savedUser) {
+        terapkanTampilanAdmin(savedNama, savedUser);
+    }
+
+    deteksiIPDanWifi();
+    // ... (sisa kode scanner kamera di bawahnya tetap biarkan)
+});
 
         setTimeout(() => {
             try {
