@@ -1662,6 +1662,47 @@
         document.getElementById("overlayMsg").innerText = pesan;
         overlay.style.display = "flex";
 
+        // --- TAMBAHAN EFEK SUARA & UCAPAN AUDIO SAAT GAGAL ---
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Fungsi pembuat suara beep nada rendah (peringatan error)
+            function playErrorTone(freq, startTime, duration) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sawtooth'; // Suara agak tajam untuk peringatan
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+                
+                gain.gain.setValueAtTime(0.15, ctx.currentTime + startTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+                
+                osc.start(ctx.currentTime + startTime);
+                osc.stop(ctx.currentTime + startTime + duration);
+            }
+
+            // Bunyikan dua nada peringatan (turun)
+            playErrorTone(300, 0.0, 0.2);
+            playErrorTone(200, 0.2, 0.3);
+
+            // Ucapkan pesan error menggunakan SpeechSynthesis
+            if ('speechSynthesis' in window) {
+                setTimeout(() => {
+                    // Bersihkan teks pesan dari simbol-simbol emoji agar suara lebih rapi dibaca
+                    let bersihPesan = pesan.replace(/[\u{1F300}-\u{1F9FF}]/gu, '').trim();
+                    let teksUcap = "Maaf, absensi gagal. " + bersihPesan;
+                    
+                    const utterance = new SpeechSynthesisUtterance(teksUcap);
+                    utterance.lang = 'id-ID';
+                    utterance.rate = 1.0;
+                    utterance.pitch = 0.9; // Nada sedikit lebih rendah untuk error
+                    window.speechSynthesis.speak(utterance);
+                }, 300);
+            }
+        } catch(e) {}
+        // ----------------------------------------------------
+
         setTimeout(() => {
             overlay.style.display = "none";
             resetScannerKamera();
