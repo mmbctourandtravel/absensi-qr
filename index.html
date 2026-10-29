@@ -1662,12 +1662,47 @@
         document.getElementById("overlayMsg").innerText = pesan;
         overlay.style.display = "flex";
 
+        // --- TAMBAHAN EFEK SUARA & UCAPAN GAGAL ---
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            
+function playErrorTone(freq, startTime, duration) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sawtooth'; // Suara agak beda untuk error
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+                
+                gain.gain.setValueAtTime(0.15, ctx.currentTime + startTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+                
+                osc.start(ctx.currentTime + startTime);
+                osc.stop(ctx.currentTime + startTime + duration);
+            }
+
+            // Nada buzzer gagal (turun)
+            playErrorTone(300, 0.0, 0.2);
+            playErrorTone(200, 0.2, 0.3);
+
+            if ('speechSynthesis' in window) {
+                setTimeout(() => {
+                    // Bisa membacakan pesan error atau teks statis "Absensi Gagal"
+                    const utterance = new SpeechSynthesisUtterance("Absensi Gagal. " + pesan);
+                    utterance.lang = 'id-ID';
+                    utterance.rate = 1.0;
+                    utterance.pitch = 0.9; // Pitch agak rendah untuk error
+                    window.speechSynthesis.speak(utterance);
+                }, 300);
+            }
+        } catch(e) {}
+        // ------------------------------------------
+
         setTimeout(() => {
             overlay.style.display = "none";
             resetScannerKamera();
         }, 6000);
     }
-
     function resetScannerKamera() {
         setTimeout(() => {
             sedangProses = false;
