@@ -805,7 +805,7 @@
         if (isAdminKhususStaffAktif()) {
             el.innerHTML = `<span style="display:inline-block; background:#dcfce7; color:#166534; border:1px solid #86efac; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700;">⭐ Admin Khusus Staff (${namaAdmin}) • Foto Selfie Terbuka</span>`;
         } else {
-            el.innerHTML = `<span style="display:inline-block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700;">👤 Admin Biasa (${namaAdmin}) • Foto Selfie Privat</span>`;
+            el.innerHTML = `<span style="display:inline-block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700;">👤 Staff (${namaAdmin}) • Foto Selfie Privat</span>`;
         }
     }
 
@@ -980,7 +980,7 @@
         if (badgeRole) {
             badgeRole.innerHTML = isKhusus
                 ? `<span style="display:inline-block; background:#dcfce7; color:#166534; border:1px solid #86efac; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700;">⭐ Admin Khusus Staff (Akses Foto Selfie & Update Wi-Fi)</span>`
-                : `<span style="display:inline-block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700;">👤 Admin Biasa (Akses Jadwal & Log • Foto Selfie Privat)</span>`;
+                : `<span style="display:inline-block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700;">👤 Staff (Akses Jadwal & Log • Foto Selfie Privat)</span>`;
         }
 
         document.getElementById("authOverlay").style.display = "none";
